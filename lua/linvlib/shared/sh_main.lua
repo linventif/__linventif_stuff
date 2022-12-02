@@ -59,3 +59,34 @@ hook.Add("Initialize", "LinvLibUpdate", function()
     end)
 end)
 
+function LinvLib.FormatMoney(money, symbol, possition, separator)
+    local monlen = string.len(money)
+    local moneystr = ""
+    for i = 1, monlen do
+        if i % 3 == 0 then
+            moneystr = separator .. string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
+        else
+            moneystr = string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
+        end
+    end
+    money = moneystr
+    if possition then
+        moneystr = symbol .. moneystr
+    else
+        moneystr = moneystr .. symbol
+    end
+    return moneystr
+end
+
+function LinvLib.MoneyToShow(separator, money)
+    local monlen = string.len(money)
+    local moneystr = ""
+    for i = 1, monlen do
+        if i % 3 == 0 then
+            moneystr = separator .. string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
+        else
+            moneystr = string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
+        end
+    end
+    return moneystr
+end

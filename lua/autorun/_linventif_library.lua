@@ -1,7 +1,7 @@
 LinvLib = {}
 
 LinvLib.name = "Linventif Library"
-LinvLib.version = "0.0.6"
+LinvLib.version = "0.0.9"
 LinvLib.author = "Linventif"
 LinvLib.license = "CC BY-SA 4.0"
 LinvLib.description = "A library for Linventif's scripts."
