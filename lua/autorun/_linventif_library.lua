@@ -5,7 +5,9 @@ LinvLib.version = "0.0.9"
 LinvLib.author = "Linventif"
 LinvLib.license = "CC BY-SA 4.0"
 LinvLib.description = "A library for Linventif's scripts."
-
+LinvLib.Install = {
+    ["linventif-library"] = "0.0.9"
+}
 
 function LinvLib.Loader(folder, name)
     local files, folders = file.Find(folder .. "/*", "LUA")

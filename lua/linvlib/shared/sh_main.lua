@@ -49,11 +49,9 @@ end
 
 hook.Add("Initialize", "LinvLibUpdate", function()
     timer.Simple( 5, function()
-        http.Fetch("https://api.linventif.fr/gmod-lib/info.json",
-        function(body, length, headers, code)
+        http.Fetch("https://api.linventif.fr/gmod-lib/info.json", function(body, length, headers, code)
             LinvLibVerif(util.JSONToTable(body))
-        end,
-        function(message)
+        end, function(message)
             print(message)
         end)
     end)
