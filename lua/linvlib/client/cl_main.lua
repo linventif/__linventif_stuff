@@ -56,8 +56,8 @@ local function OpenPanel(data)
 	scroll.VBar.btnDown.Paint = scroll.VBar.Paint
 	scroll.VBar.btnGrip.Paint = function(self, w, h) end
 
-    for k, v in pairs(data) do
-        for k2, v2 in pairs(v) do
+    for k, v in SortedPairs(data) do
+        for k2, v2 in SortedPairs(v) do
             if !LinvLib.Install[k2] then continue end
             local status_name = "Open"
             local status_color = Color(0, 200, 0)
@@ -201,10 +201,12 @@ concommand.Add("linventif_monitor", function(ply)
     GetData()
 end)
 
-hook.Add("InitPostEntity", "VoteSys", function()
+hook.Add("InitPostEntity", "LinvLibOpenVerif", function()
     if LocalPlayer():IsSuperAdmin() then
-        timer.Simple(5, function()
-            GetData()
+        hook.Add("InitPostEntity", "LinvLibOpenVeriPanel", function()
+            timer.Simple(5, function()
+                GetData()
+            end)
         end)
     end
 end)
