@@ -1,3 +1,23 @@
+function LinvLib.LoadMaterials(folder)
+    local files, folders = file.Find(folder.."*", "GAME")
+    for k, v in pairs(files) do
+        resource.AddFile(folder..v)
+        print(folder..v)
+    end
+    for k, v in pairs(folders) do
+        LinvLib.LoadMaterials(folder..v.."/")
+    end
+end
+
+function LinvLib.LoadWorkshop(workshop, name)
+    for k, v in pairs(workshop) do
+        resource.AddWorkshop(v)
+        print("| " .. name .. " | Add Workshop | " .. v)
+    end
+end
+
+/*
+
 function LinvLib.ServerName()
     local f = file.Open("cfg/server.cfg", "r", "MOD" )
     while true do
@@ -53,3 +73,5 @@ function LinvLib.GetValidLang(folder)
     end
     return lang
 end
+
+*/

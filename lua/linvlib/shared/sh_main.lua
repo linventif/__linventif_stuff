@@ -88,3 +88,13 @@ function LinvLib.MoneyToShow(separator, money)
     end
     return moneystr
 end
+
+function LinvLib.Load(name, folder, files)
+    for k, v in pairs(files) do
+        if SERVER then
+            AddCSLuaFile(folder .. "/" .. v)
+        end
+        include(folder .. "/" .. v)
+        print("| " .. name .. " | File Load | " .. folder .. "/" .. v)
+    end
+end
