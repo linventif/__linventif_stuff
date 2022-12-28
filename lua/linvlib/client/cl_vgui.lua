@@ -52,9 +52,11 @@ function LinvLib.Hover2(element, round, roundborder, border, color, hovercolor, 
     end
 end
 
-function LinvLib.HideVBar(vbar)
-    vbar:SetWide(0)
-    vbar.btnUp:SetWide(0)
-    vbar.btnDown:SetWide(0)
-    vbar.btnGrip:SetWide(0)
+function LinvLib.HideVBar(element)
+    element.VBar:SetHideButtons(true)
+    element.VBar.Paint = function() end
+    element.VBar:SetWide(0)
+    element.VBar.btnUp.Paint = function(self, w, h) end
+    element.VBar.btnDown.Paint = function(self, w, h) end
+    element.VBar.btnGrip.Paint = function(self, w, h) end
 end
