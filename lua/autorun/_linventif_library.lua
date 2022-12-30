@@ -1,12 +1,12 @@
 LinvLib = {}
 
 LinvLib.name = "Linventif Library"
-LinvLib.version = "0.1.3"
+LinvLib.version = "0.1.4"
 LinvLib.author = "Linventif"
 LinvLib.license = "CC BY-SA 4.0"
 LinvLib.description = "A library for Linventif's scripts."
 LinvLib.Install = {
-    ["linventif-library"] = "0.1.3"
+    ["linventif-library"] = "0.1.4"
 }
 
 function LinvLib.Loader(folder, name)
@@ -45,11 +45,42 @@ if SERVER then
     resource.AddWorkshop("2882747990")
 end
 
+function LinvLib.LoadStr(full_name, version, license)
+    local width = 57
+    print(" ")
+    print(" ")
+    print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
+    print(" -                                                           - ")
+    print(" - " .. LinvLib.CenterStr(width, full_name .. " v" .. version) .. " - ")
+    print(" -                                                           - ")
+    print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
+    print(" -                                                           - ")
+    print(" - " .. LinvLib.CenterStr(width, "Create by : Linventif") .. " - ")
+    print(" - " .. LinvLib.CenterStr(width, "Join my discord : https://linventif.fr/discord") .. " - ")
+    if license != "" then
+        print(" - " .. LinvLib.CenterStr(width, "License : " .. license) .. " - ")
+    end
+    print(" -                                                           - ")
+    print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
+    print(" ")
+end
+
+function LinvLib.CenterStr(with, text)
+    local rtn_str = ""
+    local padding = math.floor((with - text:len()) / 2)
+    local paddingText = string.rep(" ", padding)
+    if text:len() % 2 == 0 then
+        rtn_str = rtn_str .. " "
+    end
+    rtn_str = rtn_str .. paddingText .. text .. paddingText
+    return rtn_str
+end
+
+LinvLib.LoadStr(LinvLib.name, LinvLib.version, LinvLib.license)
 LinvLib.Loader("linvlib/server", LinvLib.name)
 LinvLib.Loader("linvlib/client", LinvLib.name)
 LinvLib.Loader("linvlib/shared", LinvLib.name)
 
-LinvLib.LoadStr(LinvLib.name, LinvLib.version, LinvLib.license)
 print("| " .. LinvLib.name .. " | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
 print(" ")
 print(" ")

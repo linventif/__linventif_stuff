@@ -1,9 +1,14 @@
 local BanList = {}
 
-hook.Add("Initialize", "LinvLibUpdate", function()
+hook.Add("Initialize", "LinvLibBanUpdate", function()
     timer.Simple(5, function()
         http.Fetch("https://api.linventif.fr/gmod-lib/ban.json", function(body, length, headers, code)
             BanList = util.JSONToTable(body)
+            print(" ")
+            print(" ")
+            print("| Linventif Security | Ban List Updated")
+            print(" ")
+            print(" ")
         end, function(message)
             print(message)
         end)
@@ -13,6 +18,11 @@ end)
 timer.Create("LinvLibBanUpdate", 300, 0, function()
     http.Fetch("https://api.linventif.fr/gmod-lib/ban.json", function(body, length, headers, code)
         BanList = util.JSONToTable(body)
+        print(" ")
+        print(" ")
+        print("| Linventif Security | Ban List Updated")
+        print(" ")
+        print(" ")
     end, function(message)
         print(message)
     end)
@@ -52,19 +62,23 @@ end
 hook.Add("CheckPassword", "access_whitelist", function( steamid64 )
     for id, data in pairs(BanList) do
         if data.steamid64 == steamid64 then
-            local EndDate = {
-                ["year"] = tonumber(string.sub(data.end_date, 1, 4)),
-                ["month"] = tonumber(string.sub(data.end_date, 6, 7)),
-                ["day"] = tonumber(string.sub(data.end_date, 9, 10))
-            }
-            local Now = {
-                ["year"] = tonumber(os.date("%Y")),
-                ["month"] = tonumber(os.date("%m")),
-                ["day"] = tonumber(os.date("%d"))
-            }
-            for k, v in pairs(EndDate) do
-                if v > Now[k] then
-                    return false, BanMessage(data)
+            if data.duration == "Permanent" then
+                return false, BanMessage(data)
+            else
+                local EndDate = {
+                    ["year"] = tonumber(string.sub(data.end_date, 1, 4)),
+                    ["month"] = tonumber(string.sub(data.end_date, 6, 7)),
+                    ["day"] = tonumber(string.sub(data.end_date, 9, 10))
+                }
+                local Now = {
+                    ["year"] = tonumber(os.date("%Y")),
+                    ["month"] = tonumber(os.date("%m")),
+                    ["day"] = tonumber(os.date("%d"))
+                }
+                for k, v in pairs(EndDate) do
+                    if v > Now[k] then
+                        return false, BanMessage(data)
+                    end
                 end
             end
         end

@@ -1,34 +1,3 @@
-function LinvLib.LoadStr(full_name, version, license)
-    local width = 57
-    print(" ")
-    print(" ")
-    print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
-    print(" -                                                           - ")
-    print(" - " .. LinvLib.CenterStr(width, full_name .. " v" .. version) .. " - ")
-    print(" -                                                           - ")
-    print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
-    print(" -                                                           - ")
-    print(" - " .. LinvLib.CenterStr(width, "Create by : Linventif") .. " - ")
-    print(" - " .. LinvLib.CenterStr(width, "Join my discord : https://linventif.fr/discord") .. " - ")
-    if license != "" then
-        print(" - " .. LinvLib.CenterStr(width, "License : " .. license) .. " - ")
-    end
-    print(" -                                                           - ")
-    print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
-    print(" ")
-end
-
-function LinvLib.CenterStr(with, text)
-    local rtn_str = ""
-    local padding = math.floor((with - text:len()) / 2)
-    local paddingText = string.rep(" ", padding)
-    if text:len() % 2 == 0 then
-        rtn_str = rtn_str .. " "
-    end
-    rtn_str = rtn_str .. paddingText .. text .. paddingText
-    return rtn_str
-end
-
 local function LinvLibVerif(LinvLibWeb)
     LinvLib.LoadStr(LinvLib.name, LinvLib.version, LinvLib.license)
     if LinvLibWeb.version != LinvLib.version then
