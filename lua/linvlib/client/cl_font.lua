@@ -1,6 +1,22 @@
+surface.CreateFont("LinvFontRobo100", {
+    font = "Roboto",
+    size = RespW(100),
+    weight = 500,
+    antialias = true,
+    shadow = false
+})
+
+surface.CreateFont("LinvFontRobo50", {
+    font = "Roboto",
+    size = RespW(50),
+    weight = 500,
+    antialias = true,
+    shadow = false
+})
+
 surface.CreateFont("LinvFontRobo35", {
     font = "Roboto",
-    size = 35,
+    size = RespW(35),
     weight = 500,
     antialias = true,
     shadow = false
@@ -8,7 +24,7 @@ surface.CreateFont("LinvFontRobo35", {
 
 surface.CreateFont("LinvFontRobo30", {
     font = "Roboto",
-    size = 30,
+    size = RespW(30),
     weight = 500,
     antialias = true,
     shadow = false
@@ -16,7 +32,7 @@ surface.CreateFont("LinvFontRobo30", {
 
 surface.CreateFont("LinvFontRobo25", {
     font = "Roboto",
-    size = 25,
+    size = RespW(25),
     weight = 500,
     antialias = true,
     shadow = false
@@ -24,7 +40,7 @@ surface.CreateFont("LinvFontRobo25", {
 
 surface.CreateFont("LinvFontRobo20", {
     font = "Roboto",
-    size = 20,
+    size = RespW(20),
     weight = 500,
     antialias = true,
     shadow = false
@@ -32,7 +48,7 @@ surface.CreateFont("LinvFontRobo20", {
 
 surface.CreateFont("LinvFontRobo15", {
     font = "Roboto",
-    size = 15,
+    size = RespW(15),
     weight = 500,
     antialias = true,
     shadow = false
