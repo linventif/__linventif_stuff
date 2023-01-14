@@ -1,12 +1,12 @@
 LinvLib = {}
 
 LinvLib.name = "Linventif Library"
-LinvLib.version = "0.1.4"
+LinvLib.version = "0.1.6"
 LinvLib.author = "Linventif"
 LinvLib.license = "CC BY-SA 4.0"
 LinvLib.description = "A library for Linventif's scripts."
 LinvLib.Install = {
-    ["linventif-library"] = "0.1.4"
+    ["linventif-library"] = "0.1.6"
 }
 
 function LinvLib.Loader(folder, name)

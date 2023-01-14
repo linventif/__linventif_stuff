@@ -1,11 +1,13 @@
-function LinvLib.LoadMaterials(folder)
-    local files, folders = file.Find(folder.."*", "GAME")
-    for k, v in pairs(files) do
-        resource.AddFile(folder..v)
-        print(folder..v)
-    end
-    for k, v in pairs(folders) do
-        LinvLib.LoadMaterials(folder..v.."/")
+function LinvLib.AddRessource(nam, folder, addon_folder)
+    if SERVER then
+        local files, folders = file.Find(folder.."*", "GAME")
+        for k, v in pairs(folders) do
+            LinvLib.LoadMaterials(folder..v.."/")
+        end
+        for k, v in pairs(files) do
+            resource.AddFile(folder..v)
+            print("| " .. name .. " | Resource Add | " .. addon_folder .. "/"..v)
+        end
     end
 end
 

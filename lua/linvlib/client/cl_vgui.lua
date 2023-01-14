@@ -1,3 +1,11 @@
+local function RespW(x)
+    return ScrW() / 1920 * x
+end
+
+local function RespH(y)
+    return ScrH() / 1080 * y
+end
+
 function LinvLib.Hover(element, round, border, color, hovercolor, bordercolor, bordercolorhover)
     local borderx2 = 0
     if border then
@@ -59,4 +67,24 @@ function LinvLib.HideVBar(element)
     element.VBar.btnUp.Paint = function(self, w, h) end
     element.VBar.btnDown.Paint = function(self, w, h) end
     element.VBar.btnGrip.Paint = function(self, w, h) end
+end
+
+function LinvLib.UIButton(element, color, border, radius1, radius2)
+    element:SetTextColor(color["text"])
+    element.Paint = function(self, w, h)
+        draw.RoundedBox(radius1, 0, 0, w, h, color["border"])
+        draw.RoundedBox(radius2, RespW(radius2/2), RespH(radius2/2), w-RespW(radius2), h-RespH(radius2), color["background"])
+    end
+    element.OnCursorEntered = function()
+        element.Paint = function(self, w, h)
+            draw.RoundedBox(radius1, 0, 0, w, h, color["hover_border"])
+            draw.RoundedBox(radius2, RespW(radius2/2), RespH(radius2/2), w-RespW(radius2), h-RespH(radius2), color["hover"])
+        end
+    end
+    element.OnCursorExited = function()
+        element.Paint = function(self, w, h)
+            draw.RoundedBox(radius1, 0, 0, w, h, color["border"])
+            draw.RoundedBox(radius2, RespW(radius2/2), RespH(radius2/2), w-RespW(radius2), h-RespH(radius2), color["background"])
+        end
+    end
 end

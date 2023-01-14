@@ -1,3 +1,7 @@
+local function RespW(x)
+    return ScrW() * (x / 1920)
+end
+
 surface.CreateFont("LinvFontRobo100", {
     font = "Roboto",
     size = RespW(100),
