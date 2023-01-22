@@ -114,7 +114,7 @@ function LinvLib:Frame(weight, height)
     frame:ShowCloseButton(LinvLib.Config.DebugMode)
     frame:SetDraggable(false)
     frame.Paint = function(self, w, h)
-        draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("background"))
+        draw.RoundedBox(RespW(14), 0, 0, w, h, LinvLib:GetColorTheme("background"))
     end
     return frame
 end
@@ -144,6 +144,21 @@ function LinvLib:Button(frame, text, weight, height, hover, func)
     return but
 end
 
+function LinvLib:Scroll(frame, weight, height)
+    local scroll = vgui.Create("DScrollPanel", frame)
+    scroll:SetSize(RespW(weight), RespH(height))
+    scroll.Paint = function() return end
+    scroll.VBar:SetHideButtons(true)
+    scroll.VBar.Paint = function()
+        draw.RoundedBox(RespW(4), 0, 0, 10, scroll.VBar:GetTall(), LinvLib:GetColorTheme("element"))
+    end
+    scroll.VBar:SetWide(10)
+    scroll.VBar.btnGrip.Paint = function(self, w, h)
+        draw.RoundedBox(RespW(4), 0, 0, w, h, LinvLib:GetColorTheme("accent"))
+    end
+    return scroll
+end
+
 function LinvLib:Notif(text)
     local frame = vgui.Create("DPanel")
     frame:SetSize(RespW(600), RespH(40))
@@ -160,6 +175,31 @@ function LinvLib:Notif(text)
             frame:Remove()
         end)
     end)
+end
+
+function LinvLib:Blur(color, force)
+    local blur = Material("pp/blurscreen")
+    local x, y = 0, 0
+    local scrW, scrH = ScrW(), ScrH()
+    local function drawBlur(panel, amount)
+        local x, y = panel:LocalToScreen(0, 0)
+        surface.SetDrawColor(255, 255, 255)
+        surface.SetMaterial(blur)
+        for i = 1, 3 do
+            blur:SetFloat("$blur", (i / 3) * (amount or 6))
+            blur:Recompute()
+            render.UpdateScreenEffectTexture()
+            surface.DrawTexturedRect(x * -1, y * -1, scrW, scrH)
+        end
+    end
+    local blur = vgui.Create("DPanel")
+    blur:SetSize(scrW, scrH)
+    blur:SetPos(x, y)
+    blur.Paint = function(self, w, h)
+        drawBlur(self, force)
+        draw.RoundedBox(0, 0, 0, w, h, color)
+    end
+    return blur
 end
 
 net.Receive("LinvLib:Notification", function()

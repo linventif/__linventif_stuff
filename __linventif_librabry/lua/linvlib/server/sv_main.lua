@@ -144,6 +144,10 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
             LinvLib.Config.MonitorShowIfNewUpdate = net.ReadBool()
         elseif id == "MonitorShowNewAddon" then
             LinvLib.Config.MonitorShowIfNewAddon = net.ReadBool()
+        elseif id == "Language" then
+            LinvLib.Config.Language = net.ReadString()
+        elseif id == "Theme" then
+            LinvLib.Config.Theme = net.ReadString()
         end
         -- LinvLib:Notif(ply, LinvLib:GetTrad("save_setting"))
         SaveSettings()
@@ -167,4 +171,10 @@ hook.Add("Initialize", "LinvLib:LoadSettings", function()
     else
         SaveSettings()
     end
+end)
+
+hook.Add("PlayerInitialSpawn", "LinvLib:SendSettings", function(ply)
+    net.Start("LinvLib:SaveSetting")
+        net.WriteString(util.TableToJSON(LinvLib.Config))
+    net.Send(ply)
 end)

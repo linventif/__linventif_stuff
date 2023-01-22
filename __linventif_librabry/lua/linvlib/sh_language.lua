@@ -4,7 +4,8 @@ local languages = {
         ["not_perm"] = "You don't have the permission to do this!",
         ["save_setting"] = "Settings Sucessfully Saved.",
         ["new_setting_received"] = "LinvLib : New Settings Received.",
-    },
+        ["in_dev"] = "Fonctionality in development."
+    }
 }
 
 // -- // -- // -- // -- // -- // -- // -- //

@@ -221,6 +221,9 @@ local id_type = {
         ["MonitorShowEveryJoin"] = true,
         ["MonitorShowNewUpadte"] = true,
         ["MonitorShowNewAddon"] = true,
+    },
+    ["string"] = {
+        ["Language"] = true
     }
 }
 
@@ -248,6 +251,35 @@ local function RefreshIcon(element, v2)
     end
 end
 
+local function OpenSelect(data)
+    -- local blur = LinvLib:Blur(Color(255, 180, 60, 60), 1)
+    local select_menu = LinvLib:Frame(410, 415)
+    select_menu.Paint = function(self, w, h)
+        draw.RoundedBox(RespW(14), 0, 0, w, h, LinvLib:GetColorTheme("background"))
+        draw.SimpleText(data["title"], "LinvFontRobo25", w/2, RespH(40), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+    local scroll = LinvLib:Scroll(select_menu, 365, 245)
+    scroll:SetPos(30, 80)
+    for k, v in pairs(data["data"]) do
+        if data["type"] == ["simple"] then
+            local button = LinvLib:Button(scroll, v, 365, 40, true, function()
+                select_menu:Close()
+                data["callback"](v)
+            end)
+        end
+        button:Dock(TOP)
+        button:DockMargin(0, 15, 15, 0)
+    end
+    local but_close = LinvLib:Button(select_menu, "Close", 200, 50, true, function()
+        select_menu:Close()
+    end)
+    but_close:SetPos(105, 345)
+    select_menu.OnRemove = function()
+        -- blur:Remove()
+        RunConsoleCommand("linvlib_settings")
+    end
+end
+
 local function OpenSettings()
     local settings_list = {
         [1] = {
@@ -256,21 +288,53 @@ local function OpenSettings()
                 [1] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        LinvLib:Notif(text)
+                        OpenSelect({
+                            ["title"] = "Language",
+                            ["data"] = {
+                                [1] = "english",
+                                [2] = "french"
+                            },
+                            ["type"] = "simple",
+                            ["callback"] = function(data)
+                                LinvLib.Config.Language = data
+                                SaveSetting("Language", LinvLib.Config.Language)
+                            end
+                        })
                     end,
                     ["name"] = "Language : " .. LinvLib.Config.Language
                 },
                 [2] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        LinvLib:Notif(text)
+                        OpenSelect({
+                            ["title"] = "Language",
+                            ["data"] = LinvLib.Install,
+                            ["type"] = "checkbox",
+                            ["callback"] = function(data)
+                                LinvLib.Config.Language = data
+                                SaveSetting("Language", LinvLib.Config.Language)
+                            end
+                        })
                     end,
                     ["name"] = "Compatible Addon"
                 },
                 [3] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        LinvLib:Notif(text)
+                        OpenSelect({
+                            ["title"] = "Theme",
+                            ["data"] = {
+                                [1] = "linventif",
+                                [2] = "dark",
+                                [3] = "grey",
+                                [4] = "light"
+                            },
+                            ["type"] = "simple",
+                            ["callback"] = function(data)
+                                LinvLib.Config.Theme = data
+                                SaveSetting("Theme", LinvLib.Config.Theme)
+                            end
+                        })
                     end,
                     ["name"] = "Theme : " .. LinvLib.Config.Theme
                 },
@@ -324,7 +388,7 @@ local function OpenSettings()
             }
         },
         [3] = {
-            ["name"] = "Admin Suite",
+            ["name"] = "Admin Suite (-In Dev-)",
             ["settings"] = {
                 [1] = {
                     ["checkbox"] = true,
@@ -371,14 +435,14 @@ local function OpenSettings()
                 [4] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        LinvLib:Notif(text)
+                        LinvLib:Notif("in_dev")
                     end,
                     ["name"] = "Admin Groups"
                 },
             }
         },
         [4] = {
-            ["name"] = "Linventif Security",
+            ["name"] = "Linventif Security (-In Dev-))",
             ["settings"] = {
                 [1] = {
                     ["checkbox"] = true,
@@ -436,20 +500,8 @@ local function OpenSettings()
         draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("background"))
         draw.SimpleText("Linventif Library - " .. LinvLib.version .. " - Settings", "LinvFontRobo25", RespW(910/2), RespH(40), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
-    local scroll = vgui.Create("DScrollPanel", frame)
-    scroll:SetSize(RespW(895), RespH(610))
+    local scroll = LinvLib:Scroll(frame, 895, 610)
     scroll:SetPos(RespW(0), RespH(80))
-    scroll.Paint = function(self, w, h)
-        draw.RoundedBox(RespW(8), 0, 0, w, h, Color(0, 0, 0, 0))
-    end
-    scroll.VBar:SetHideButtons(true)
-    scroll.VBar.Paint = function()
-        draw.RoundedBox(RespW(4), 0, 0, 10, scroll.VBar:GetTall(), LinvLib:GetColorTheme("element"))
-    end
-    scroll.VBar:SetWide(10)
-    scroll.VBar.btnGrip.Paint = function(self, w, h)
-        draw.RoundedBox(RespW(4), 0, 0, w, h, LinvLib:GetColorTheme("accent"))
-    end
     for k, v in SortedPairs(settings_list) do
         local panel = vgui.Create("DPanel", scroll)
         panel:SetSize(RespW(840), RespH(math.Round(#v["settings"]/2)*60 + (math.Round(#v["settings"]/2) - 1)*30) + 50)
@@ -486,6 +538,8 @@ local function OpenSettings()
                     else
                         v2["state"] = true
                     end
+                else
+                    frame:Remove()
                 end
                 v2["function"]()
                 RefreshIcon(but_act, v2)
@@ -502,4 +556,10 @@ net.Receive("LinvLib:SaveSetting", function()
     LinvLib:Notif(LinvLib:GetTrad("new_setting_received"))
 end)
 
-OpenSettings()
+concommand.Add("linvlib_settings", function()
+    if LinvLib.Config.AdminGroups[LocalPlayer():GetUserGroup()] then
+        OpenSettings()
+    else
+        LinvLib:Notif(LinvLib:GetTrad("not_perm"))
+    end
+end)
