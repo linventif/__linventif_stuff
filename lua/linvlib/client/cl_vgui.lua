@@ -88,3 +88,81 @@ function LinvLib.UIButton(element, color, border, radius1, radius2)
         end
     end
 end
+
+
+function LinvLib:Hover(element, round, color, hovercolor)
+    element.OnCursorEntered = function()
+        element.Paint = function(self, w, h)
+            draw.RoundedBox(round, 0, 0, w, h, hovercolor)
+        end
+    end
+    element.OnCursorExited = function()
+        element.Paint = function(self, w, h)
+            draw.RoundedBox(round, 0, 0, w, h, color)
+        end
+    end
+end
+
+// -- // -- // --
+
+function LinvLib:Frame(weight, height)
+    local frame = vgui.Create("DFrame")
+    frame:SetSize(RespW(weight), RespH(height))
+    frame:Center()
+    frame:SetTitle("")
+    frame:MakePopup()
+    frame:ShowCloseButton(LinvLib.Config.DebugMode)
+    frame:SetDraggable(false)
+    frame.Paint = function(self, w, h)
+        draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("background"))
+    end
+    return frame
+end
+
+function LinvLib:Panel(frame, weight, height)
+    local panel = vgui.Create("DPanel", frame)
+    panel:SetSize(RespW(weight), RespH(height))
+    panel.Paint = function(self, w, h)
+        draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("element"))
+    end
+    return panel
+end
+
+function LinvLib:Button(frame, text, weight, height, hover, func)
+    local but = vgui.Create("DButton", frame)
+    but:SetSize(RespW(weight), RespH(height))
+    but:SetText(text)
+    but:SetTextColor(LinvLib:GetColorTheme("text"))
+    but:SetFont("LinvFontRobo20")
+    but.Paint = function(self, w, h)
+        draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("element"))
+    end
+    if hover then
+        LinvLib:Hover(but, RespW(8), LinvLib:GetColorTheme("element"), LinvLib:GetColorTheme("hover"))
+    end
+    but.DoClick = func
+    return but
+end
+
+function LinvLib:Notif(text)
+    local frame = vgui.Create("DPanel")
+    frame:SetSize(RespW(600), RespH(40))
+    frame:SetPos(ScrW()/2-RespW(300), RespH(-100))
+    frame.Paint = function(self, w, h)
+        draw.RoundedBox(8, 0, 0, w, h, LinvLib:GetColorTheme("background"))
+        draw.SimpleText(text, "LinvFontRobo20", RespW(600)/2, RespH(20), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+    print(text)
+    frame:MoveTo(ScrW()/2-RespW(300), RespH(10), 0.5, 0, 1)
+    timer.Simple(4, function()
+        frame:MoveTo(ScrW()/2-RespW(300), -RespH(100), 0.5, 0, 1)
+        timer.Simple(0.5, function()
+            frame:Remove()
+        end)
+    end)
+end
+
+net.Receive("LinvLib:Notification", function()
+    local text = net.ReadString()
+    LinvLib:Notif(text)
+end)

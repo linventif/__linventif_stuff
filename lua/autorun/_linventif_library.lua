@@ -1,6 +1,8 @@
 LinvLib = {}
+LinvLib.Config = {}
 
 LinvLib.name = "Linventif Library"
+LinvLib.folder = "linvlib"
 LinvLib.version = "0.1.6"
 LinvLib.author = "Linventif"
 LinvLib.license = "CC BY-SA 4.0"
@@ -41,6 +43,16 @@ function LinvLib.Loader(folder, name)
     end
 end
 
+function LinvLib.Load(name, folder, files)
+    for k, v in pairs(files) do
+        if SERVER then
+            AddCSLuaFile(folder .. "/" .. v)
+        end
+        include(folder .. "/" .. v)
+        print("| " .. name .. " | File Load | " .. folder .. "/" .. v)
+    end
+end
+
 if SERVER then
     resource.AddWorkshop("2882747990")
 end
@@ -77,9 +89,10 @@ function LinvLib.CenterStr(with, text)
 end
 
 LinvLib.LoadStr(LinvLib.name, LinvLib.version, LinvLib.license)
-LinvLib.Loader("linvlib/server", LinvLib.name)
-LinvLib.Loader("linvlib/client", LinvLib.name)
-LinvLib.Loader("linvlib/shared", LinvLib.name)
+LinvLib.Load(LinvLib.name, LinvLib.folder, {"sh_config.lua", "sh_language.lua"})
+LinvLib.Loader(LinvLib.folder .. "/server", LinvLib.name)
+LinvLib.Loader(LinvLib.folder .. "/client", LinvLib.name)
+LinvLib.Loader(LinvLib.folder .. "/shared", LinvLib.name)
 
 print("| " .. LinvLib.name .. " | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
 print(" ")

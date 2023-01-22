@@ -1,3 +1,7 @@
+util.AddNetworkString("LinvLib:Compatibility")
+util.AddNetworkString("LinvLib:SaveSetting")
+util.AddNetworkString("LinvLib:Notification")
+
 function LinvLib.AddRessource(name, folder, addon_folder)
     local files, folders = file.Find(folder.."*", "GAME")
     for k, v in pairs(folders) do
@@ -80,4 +84,87 @@ function LinvLib.GetValidLang(folder)
     return lang
 end
 
+if file.Exists("linventif/liventif_library/settings.json", "DATA") then
+    local data = util.JSONToTable(file.Read("linventif/liventif_library/settings.json", "DATA"))
+    if data.version < LinvLib.version then
+        data.config = table.Merge(LinvLib.Config, data.config)
+        data.version = LinvLib.version
+        file.Write("linventif/liventif_library/settings.json", util.TableToJSON(data, true))
+    end
+    LinvLib.Config = data.config
+    PrintTable(data)
+else
+    if !file.Exists("linventif/liventif_library", "DATA") then
+        file.CreateDir("linventif/liventif_library")
+    end
+    local data = {
+        ["version"] = LinvLib.version,
+        ["config"] = LinvLib.Config
+    }
+    file.Write("linventif/liventif_library/settings.json", util.TableToJSON(data, true))
+end
+
 */
+
+local function SaveSettings()
+    if !file.Exists("linventif/liventif_library", "DATA") then
+        file.CreateDir("linventif/liventif_library")
+    end
+    local data = {
+        ["version"] = LinvLib.version,
+        ["config"] = LinvLib.Config
+    }
+    file.Write("linventif/liventif_library/settings.json", util.TableToJSON(data, true))
+end
+
+function LinvLib:Notif(ply, text)
+    net.Start("LinvLib:Notification")
+        net.WriteString(text)
+    net.Send(ply)
+end
+
+net.Receive("LinvLib:SaveSetting", function(len, ply)
+    if LinvLib.Config.AdminGroups[ply:GetUserGroup()] then
+        local id = net.ReadString()
+        if id == "AdminMenu" then
+            LinvLib.Config.AdminMenu = net.ReadBool()
+        elseif id == "AdminMenuExtend" then
+            LinvLib.Config.AdminMenuExtended = net.ReadBool()
+        elseif id == "AdminTicket" then
+            LinvLib.Config.AdminTicket = net.ReadBool()
+        elseif id == "GlobalBan" then
+            LinvLib.Config.GlobalBan = net.ReadBool()
+        elseif id == "PlayerTrustFactor" then
+            LinvLib.Config.PlayerTrustFactor = net.ReadBool()
+        elseif id == "DebugMode" then
+            LinvLib.Config.DebugMode = net.ReadBool()
+        elseif id == "MonitorShowEveryJoin" then
+            LinvLib.Config.MonitorShowEveryJoin = net.ReadBool()
+        elseif id == "MonitorShowNewUpadte" then
+            LinvLib.Config.MonitorShowIfNewUpdate = net.ReadBool()
+        elseif id == "MonitorShowNewAddon" then
+            LinvLib.Config.MonitorShowIfNewAddon = net.ReadBool()
+        end
+        -- LinvLib:Notif(ply, LinvLib:GetTrad("save_setting"))
+        SaveSettings()
+        net.Start("LinvLib:SaveSetting")
+            net.WriteString(util.TableToJSON(LinvLib.Config))
+        net.Broadcast()
+    else
+        LinvLib:Notif(ply, LinvLib:GetTrad("not_perm"))
+    end
+end)
+
+hook.Add("Initialize", "LinvLib:LoadSettings", function()
+    if file.Exists("linventif/liventif_library/settings.json", "DATA") then
+        local data = util.JSONToTable(file.Read("linventif/liventif_library/settings.json", "DATA"))
+        if data.version < LinvLib.version then
+            data.config = table.Merge(LinvLib.Config, data.config)
+            data.version = LinvLib.version
+            SaveSettings()
+        end
+        LinvLib.Config = data.config
+    else
+        SaveSettings()
+    end
+end)

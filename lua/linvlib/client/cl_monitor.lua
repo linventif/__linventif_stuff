@@ -1,3 +1,11 @@
+local function RespW(x)
+    return ScrW() / 1920 * x
+end
+
+local function RespH(y)
+    return ScrH() / 1080 * y
+end
+
 local function OpenPanel(data)
     local frame = vgui.Create("DFrame")
     frame:SetSize(650, 750)
@@ -199,3 +207,299 @@ hook.Add("InitPostEntity", "LinvLibOpenVerif", function()
         end)
     end
 end)
+
+// -- // -- // --
+
+local id_type = {
+    ["boolean"] = {
+        ["AdminMenu"] = true,
+        ["AdminMenuExtend"] = true,
+        ["AdminTicket"] = true,
+        ["GlobalBan"] = true,
+        ["PlayerTrustFactor"] = true,
+        ["DebugMode"] = true,
+        ["MonitorShowEveryJoin"] = true,
+        ["MonitorShowNewUpadte"] = true,
+        ["MonitorShowNewAddon"] = true,
+    }
+}
+
+local function SaveSetting(id, data)
+    net.Start("LinvLib:SaveSetting")
+        net.WriteString(id)
+        if id_type["boolean"][id] then
+            net.WriteBool(data)
+        else
+            net.WriteString(data)
+        end
+    net.SendToServer()
+end
+
+local function RefreshIcon(element, v2)
+    element.Paint = function(self, w, h)
+        draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("accent"))
+        surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
+        if v2["checkbox"] && !v2["state"] then
+            surface.SetMaterial(Material("Models/effects/vol_light001"))
+        else
+            surface.SetMaterial(v2["icon"])
+        end
+        surface.DrawTexturedRect(RespW(5), RespH(5), RespW(30), RespH(30))
+    end
+end
+
+local function OpenSettings()
+    local settings_list = {
+        [1] = {
+            ["name"] = "General",
+            ["settings"] = {
+                [1] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        LinvLib:Notif(text)
+                    end,
+                    ["name"] = "Language : " .. LinvLib.Config.Language
+                },
+                [2] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        LinvLib:Notif(text)
+                    end,
+                    ["name"] = "Compatible Addon"
+                },
+                [3] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        LinvLib:Notif(text)
+                    end,
+                    ["name"] = "Theme : " .. LinvLib.Config.Theme
+                },
+            }
+        },
+        [2] = {
+            ["name"] = "Monitor",
+            ["settings"] = {
+                [1] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.MonitorShowEveryJoin,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.MonitorShowEveryJoin then
+                            LinvLib.Config.MonitorShowEveryJoin = false
+                        else
+                            LinvLib.Config.MonitorShowEveryJoin = true
+                        end
+                        SaveSetting("MonitorShowEveryJoin", LinvLib.Config.MonitorShowEveryJoin)
+                    end,
+                    ["name"] = "Show at every join"
+                },
+                [2] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.MonitorShowIfNewUpdate,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.MonitorShowIfNewUpdate then
+                            LinvLib.Config.MonitorShowIfNewUpdate = false
+                        else
+                            LinvLib.Config.MonitorShowIfNewUpdate = true
+                        end
+                        SaveSetting("MonitorShowNewUpadte", LinvLib.Config.MonitorShowIfNewUpdate)
+                    end,
+                    ["name"] = "Show if addon need update"
+                },
+                [3] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.MonitorShowIfNewAddon,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.MonitorShowIfNewAddon then
+                            LinvLib.Config.MonitorShowIfNewAddon = false
+                        else
+                            LinvLib.Config.MonitorShowIfNewAddon = true
+                        end
+                        SaveSetting("MonitorShowNewAddon", LinvLib.Config.MonitorShowIfNewAddon)
+                    end,
+                    ["name"] = "Show if new addon is detected"
+                },
+            }
+        },
+        [3] = {
+            ["name"] = "Admin Suite",
+            ["settings"] = {
+                [1] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.AdminMenu,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.AdminMenu then
+                            LinvLib.Config.AdminMenu = false
+                        else
+                            LinvLib.Config.AdminMenu = true
+                        end
+                        SaveSetting("AdminMenu", LinvLib.Config.AdminMenu)
+                    end,
+                    ["name"] = "Admin Menu"
+                },
+                [2] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.AdminMenuExtended,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.AdminMenuExtended then
+                            LinvLib.Config.AdminMenuExtended = false
+                        else
+                            LinvLib.Config.AdminMenuExtended = true
+                        end
+                        SaveSetting("AdminMenuExtend", LinvLib.Config.AdminMenuExtended)
+                    end,
+                    ["name"] = "Admin Menu Extended"
+                },
+                [3] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.AdminTicket,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.AdminTicket then
+                            LinvLib.Config.AdminTicket = false
+                        else
+                            LinvLib.Config.AdminTicket = true
+                        end
+                        SaveSetting("AdminTicket", LinvLib.Config.AdminTicket)
+                    end,
+                    ["name"] = "Ticket Admin"
+                },
+                [4] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        LinvLib:Notif(text)
+                    end,
+                    ["name"] = "Admin Groups"
+                },
+            }
+        },
+        [4] = {
+            ["name"] = "Linventif Security",
+            ["settings"] = {
+                [1] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.GlobalBan,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.GlobalBan then
+                            LinvLib.Config.GlobalBan = false
+                        else
+                            LinvLib.Config.GlobalBan = true
+                        end
+                        SaveSetting("GlobalBan", LinvLib.Config.GlobalBan)
+                    end,
+                    ["name"] = "Global Ban"
+                },
+                [2] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.PlayerTrustFactor,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.PlayerTrustFactor then
+                            LinvLib.Config.PlayerTrustFactor = false
+                        else
+                            LinvLib.Config.PlayerTrustFactor = true
+                        end
+                        SaveSetting("PlayerTrustFactor", LinvLib.Config.PlayerTrustFactor)
+                    end,
+                    ["name"] = "Player Trust Factor"
+                },
+            }
+        },
+        [5] = {
+            ["name"] = "Others",
+            ["settings"] = {
+                [1] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.DebugMode,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.DebugMode then
+                            LinvLib.Config.DebugMode = false
+                        else
+                            LinvLib.Config.DebugMode = true
+                        end
+                        SaveSetting("DebugMode", LinvLib.Config.DebugMode)
+                    end,
+                    ["name"] = "Debug Mode"
+                },
+            }
+        },
+    }
+
+    local frame = LinvLib:Frame(910, 720)
+    frame.Paint = function(self, w, h)
+        draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("background"))
+        draw.SimpleText("Linventif Library - " .. LinvLib.version .. " - Settings", "LinvFontRobo25", RespW(910/2), RespH(40), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    end
+    local scroll = vgui.Create("DScrollPanel", frame)
+    scroll:SetSize(RespW(895), RespH(610))
+    scroll:SetPos(RespW(0), RespH(80))
+    scroll.Paint = function(self, w, h)
+        draw.RoundedBox(RespW(8), 0, 0, w, h, Color(0, 0, 0, 0))
+    end
+    scroll.VBar:SetHideButtons(true)
+    scroll.VBar.Paint = function()
+        draw.RoundedBox(RespW(4), 0, 0, 10, scroll.VBar:GetTall(), LinvLib:GetColorTheme("element"))
+    end
+    scroll.VBar:SetWide(10)
+    scroll.VBar.btnGrip.Paint = function(self, w, h)
+        draw.RoundedBox(RespW(4), 0, 0, w, h, LinvLib:GetColorTheme("accent"))
+    end
+    for k, v in SortedPairs(settings_list) do
+        local panel = vgui.Create("DPanel", scroll)
+        panel:SetSize(RespW(840), RespH(math.Round(#v["settings"]/2)*60 + (math.Round(#v["settings"]/2) - 1)*30) + 50)
+        panel.Paint = function(self, w, h)
+            draw.RoundedBox(RespW(8), 0, 0, w, h, Color(0, 0, 0, 0))
+            draw.SimpleText(v["name"], "LinvFontRobo25", RespW(840/2), RespH(20), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+        local dplist = vgui.Create("DPanelList", panel)
+        dplist:SetSize(RespW(840), RespH(math.Round(#v["settings"]/2)*60 + (math.Round(#v["settings"]/2) - 1)*30))
+        // math.Round(#v["settings"]/2)*60 + (math.Round(#v["settings"]/2) - 1)*30) = total height (60 = height of panel, 30 = spacing)
+        dplist:SetPos(RespW(0), RespH(50))
+        dplist:EnableVerticalScrollbar(true)
+        dplist:EnableHorizontal(true)
+        dplist:SetSpacing(RespW(30))
+        dplist:SetPadding(RespW(0))
+        dplist.Paint = function(self, w, h)
+            draw.RoundedBox(RespW(8), 0, 0, w, h, Color(0, 0, 0, 0))
+        end
+        for k2, v2 in SortedPairs(v["settings"]) do
+            local panel = vgui.Create("DPanel")
+            panel:SetSize(RespW(405), RespH(60))
+            panel.Paint = function(self, w, h)
+                draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("element"))
+                -- draw.RoundedBox(RespW(8), 355, 10, 40, 40, LinvLib:GetColorTheme("accent"))
+                draw.SimpleText(v2["name"], "LinvFontRobo20", RespW(177.5), RespH(30), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+            local but_act = LinvLib:Button(panel, "", 40, 40, false, v2["function"])
+            but_act:SetPos(RespW(355), RespH(10))
+            RefreshIcon(but_act, v2)
+            but_act.DoClick = function()
+                if v2["checkbox"] then
+                    if v2["state"] then
+                        v2["state"] = false
+                    else
+                        v2["state"] = true
+                    end
+                end
+                v2["function"]()
+                RefreshIcon(but_act, v2)
+            end
+            dplist:AddItem(panel)
+        end
+        panel:Dock(TOP)
+        panel:DockMargin(30, 0, 0, 30)
+    end
+end
+
+net.Receive("LinvLib:SaveSetting", function()
+    LinvLib.Config = util.JSONToTable(net.ReadString())
+    LinvLib:Notif(LinvLib:GetTrad("new_setting_received"))
+end)
+
+OpenSettings()
