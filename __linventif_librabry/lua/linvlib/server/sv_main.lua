@@ -106,6 +106,12 @@ end
 
 */
 
+function LinvLib:Notif(ply, text)
+    net.Start("LinvLib:Notification")
+        net.WriteString(text)
+    net.Send(ply)
+end
+
 local function SaveSettings()
     if !file.Exists("linventif/liventif_library", "DATA") then
         file.CreateDir("linventif/liventif_library")
@@ -115,12 +121,6 @@ local function SaveSettings()
         ["config"] = LinvLib.Config
     }
     file.Write("linventif/liventif_library/settings.json", util.TableToJSON(data, true))
-end
-
-function LinvLib:Notif(ply, text)
-    net.Start("LinvLib:Notification")
-        net.WriteString(text)
-    net.Send(ply)
 end
 
 net.Receive("LinvLib:SaveSetting", function(len, ply)
@@ -148,8 +148,16 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
             LinvLib.Config.Language = net.ReadString()
         elseif id == "Theme" then
             LinvLib.Config.Theme = net.ReadString()
+        elseif id == "CompatibleAddon" then
+            LinvLib.Config.Compatibility = util.JSONToTable(net.ReadString())
+        elseif id == "color" then
+            local id = net.ReadString()
+            LinvLib.Config.CustomTheme[id] = net.ReadColor()
+        elseif id == "Border" then
+            LinvLib.Config.Border = net.ReadInt(32)
+        elseif id == "Rounded" then
+            LinvLib.Config.Rounded = net.ReadInt(32)
         end
-        -- LinvLib:Notif(ply, LinvLib:GetTrad("save_setting"))
         SaveSettings()
         net.Start("LinvLib:SaveSetting")
             net.WriteString(util.TableToJSON(LinvLib.Config))

@@ -7,6 +7,8 @@
 // Main Settings
 LinvLib.Config.Language = "english" // Language (english - french) you can add your own language in sh_language.lua
 LinvLib.Config.Theme = "linventif" // Theme (linventif - dark - grey - light) you can add your own theme in cl_theme.lua
+LinvLib.Config.Border = 0 // Border (px 0 to disable)
+LinvLib.Config.Rounded = 8 // Rounded (px 0 to disable)
 
 // Developer Settings
 LinvLib.Config.DebugMode = true // Debug (true - false)
@@ -18,6 +20,9 @@ LinvLib.Config.AdminGroups = { // Admin Group
     ["moderator"] = true,
     ["helper"] = true,
 }
+
+// Materials Settings
+LinvLib.Config.ForceMaterial = true // Force Material (redownload all materials at each connection)
 
 // -- // -- // -- // -- // -- // -- // -- //
 //                                        //
@@ -46,6 +51,13 @@ LinvLib.Config.AdminCommands = { // Admin Commands to open the admin menu
 LinvLib.Config.MonitorShowEveryJoin = true // Monitor Show At Every Connection (true - false)
 LinvLib.Config.MonitorShowIfNewUpdate = true // Monitor Show If New Update (true - false)
 LinvLib.Config.MonitorShowIfNewAddon = true // Monitor Show If New Addon Detected (true - false)
+LinvLib.Config.MinPlayerTrustFactor = 50 // Min Player Trust Factor (0 to disable)
+LinvLib.Config.MonitorGroup = {
+    ["superadmin"] = true,
+    ["fondateur"] = true,
+    ["fonda"] = true,
+    ["owner"] = true
+}
 
 // Linventif Security Settings
 LinvLib.Config.GlobalBan = true // Global Ban (true - false)

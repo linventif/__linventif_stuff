@@ -1,5 +1,6 @@
 util.AddNetworkString("LinvLib:Admin")
 util.AddNetworkString("LinvLib:Notify")
+ulil.AddNetworkString("LinvLib:Action")
 
 local function Notify(ply, msg, idx, time)
     if !ply:IsValid() && !ply:IsPlayer then return end
