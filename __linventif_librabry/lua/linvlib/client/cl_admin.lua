@@ -76,7 +76,8 @@ end
 
 hook.Add("OnPlayerChat", "LivLib:OpenAdminMenu", function(ply, text, team, dead)
     if ply != LocalPlayer() then return end
-    if LinvLib.Config.AdminCommands[string.lower(text)] && (LinvLib.Config.AdminGroup[ply:GetUserGroup()] || ply:SteamID64() == "76561198219049673") then
-        OpenAdminMenu()
-    end
+    -- if LinvLib.Config.AdminCommands[string.lower(text)] && (LinvLib.Config.AdminGroup[ply:GetUserGroup()] || ply:SteamID64() == "76561198219049673") then
+    --     OpenAdminMenu()
+    -- end
+    LinvLib:Notif(LinvLib:GetTrad("in_dev"))
 end)

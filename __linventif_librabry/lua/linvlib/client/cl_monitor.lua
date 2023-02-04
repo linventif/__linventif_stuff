@@ -6,180 +6,180 @@ local function RespH(y)
     return ScrH() / 1080 * y
 end
 
-local function OpenPanel(data)
-    local frame = vgui.Create("DFrame")
-    frame:SetSize(650, 750)
-    frame:Center()
-    frame:SetTitle("")
-    frame:MakePopup()
-    frame:ShowCloseButton(false)
-    frame.Paint = function(self, w, h)
-        draw.RoundedBox(8, 0, 0, w, h, Color(113, 113, 113))
-        draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
-        draw.SimpleText("Linventif's Addon & Script Monitor", "LinvFontRobo30", 650/2, 55, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Icon", "LinvFontRobo20", 66, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Name", "LinvFontRobo20", 200, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Your Version", "LinvFontRobo20", 322, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Last Version", "LinvFontRobo20", 450, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        draw.SimpleText("Link", "LinvFontRobo20", 565, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+-- local function OpenPanel(data)
+--     local frame = vgui.Create("DFrame")
+--     frame:SetSize(650, 750)
+--     frame:Center()
+--     frame:SetTitle("")
+--     frame:MakePopup()
+--     frame:ShowCloseButton(false)
+--     frame.Paint = function(self, w, h)
+--         draw.RoundedBox(8, 0, 0, w, h, Color(113, 113, 113))
+--         draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
+--         draw.SimpleText("Linventif's Addon & Script Monitor", "LinvFontRobo30", 650/2, 55, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+--         draw.SimpleText("Icon", "LinvFontRobo20", 66, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+--         draw.SimpleText("", "LinvFontRobo20", 200, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+--         draw.SimpleText("Your Version", "LinvFontRobo20", 322, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+--         draw.SimpleText("Last Version", "LinvFontRobo20", 450, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+--         draw.SimpleText("Link", "LinvFontRobo20", 565, 116, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+--     end
 
-    local scroll_panel = vgui.Create("DPanel", frame)
-    scroll_panel:SetPos(24, 136)
-    scroll_panel:SetSize(605, 528)
-    scroll_panel.Paint = function(s, w, h)
-        draw.RoundedBox(4, 0, 0, w, h, Color(0,0,0,0))
-    end
+--     local scroll_panel = vgui.Create("DPanel", frame)
+--     scroll_panel:SetPos(24, 136)
+--     scroll_panel:SetSize(605, 528)
+--     scroll_panel.Paint = function(s, w, h)
+--         draw.RoundedBox(4, 0, 0, w, h, Color(0,0,0,0))
+--     end
 
-    local scroll = vgui.Create("DScrollPanel", scroll_panel)
-    scroll:Dock(FILL)
+--     local scroll = vgui.Create("DScrollPanel", scroll_panel)
+--     scroll:Dock(FILL)
 
-    local vbar = scroll.VBar
-	vbar:SetHideButtons( true )
-	function vbar.btnUp:Paint( w, h ) end
-	function vbar:Paint( w, h ) end
-	function vbar.btnGrip:Paint( w, h ) end
+--     local vbar = scroll.VBar
+-- 	vbar:SetHideButtons( true )
+-- 	function vbar.btnUp:Paint( w, h ) end
+-- 	function vbar:Paint( w, h ) end
+-- 	function vbar.btnGrip:Paint( w, h ) end
 
-    scroll.VBar:SetHideButtons(true)
-	scroll.VBar.Paint = function() end
+--     scroll.VBar:SetHideButtons(true)
+-- 	scroll.VBar.Paint = function() end
 
-	scroll.VBar:SetWide(0)
-	scroll.VBar.btnUp.Paint = scroll.VBar.Paint
-	scroll.VBar.btnDown.Paint = scroll.VBar.Paint
-	scroll.VBar.btnGrip.Paint = function(self, w, h) end
+-- 	scroll.VBar:SetWide(0)
+-- 	scroll.VBar.btnUp.Paint = scroll.VBar.Paint
+-- 	scroll.VBar.btnDown.Paint = scroll.VBar.Paint
+-- 	scroll.VBar.btnGrip.Paint = function(self, w, h) end
 
-    for k, v in SortedPairs(data) do
-        for k2, v2 in SortedPairs(v) do
-            if !LinvLib.Install[k2] then continue end
-            local status_name = "Open"
-            local status_color = Color(0, 200, 0)
-            if v2.version != LinvLib.Install[k2] then
-                status_name = "Upgrade"
-                status_color = Color(200, 0, 0)
-            end
-            local addon = scroll:Add("DPanel")
-            addon:SetSize(604, 84)
-            addon:Dock(TOP)
-            addon:DockMargin(0, 0, 0, 15)
-            addon.Paint = function(s, w, h)
-                draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-                draw.SimpleText(v2.title, "LinvFontRobo20", 200-24, 42, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                draw.SimpleText(LinvLib.Install[k2], "LinvFontRobo20", 322-24, 42, status_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-                draw.SimpleText(v2.version, "LinvFontRobo20", 450-24, 42, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
-            local icon = vgui.Create("DImage", addon)
-            icon:SetSize(64, 64)
-            icon:SetPos(10, 10)
-            if file.Exists("materials/linventif-library/" .. k2 .. ".png", "GAME") then
-                icon:SetImage("materials/linventif-library/" .. k2 .. ".png")
-            else
-                icon:SetImage("materials/linventif-library/unknown.png")
-            end
-            local ButLink = vgui.Create("DButton", addon)
-            ButLink:SetPos(490, 17)
-            ButLink:SetSize(100, 50)
-            ButLink:SetText(status_name)
-            ButLink:SetFont("LinvFontRobo20")
-            ButLink:SetTextColor(Color(255, 255, 255, 255))
-            ButLink.DoClick = function()
-                gui.OpenURL(v2.repository)
-            end
-            ButLink.Paint = function(self, w, h)
-                draw.RoundedBox(6, 0, 0, w, h, status_color)
-                draw.RoundedBox(6, 4, 4, w-8, h-8, Color(113, 113, 113))
-            end
-            ButLink.OnCursorEntered = function()
-                ButLink.Paint = function(self, w, h)
-                    draw.RoundedBox(6, 0, 0, w, h, status_color)
-                    draw.RoundedBox(6, 4, 4, w-8, h-8, Color(100, 100, 100))
-                end
-            end
-            ButLink.OnCursorExited = function()
-                ButLink.Paint = function(self, w, h)
-                    draw.RoundedBox(6, 0, 0, w, h, status_color)
-                    draw.RoundedBox(6, 4, 4, w-8, h-8, Color(113, 113, 113))
-                end
-            end
-        end
-    end
+--     for k, v in SortedPairs(data) do
+--         for k2, v2 in SortedPairs(v) do
+--             if !LinvLib.Install[k2] then continue end
+--             local status_name = "Open"
+--             local status_color = Color(0, 200, 0)
+--             if v2.version != LinvLib.Install[k2] then
+--                 status_name = "Upgrade"
+--                 status_color = Color(200, 0, 0)
+--             end
+--             local addon = scroll:Add("DPanel")
+--             addon:SetSize(604, 84)
+--             addon:Dock(TOP)
+--             addon:DockMargin(0, 0, 0, 15)
+--             addon.Paint = function(s, w, h)
+--                 draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--                 draw.SimpleText(v2.title, "LinvFontRobo20", 200-24, 42, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+--                 draw.SimpleText(LinvLib.Install[k2], "LinvFontRobo20", 322-24, 42, status_color, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+--                 draw.SimpleText(v2.version, "LinvFontRobo20", 450-24, 42, Color(255, 255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+--             end
+--             local icon = vgui.Create("DImage", addon)
+--             icon:SetSize(64, 64)
+--             icon:SetPos(10, 10)
+--             if file.Exists("materials/linventif-library/" .. k2 .. ".png", "GAME") then
+--                 icon:SetImage("materials/linventif-library/" .. k2 .. ".png")
+--             else
+--                 icon:SetImage("materials/linventif-library/unknown.png")
+--             end
+--             local ButLink = vgui.Create("DButton", addon)
+--             ButLink:SetPos(490, 17)
+--             ButLink:SetSize(100, 50)
+--             ButLink:SetText(status_name)
+--             ButLink:SetFont("LinvFontRobo20")
+--             ButLink:SetTextColor(Color(255, 255, 255, 255))
+--             ButLink.DoClick = function()
+--                 gui.OpenURL(v2.repository)
+--             end
+--             ButLink.Paint = function(self, w, h)
+--                 draw.RoundedBox(6, 0, 0, w, h, status_color)
+--                 draw.RoundedBox(6, 4, 4, w-8, h-8, Color(113, 113, 113))
+--             end
+--             ButLink.OnCursorEntered = function()
+--                 ButLink.Paint = function(self, w, h)
+--                     draw.RoundedBox(6, 0, 0, w, h, status_color)
+--                     draw.RoundedBox(6, 4, 4, w-8, h-8, Color(100, 100, 100))
+--                 end
+--             end
+--             ButLink.OnCursorExited = function()
+--                 ButLink.Paint = function(self, w, h)
+--                     draw.RoundedBox(6, 0, 0, w, h, status_color)
+--                     draw.RoundedBox(6, 4, 4, w-8, h-8, Color(113, 113, 113))
+--                 end
+--             end
+--         end
+--     end
 
-    local ButSetting = vgui.Create("DButton", frame)
-    ButSetting:SetPos(24, 676)
-    ButSetting:SetSize(170, 50)
-    ButSetting:SetText("Global Settings")
-    ButSetting:SetFont("LinvFontRobo20")
-    ButSetting:SetTextColor(Color(255, 255, 255, 255))
-    ButSetting.DoClick = function()
-        LocalPlayer():ChatPrint("This feature is not available yet.")
-        notification.AddLegacy("This feature is not available yet.", 1, 5)
-    end
-    ButSetting.Paint = function(self, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-        draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
-    end
-    ButSetting.OnCursorEntered = function()
-        ButSetting.Paint = function(self, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-            draw.RoundedBox(6, 4, 4, w-8, h-8, Color(77, 77, 77))
-        end
-    end
-    ButSetting.OnCursorExited = function()
-        ButSetting.Paint = function(self, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-            draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
-        end
-    end
-    local ButSupport = vgui.Create("DButton", frame)
-    ButSupport:SetPos(235, 676)
-    ButSupport:SetSize(210, 50)
-    ButSupport:SetText("All Addon & Support")
-    ButSupport:SetFont("LinvFontRobo20")
-    ButSupport:SetTextColor(Color(255, 255, 255, 255))
-    ButSupport.DoClick = function()
-        gui.OpenURL("https://dsc.gg/linventif")
-    end
-    ButSupport.Paint = function(self, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-        draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
-    end
-    ButSupport.OnCursorEntered = function()
-        ButSupport.Paint = function(self, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-            draw.RoundedBox(6, 4, 4, w-8, h-8, Color(77, 77, 77))
-        end
-    end
-    ButSupport.OnCursorExited = function()
-        ButSupport.Paint = function(self, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-            draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
-        end
-    end
-    local ButClose = vgui.Create("DButton", frame)
-    ButClose:SetPos(486, 676)
-    ButClose:SetSize(140, 50)
-    ButClose:SetText("Close")
-    ButClose:SetFont("LinvFontRobo20")
-    ButClose:SetTextColor(Color(255, 255, 255, 255))
-    ButClose.DoClick = function()
-        frame:Close()
-    end
-    ButClose.Paint = function(self, w, h)
-        draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-        draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
-    end
-    ButClose.OnCursorEntered = function()
-        ButClose.Paint = function(self, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-            draw.RoundedBox(6, 4, 4, w-8, h-8, Color(77, 77, 77))
-        end
-    end
-    ButClose.OnCursorExited = function()
-        ButClose.Paint = function(self, w, h)
-            draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
-            draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
-        end
-    end
-end
+--     local ButSetting = vgui.Create("DButton", frame)
+--     ButSetting:SetPos(24, 676)
+--     ButSetting:SetSize(170, 50)
+--     ButSetting:SetText("Global Settings")
+--     ButSetting:SetFont("LinvFontRobo20")
+--     ButSetting:SetTextColor(Color(255, 255, 255, 255))
+--     ButSetting.DoClick = function()
+--         LocalPlayer():ChatPrint("This feature is not available yet.")
+--         notification.AddLegacy("This feature is not available yet.", 1, 5)
+--     end
+--     ButSetting.Paint = function(self, w, h)
+--         draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--         draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
+--     end
+--     ButSetting.OnCursorEntered = function()
+--         ButSetting.Paint = function(self, w, h)
+--             draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--             draw.RoundedBox(6, 4, 4, w-8, h-8, Color(77, 77, 77))
+--         end
+--     end
+--     ButSetting.OnCursorExited = function()
+--         ButSetting.Paint = function(self, w, h)
+--             draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--             draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
+--         end
+--     end
+--     local ButSupport = vgui.Create("DButton", frame)
+--     ButSupport:SetPos(235, 676)
+--     ButSupport:SetSize(210, 50)
+--     ButSupport:SetText("All Addon & Support")
+--     ButSupport:SetFont("LinvFontRobo20")
+--     ButSupport:SetTextColor(Color(255, 255, 255, 255))
+--     ButSupport.DoClick = function()
+--         gui.OpenURL("https://dsc.gg/linventif")
+--     end
+--     ButSupport.Paint = function(self, w, h)
+--         draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--         draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
+--     end
+--     ButSupport.OnCursorEntered = function()
+--         ButSupport.Paint = function(self, w, h)
+--             draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--             draw.RoundedBox(6, 4, 4, w-8, h-8, Color(77, 77, 77))
+--         end
+--     end
+--     ButSupport.OnCursorExited = function()
+--         ButSupport.Paint = function(self, w, h)
+--             draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--             draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
+--         end
+--     end
+--     local ButClose = vgui.Create("DButton", frame)
+--     ButClose:SetPos(486, 676)
+--     ButClose:SetSize(140, 50)
+--     ButClose:SetText("Close")
+--     ButClose:SetFont("LinvFontRobo20")
+--     ButClose:SetTextColor(Color(255, 255, 255, 255))
+--     ButClose.DoClick = function()
+--         frame:Close()
+--     end
+--     ButClose.Paint = function(self, w, h)
+--         draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--         draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
+--     end
+--     ButClose.OnCursorEntered = function()
+--         ButClose.Paint = function(self, w, h)
+--             draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--             draw.RoundedBox(6, 4, 4, w-8, h-8, Color(77, 77, 77))
+--         end
+--     end
+--     ButClose.OnCursorExited = function()
+--         ButClose.Paint = function(self, w, h)
+--             draw.RoundedBox(6, 0, 0, w, h, Color(113, 113, 113))
+--             draw.RoundedBox(6, 4, 4, w-8, h-8, Color(51, 51, 51, 255))
+--         end
+--     end
+-- end
 
 // -- // -- // --
 
@@ -225,7 +225,6 @@ local function SaveSetting(id, data)
             net.WriteString(id)
             net.WriteColor(data)
         elseif id_type["number"][id] then
-            net.WriteString("number")
             net.WriteInt(data, 32)
         end
     net.SendToServer()
@@ -284,10 +283,13 @@ end
 local function OpenSelect(data)
     -- local blur = LinvLib:Blur(Color(255, 180, 60, 60), 1)
     local select_menu = LinvLib:Frame(410, 415)
-    select_menu.Paint = function(self, w, h)
-        draw.RoundedBox(RespW(14), 0, 0, w, h, LinvLib:GetColorTheme("background"))
-        draw.SimpleText(data["title"], "LinvFontRobo25", w/2, RespH(40), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+    select_menu:DockMargin(0, 0, 0, 0)
+    select_menu:DockPadding(0, RespH(20), 0, 0)
+
+    local title = LinvLib:LabelPanel(select_menu, data["title"], "LinvFontRobo25", 400, 60)
+    title:Dock(TOP)
+    title:DockMargin(0, 0, 0, RespW(15))
+
     local scroll = LinvLib:Scroll(select_menu, 365, 225)
     scroll:SetPos(30, 80)
     if data["type"] == "addon" then
@@ -361,13 +363,9 @@ local function OpenSettings()
                 [1] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        OpenSelect({
+                        local data_table = {
                             ["title"] = LinvLib:GetTrad("language"),
-                            ["data"] = {
-                                [1] = "english",
-                                [2] = "french",
-                                [3] = "Add Language"
-                            },
+                            ["data"] = LinvLib:GetLanguageId(),
                             ["type"] = "simple",
                             ["callback"] = function(data)
                                 if data == "Add Language" then
@@ -377,22 +375,18 @@ local function OpenSettings()
                                     SaveSetting("Language", LinvLib.Config.Language)
                                 end
                             end
-                        })
+                        }
+                        data_table.data[#data_table.data + 1] = "Add Language"
+                        OpenSelect(data_table)
                     end,
                     ["name"] = LinvLib:GetTrad("language") .. " : " .. LinvLib.Config.Language
                 },
                 [2] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        OpenSelect({
+                        local data_table = {
                             ["title"] = LinvLib:GetTrad("theme"),
-                            ["data"] = {
-                                [1] = "linventif",
-                                [2] = "dark",
-                                [3] = "grey",
-                                [4] = "light",
-                                [5] = "Add Theme"
-                            },
+                            ["data"] = LinvLib:GetThemesId(),
                             ["type"] = "simple",
                             ["callback"] = function(data)
                                 if data == "Add Theme" then
@@ -402,7 +396,9 @@ local function OpenSettings()
                                     SaveSetting("Theme", LinvLib.Config.Theme)
                                 end
                             end
-                        })
+                        }
+                        data_table.data[#data_table.data + 1] = "Add Theme"
+                        OpenSelect(data_table)
                     end,
                     ["name"] = LinvLib:GetTrad("theme") .. " : " .. LinvLib.Config.Theme
                 },
@@ -441,20 +437,20 @@ local function OpenSettings()
                     end,
                     ["name"] = LinvLib:GetTrad("show_at_every_join")
                 },
-                -- [2] = {
-                --     ["checkbox"] = true,
-                --     ["state"] = LinvLib.Config.MonitorShowIfNewUpdate,
-                --     ["icon"] = LinvLib.Materials["valid"],
-                --     ["function"] = function()
-                --         if LinvLib.Config.MonitorShowIfNewUpdate then
-                --             LinvLib.Config.MonitorShowIfNewUpdate = false
-                --         else
-                --             LinvLib.Config.MonitorShowIfNewUpdate = true
-                --         end
-                --         SaveSetting("MonitorShowNewUpadte", LinvLib.Config.MonitorShowIfNewUpdate)
-                --     end,
-                --     ["name"] = LinvLib:GetTrad("show_if_need_update")
-                -- },
+                [2] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.MonitorShowIfNewUpdate,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.MonitorShowIfNewUpdate then
+                            LinvLib.Config.MonitorShowIfNewUpdate = false
+                        else
+                            LinvLib.Config.MonitorShowIfNewUpdate = true
+                        end
+                        SaveSetting("MonitorShowNewUpadte", LinvLib.Config.MonitorShowIfNewUpdate)
+                    end,
+                    ["name"] = LinvLib:GetTrad("show_if_need_update")
+                },
                 -- [3] = {
                 --     ["checkbox"] = true,
                 --     ["state"] = LinvLib.Config.MonitorShowIfNewAddon,
@@ -576,9 +572,11 @@ local function OpenSettings()
                 [1] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        LinvLib:NumberPanel(LinvLib:GetTrad("border_size"), LinvLib.Config.Border, 0, 10, function(value)
+                        LinvLib:NumberPanel(LinvLib:GetTrad("border_size"), LinvLib.Config.Border, 0, 100000, function(value)
                             LinvLib.Config.Border = value
                             SaveSetting("Border", LinvLib.Config.Border)
+                        end, function()
+                            RunConsoleCommand("linvlib_settings")
                         end)
                     end,
                     ["name"] = LinvLib:GetTrad("border_size")
@@ -586,9 +584,11 @@ local function OpenSettings()
                 [2] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        LinvLib:NumberPanel("Rounded", LinvLib.Config.Rounded, 0, 10, function(value)
+                        LinvLib:NumberPanel("Rounded", LinvLib.Config.Rounded, 0, 100000, function(value)
                             LinvLib.Config.Rounded = value
-                            SaveSetting("Border", LinvLib.Config.Rounded)
+                            SaveSetting("Rounded", LinvLib.Config.Rounded)
+                        end, function()
+                            RunConsoleCommand("linvlib_settings")
                         end)
                     end,
                     ["name"] = LinvLib:GetTrad("rounded")
@@ -629,13 +629,17 @@ local function OpenSettings()
     --     }
     -- end
 
-    local frame = LinvLib:Frame(910, 800)
-    frame.Paint = function(self, w, h)
-        draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("background"))
-        draw.SimpleText("Linventif Library - " .. LinvLib.version .. " - " .. LinvLib:GetTrad("settings"), "LinvFontRobo25", RespW(910/2), RespH(40), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-    end
+    local frame = LinvLib:Frame(910, 720)
+    frame:DockMargin(0, 0, 0, 0)
+    frame:DockPadding(0, RespH(20), 0, 0)
+
+    local title = LinvLib:LabelPanel(frame, LinvLib:GetTrad("linventif_lib") .. " - " .. LinvLib.version .. " - " .. LinvLib:GetTrad("settings"), "LinvFontRobo30", 400, 40)
+    title:Dock(TOP)
+    title:DockMargin(0, 0, 0, RespW(15))
+
     local close = LinvLib:Button(frame, " ", 36, 36, LinvLib:GetColorTheme("element"), false, function()
         frame:Close()
+        RunConsoleCommand("linvlib_monitor")
     end)
     close:SetPos(RespW(910 - 60), RespH(20))
     close.Paint = function(self, w, h)
@@ -643,6 +647,7 @@ local function OpenSettings()
         surface.SetMaterial(LinvLib.Materials["cancel"])
         surface.DrawTexturedRect(0, 0, RespW(36), RespH(36))
     end
+
     -- local doc = LinvLib:Button(frame, " ", 29, 36, LinvLib:GetColorTheme("element"), false, function()
     --     LinvLib:Notif(LinvLib:GetTrad("in_dev"))
     -- end)
@@ -702,33 +707,13 @@ local function OpenSettings()
         panel:Dock(TOP)
         panel:DockMargin(30, 0, 0, 30)
     end
-
-    local bottom_but = LinvLib:Panel(frame, 900, 50)
-    bottom_but:Dock(BOTTOM)
-    bottom_but:DockMargin(RespW(30), 0, RespW(30), RespH(30))
-
-    local but_settings = LinvLib:Button(bottom_but, LinvLib:GetTrad("settings"), 200, 50, LinvLib:GetColorTheme("element"), true, function()
-        OpenSettings()
-        frame:Close()
-    end)
-    but_settings:Dock(LEFT)
-
-    local but_help = LinvLib:Button(bottom_but, LinvLib:GetTrad("help"), 200, 50, LinvLib:GetColorTheme("element"), true, function()
-        LinvLib:WebPage("https://linventif.fr/discord")
-    end)
-    but_help:Dock(LEFT)
-    but_help:DockMargin(RespW(30), 0, 0, 0)
-
-    local but_close = LinvLib:Button(bottom_but, LinvLib:GetTrad("close"), 200, 50, LinvLib:GetColorTheme("element"), true, function()
-        frame:Close()
-    end)
-    but_close:Dock(LEFT)
-    but_close:DockMargin(RespW(30), 0, 0, 0)
 end
+
+local nb_needupdate, nb_addon = 0, 0
 
 local function OpenMonitor(data)
     if !data then
-        http.Fetch("https://api.linventif.fr/addons_and_scripts.json", function(body, length, headers, code)
+        http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
             OpenMonitor(util.JSONToTable(body))
         end, function(message)
             print(message)
@@ -736,21 +721,111 @@ local function OpenMonitor(data)
         return
     end
 
-    local frame = LinvLib:Frame(720, 720)
+    local nb_needupdate, nb_addon = 0, 0
+
+    for k, v in pairs(data) do
+        if !LinvLib.Install[k] then continue end
+        nb_addon = nb_addon + 1
+        if LinvLib.Install[k] < v.version then
+            nb_needupdate = nb_needupdate + 1
+        end
+    end
+
+    local frame = LinvLib:Frame(720, 795)
     frame:DockMargin(0, 0, 0, 0)
     frame:DockPadding(0, RespH(20), 0, 0)
 
-    local title = LinvLib:LabelPanel(frame, "Linventif Library - " .. LinvLib.version .. " - " .. LinvLib:GetTrad("monitor"), "LinvFontRobo25", 400, 60)
+    local title = LinvLib:LabelPanel(frame, "Linventif's Stuff - " .. LinvLib.version .. " - " .. LinvLib:GetTrad("monitor"), "LinvFontRobo25", 400, 60)
     title:Dock(TOP)
     title:DockMargin(0, 0, 0, RespW(15))
 
-    local scroll = LinvLib:Scroll(frame, 720, 610)
-    scroll:Dock(TOP)
-    scroll:DockMargin(RespW(30), 0, 0, 0)
+    local info = LinvLib:Panel(frame, 720, 40, false, false, LinvLib:GetColorTheme("element"))
+    info:Dock(TOP)
+    info:DockMargin(RespW(30), 0, RespW(30), RespH(15))
 
-    -- for k, v 
+    local nb_addons = LinvLib:LabelPanel(info, LinvLib:GetTrad("install_addon") .. nb_addon, "LinvFontRobo20", 305, 50)
+    nb_addons:Dock(LEFT)
+    nb_addons:DockMargin(RespW(30), 0, 0, 0)
 
-    local bottom_but = LinvLib:Panel(frame, 900, 50)
+    local nb_addon_need = LinvLib:LabelPanel(info, LinvLib:GetTrad("addon_need_update") .. nb_needupdate, "LinvFontRobo20", 305, 50)
+    nb_addon_need:Dock(RIGHT)
+    nb_addon_need:DockMargin(RespW(30), 0, 0, 0)
+
+    local scroll_info = LinvLib:Panel(frame, 720, 40, false, false, LinvLib:GetColorTheme("element"))
+    scroll_info:Dock(TOP)
+    scroll_info:DockMargin(RespW(30), 0, RespW(30), RespH(15))
+
+    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("icon"), "LinvFontRobo20", 84, 50)
+    label_icon:Dock(LEFT)
+    label_icon:DockMargin(0, 0, 0, 0)
+
+    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("name"), "LinvFontRobo20", 100, 50)
+    label_icon:Dock(FILL)
+    label_icon:DockMargin(RespW(30), 0, 0, 0)
+
+    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("link"), "LinvFontRobo20", 100, 50)
+    label_icon:Dock(RIGHT)
+    label_icon:DockMargin(RespW(30), 0, RespW(10), 0)
+
+    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("last_version"), "LinvFontRobo20", 100, 50)
+    label_icon:Dock(RIGHT)
+    label_icon:DockMargin(RespW(30), 0, 0, 0)
+
+    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("your_version"), "LinvFontRobo20", 100, 50)
+    label_icon:Dock(RIGHT)
+    label_icon:DockMargin(RespW(30), 0, 0, 0)
+
+    local scroll = LinvLib:Scroll(frame, 720, 480)
+    scroll:Dock(FILL)
+    if nb_addon > 5 then
+        scroll:DockMargin(RespW(30), 0, RespW(10), RespH(30))
+    else
+        scroll:DockMargin(RespW(30), 0, RespW(20), RespH(30))
+    end
+    for k, v in pairs(data) do
+        if !LinvLib.Install[k] then continue end
+        local need_update = LinvLib.Install[k] < v.version
+        local addon = LinvLib:Panel(scroll, 720, 84)
+        addon.Paint = function(self, w, h)
+            LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("element"))
+        end
+        addon:Dock(TOP)
+        addon:DockMargin(0, 0, RespW(10), RespH(15))
+        addon:DockPadding(RespW(10), RespH(10), RespW(10), RespH(10))
+        local icon_panel = LinvLib:Panel(addon, 64, 64)
+        icon_panel.Paint = function(self, w, h)
+            surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
+            surface.SetMaterial(LinvLib.Materials[k] || LinvLib.Materials["unknow"])
+            surface.DrawTexturedRect(0, 0, w, h)
+        end
+        icon_panel:Dock(LEFT)
+        icon_panel:DockMargin(0, 0, RespW(15), 0)
+        local name = LinvLib:LabelPanel(addon, v.title, "LinvFontRobo20", 100, 50)
+        name:Dock(FILL)
+        name:DockMargin(RespW(30), 0, 0, 0)
+        local but = LinvLib:Button(addon, need_update && LinvLib:GetTrad("update") || LinvLib:GetTrad("open"), 100, 50, LinvLib:GetColorTheme("accent"), true, function()
+            LinvLib:WebPage(v.repository)
+        end)
+        but:Dock(RIGHT)
+        but:DockMargin(RespW(30), 0, 0, 0)
+        local last_version = LinvLib:LabelPanel(addon, v.version, "LinvFontRobo20", 100, 50)
+        last_version:Dock(RIGHT)
+        last_version:DockMargin(RespW(30), 0, 0, 0)
+        local your_version = LinvLib:LabelPanel(addon, LinvLib.Install[k], "LinvFontRobo20", 100, 50)
+        your_version:Dock(RIGHT)
+        your_version:DockMargin(RespW(30), 0, 0, 0)
+        if need_update then
+            your_version.Paint = function(self, w, h)
+                draw.SimpleText(LinvLib.Install[k], "LinvFontRobo25", w/2, h/2, LinvLib:GetColorTheme("red"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+        else
+            your_version.Paint = function(self, w, h)
+                draw.SimpleText(LinvLib.Install[k], "LinvFontRobo20", w/2, h/2, LinvLib:GetColorTheme("green"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+        end
+    end
+
+    local bottom_but = LinvLib:Panel(frame, 900, 50, true)
     bottom_but:Dock(BOTTOM)
     bottom_but:DockMargin(RespW(30), 0, RespW(30), RespH(30))
 
@@ -773,40 +848,138 @@ local function OpenMonitor(data)
     but_close:DockMargin(RespW(30), 0, 0, 0)
 end
 
-OpenMonitor()
-
-net.Receive("LinvLib:SaveSetting", function()
-    LinvLib.Config = util.JSONToTable(net.ReadString())
-    LinvLib:Notif(LinvLib:GetTrad("new_setting_received"))
-end)
-
-hook.Add("InitPostEntity", "LinvLib:InitAll", function()
-    // Get Settings
-        -- net.Start("LinvLib:Action")
-        --     net.WriteString("LinvLib:GetSettings")
-        -- net.SendToServer()
-    // Open Monitor
-    if LinvLib.Config.MonitorGroup[LocalPlayer():GetUserGroup()] && LinvLib.Config.MonitorShowEveryJoin then
-        timer.Simple(5, function()
-            OpenMonitor()
-        end)
-    end
-end)
-
-// Console Commands
-
-concommand.Add("linvlib_monitor", function()
+local function CanOpenMonitor()
     if LinvLib.Config.AdminGroups[LocalPlayer():GetUserGroup()] then
         OpenMonitor()
     else
         LinvLib:Notif(LinvLib:GetTrad("not_perm"))
     end
+end
+
+local function AddonNeedUpdate(data)
+    if !data then
+        http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
+            AddonNeedUpdate(util.JSONToTable(body))
+        end, function(message)
+            print(message)
+        end)
+        return
+    end
+    local addon_need_update = 0
+    for k, v in pairs(data) do
+        if LinvLib.Install[k] && (LinvLib.Install[k]["version"] < v["version"])then
+            addon_need_update = addon_need_update + 1
+        end
+    end
+    if addon_need_update > 0 then
+        LinvLib:Notif(LinvLib:GetTrad("addon_need_update") .. addon_need_update)
+        CanOpenMonitor()
+    end
+end
+
+local function NewAddonPanel(data, data_ext)
+    if !data_ext then
+        http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
+            NewAddonPanel(data, util.JSONToTable(body))
+        end, function(message)
+            print(message)
+        end)
+        return
+    end
+
+    local frame = LinvLib:Frame(720, 780)
+    frame:DockMargin(0, 0, 0, 0)
+    frame:DockPadding(0, RespH(20), 0, 0)
+
+    local title = LinvLib:LabelPanel(frame, "Linventif's Stuff - " .. LinvLib.version .. " - " .. LinvLib:GetTrad("new_addon"), "LinvFontRobo25", 400, 60)
+    title:Dock(TOP)
+    title:DockMargin(0, 0, 0, RespW(15))
+
+    local close = LinvLib:Button(frame, " ", 36, 36, LinvLib:GetColorTheme("element"), false, function()
+        frame:Close()
+        if LinvLib.Config.MonitorShowIfNewUpdate && LinvLib.Config.MonitorShowIfNewAddo then
+            CanOpenMonitor()
+        end
+    end)
+    close:SetPos(RespW(910 - 60), RespH(20))
+    close.Paint = function(self, w, h)
+        surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
+        surface.SetMaterial(LinvLib.Materials["cancel"])
+        surface.DrawTexturedRect(0, 0, RespW(36), RespH(36))
+    end
+
+    local scroll = LinvLib:Scroll(frame, 720, 480)
+    scroll:Dock(FILL)
+    scroll:DockMargin(RespW(30), 0, RespW(10), RespH(30))
+
+    for k, v in pairs(data_ext) do
+        //
+    end
+end
+
+local function NewAddonsDetected(data)
+    if !data then
+        net.Start("LinvLib:Action")
+            net.WriteString("LinvLib:GetInstalled")
+        net.SendToServer()
+        return
+    end
+    local new_addon = {}
+    for k, v in pairs(LinvLib.Install) do
+        if !data[k] then
+            new_addon[k] = true
+        end
+    end
+    if table.Count(new_addon) > 0 then
+        LinvLib:Notif(LinvLib:GetTrad("new_addon_detected") .. table.Count(new_addon))
+        timer.Simple(4, function()
+            NewAddonPanel(new_addon)
+        end)
+    end
+end
+
+hook.Add("InitPostEntity", "LinvLib:InitAll", function()
+    timer.Simple(2, function()
+        net.Start("LinvLib:Action")
+            net.WriteString("LinvLib:GetSettings")
+        net.SendToServer()
+        if LinvLib.Config.AdminGroups[LocalPlayer():GetUserGroup()] then
+            timer.Simple(2, function()
+                if LinvLib.Config.MonitorGroup[LocalPlayer():GetUserGroup()] && LinvLib.Config.MonitorShowEveryJoin then
+                    OpenMonitor()
+                elseif LinvLib.Config.MonitorShowIfNewUpdate then
+                    AddonNeedUpdate()
+                end
+                -- NewAddonsDetected()
+            end)
+        end
+    end)
+end)
+
+// Console Commands
+
+concommand.Add("linvlib_monitor", function()
+    CanOpenMonitor()
 end)
 
 concommand.Add("linvlib_settings", function()
-    if LinvLib.Config.AdminGroups[LocalPlayer():GetUserGroup()] then
-        OpenSettings()
-    else
-        LinvLib:Notif(LinvLib:GetTrad("not_perm"))
+    OpenSettings()
+end)
+
+hook.Add("OnPlayerChat", "LinvLib:OpenChatMonitor", function( ply, text)
+    if (ply != LocalPlayer()) then return end
+    if LinvLib.Config.MonitorCommands[string.lower(text)] then
+        RunConsoleCommand("linvlib_monitor")
+		return true
+    end
+end)
+
+net.Receive("LinvLib:Action", function(len, ply)
+    local action = net.ReadString()
+    if action == "LinvLib:SaveSetting" then
+        LinvLib.Config = util.JSONToTable(net.ReadString())
+        LinvLib:Notif(LinvLib:GetTrad("new_setting_received"))
+    elseif action == "LinvLib:Installed" then
+        NewAddonsDetected(util.JSONToTable(net.ReadString()))
     end
 end)

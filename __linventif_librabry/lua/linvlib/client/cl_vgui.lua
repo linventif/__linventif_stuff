@@ -89,9 +89,9 @@ function LinvLib.UIButton(element, color, border, radius1, radius2)
     end
 end
 
-function LinvLib:NewPaint(element, w, h, border, background)
+function LinvLib:NewPaint(element, w, h, border, background, noborder)
     local round = LinvLib.Config.Rounded
-    if LinvLib.Config.Border != 0 then
+    if LinvLib.Config.Border != 0 && !noborder then
         local BorderY = RespH(LinvLib.Config.Border)
         local BorderX = RespW(LinvLib.Config.Border)
         draw.RoundedBox(RespW(round), 0, 0, w, h, border)
@@ -131,11 +131,11 @@ function LinvLib:Frame(weight, height, round)
     return frame
 end
 
-function LinvLib:Panel(frame, weight, height)
+function LinvLib:Panel(frame, weight, height, noborder, bord_color, back_color)
     local panel = vgui.Create("DPanel", frame)
     panel:SetSize(RespW(weight), RespH(height))
     panel.Paint = function(self, w, h)
-        LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("background"))
+        LinvLib:NewPaint(frame, w, h, bord_color || LinvLib:GetColorTheme("border"), back_color || LinvLib:GetColorTheme("background"), noborder)
     end
     return panel
 end
@@ -232,8 +232,7 @@ end
 function LinvLib:LabelPanel(frame, text, font, weight, height)
     local panel = LinvLib:Panel(frame, weight, height)
     panel.Paint = function(self, w, h)
-        draw.RoundedBox(RespW(8), 0, 0, w, h, Color(0, 0, 0, 0))
-        draw.SimpleText(text, font, w/2, h/2, Color(255, 255, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(text, font, w/2, h/2, LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
     return panel
 end
@@ -276,7 +275,7 @@ end)
 --     local frame = LinvLib:Frame(400, 475, 8)
 --     frame:DockPadding(RespW(30), RespW(30), RespW(30), RespW(30))
 
---     local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 0, 0, 400, 60)
+--     local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 60)
 --     title:Dock(TOP)
 --     title:DockMargin(0, 0, 0, RespW(15))
 
@@ -310,7 +309,7 @@ function LinvLib:NumSlidePanel(msg, default, min, max, deci, func)
     local frame = LinvLib:Frame(400, 475, 8)
     frame:DockPadding(RespW(30), RespW(30), RespW(30), RespW(30))
 
-    local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 0, 0, 400, 60)
+    local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 60)
     title:Dock(TOP)
     title:DockMargin(0, 0, 0, RespW(15))
 
@@ -343,11 +342,11 @@ end
 --     print(result)
 -- end)
 
-function LinvLib:NumberPanel(msg, value, min, max, func)
+function LinvLib:NumberPanel(msg, value, min, max, func, remove_func)
     local frame = LinvLib:Frame(400, 290, 8)
     frame:DockPadding(RespW(30), RespH(30), RespW(30), RespH(30))
 
-    local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 0, 0, 400, 60)
+    local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 40)
     title:Dock(TOP)
     title:DockMargin(0, 0, 0, RespW(15))
 
@@ -372,6 +371,7 @@ function LinvLib:NumberPanel(msg, value, min, max, func)
     panel_but.Paint = function(self, w, h) end
 
     local but_close = LinvLib:Button(panel_but, LinvLib:GetTrad("close"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
+        if remove_func then remove_func() end
         frame:Remove()
     end)
     but_close:Dock(LEFT)
@@ -381,6 +381,7 @@ function LinvLib:NumberPanel(msg, value, min, max, func)
             LinvLib:Notif(LinvLib:GetTrad("invalid_value"))
         else
             func(tonumber(entry:GetValue()))
+            if remove_func then remove_func() end
             frame:Remove()
         end
     end)

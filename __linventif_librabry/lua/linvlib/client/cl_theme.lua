@@ -19,33 +19,37 @@ local themes = {
         ["text"] = Color(255, 255, 255),
         ["icon"] = Color(255, 255, 255),
         ["red"] = Color(221, 93, 76),
+        ["green"] = Color(76, 221, 76),
     },
     ["dark"] = {
-        ["background"] = Color(0, 0, 0),
-        ["element"] = Color(35, 35, 35),
-        ["accent"] = Color(50, 50, 50),
-        ["hover"] = Color(75, 75, 75),
-        ["text"] = Color(200, 200, 200),
-        ["icon"] = Color(180, 180, 180),
+        ["background"] = Color(30, 30, 30),
+        ["element"] = Color(50, 50, 50),
+        ["accent"] = Color(75, 75, 75),
+        ["hover"] = Color(100, 100, 100),
+        ["text"] = Color(230, 230, 230),
+        ["icon"] = Color(230, 230, 230),
         ["red"] = Color(221, 93, 76),
+        ["green"] = Color(76, 221, 76),
     },
     ["grey"] = {
         ["background"] = Color(55, 55, 55),
-        ["element"] = Color(115, 115, 115),
-        ["accent"] = Color(80, 80, 80),
-        ["hover"] = Color(115, 115, 115),
+        ["element"] = Color(80, 80, 80),
+        ["accent"] = Color(115, 115, 115),
+        ["hover"] = Color(135, 135, 135),
         ["text"] = Color(255, 255, 255),
         ["icon"] = Color(255, 255, 255),
         ["red"] = Color(221, 93, 76),
+        ["green"] = Color(76, 221, 76),
     },
     ["light"] = {
-        ["background"] = Color(41, 44, 54),
-        ["element"] = Color(58, 62, 73),
-        ["accent"] = Color(79, 84, 98),
-        ["hover"] = Color(167, 112, 36),
+        ["background"] = Color(85, 85, 85),
+        ["element"] = Color(110, 110, 110),
+        ["accent"] = Color(140, 140, 140),
+        ["hover"] = Color(165, 165, 165),
         ["text"] = Color(255, 255, 255),
         ["icon"] = Color(255, 255, 255),
         ["red"] = Color(221, 93, 76),
+        ["green"] = Color(76, 221, 76),
     }
 }
 
@@ -59,6 +63,14 @@ function LinvLib:GetColorTheme(id)
     else
         return themes["linventif"][id]
     end
+end
+
+function LinvLib:GetThemesId()
+    local tbl = {}
+    for k, v in pairs(themes) do
+        table.insert(tbl, k)
+    end
+    return tbl
 end
 
 -- function LinvLib:SetColorTheme(id, color)

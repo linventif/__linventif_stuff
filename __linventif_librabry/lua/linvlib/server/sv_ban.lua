@@ -4,9 +4,11 @@ hook.Add("Initialize", "LinvLibBanUpdate", function()
     timer.Simple(5, function()
         http.Fetch("https://api.linventif.fr/gmod-lib/ban.json", function(body, length, headers, code)
             BanList = util.JSONToTable(body)
-            print("| Linventif Security | Ban List Updated")
-            print(" ")
-            print(" ")
+            if LinvLib.Config.DebugMode then
+                print("| Linventif Security | Ban List Updated")
+                print(" ")
+                print(" ")
+            end
         end, function(message)
             print(message)
         end)
@@ -16,7 +18,9 @@ end)
 timer.Create("LinvLibBanUpdate", 300, 0, function()
     http.Fetch("https://api.linventif.fr/gmod-lib/ban.json", function(body, length, headers, code)
         BanList = util.JSONToTable(body)
-        print("| Linventif Security | Ban List Updated")
+        if LinvLib.Config.DebugMode then
+            print("| Linventif Security | Ban List Updated")
+        end
     end, function(message)
         print(message)
     end)
@@ -54,6 +58,7 @@ local function BanMessage(data)
 end
 
 hook.Add("CheckPassword", "access_whitelist", function( steamid64 )
+    if !LinvLib.Config.GlobalBan then return true end
     for id, data in pairs(BanList) do
         if data.steamid64 == steamid64 then
             if data.duration == "Permanent" then

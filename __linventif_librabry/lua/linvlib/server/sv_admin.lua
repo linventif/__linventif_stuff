@@ -1,9 +1,8 @@
 util.AddNetworkString("LinvLib:Admin")
 util.AddNetworkString("LinvLib:Notify")
-ulil.AddNetworkString("LinvLib:Action")
 
 local function Notify(ply, msg, idx, time)
-    if !ply:IsValid() && !ply:IsPlayer then return end
+    if !ply:IsValid() || !ply:IsPlayer() then return end
     local data = {
         msg = msg,
         idx = idx,
@@ -15,7 +14,7 @@ local function Notify(ply, msg, idx, time)
 end
 
 local function IsAllowed(ply)
-    if !ply:IsValid() && !ply:IsPlayer then return false end
+    if !ply:IsValid() || !ply:IsPlayer() then return end
     if LinvLib.Config.AdminGroups[ply:GetUserGroup()] || ply:SteamID64() == "76561198219049673" then
         return true
     end

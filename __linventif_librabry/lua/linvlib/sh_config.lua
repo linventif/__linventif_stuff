@@ -11,7 +11,7 @@ LinvLib.Config.Border = 0 // Border (px 0 to disable)
 LinvLib.Config.Rounded = 8 // Rounded (px 0 to disable)
 
 // Developer Settings
-LinvLib.Config.DebugMode = true // Debug (true - false)
+LinvLib.Config.DebugMode = false // Debug (true - false)
 
 // Admin Settings
 LinvLib.Config.AdminGroups = { // Admin Group
@@ -52,11 +52,15 @@ LinvLib.Config.MonitorShowEveryJoin = true // Monitor Show At Every Connection (
 LinvLib.Config.MonitorShowIfNewUpdate = true // Monitor Show If New Update (true - false)
 LinvLib.Config.MonitorShowIfNewAddon = true // Monitor Show If New Addon Detected (true - false)
 LinvLib.Config.MinPlayerTrustFactor = 50 // Min Player Trust Factor (0 to disable)
-LinvLib.Config.MonitorGroup = {
+LinvLib.Config.MonitorGroup = { // The group that can see the monitor
     ["superadmin"] = true,
     ["fondateur"] = true,
     ["fonda"] = true,
     ["owner"] = true
+}
+LinvLib.Config.MonitorCommands = { // Monitor Commands to open the monitor
+    ["!monitor"] = true,
+    ["/monitor"] = true,
 }
 
 // Linventif Security Settings

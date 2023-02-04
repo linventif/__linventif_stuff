@@ -1,6 +1,14 @@
 util.AddNetworkString("LinvLib:Compatibility")
 util.AddNetworkString("LinvLib:SaveSetting")
 util.AddNetworkString("LinvLib:Notification")
+util.AddNetworkString("LinvLib:Action")
+
+if !file.Exists("linventif/linventif_library/installed.json", "DATA") then
+    local test_data = {
+        ["linventif-library"] = LinvLib.version
+    }
+    file.Write("linventif/linventif_library/installed.json", util.TableToJSON(test_data, true))
+end
 
 function LinvLib.AddRessource(name, folder, addon_folder)
     local files, folders = file.Find(folder.."*", "GAME")
@@ -84,24 +92,24 @@ function LinvLib.GetValidLang(folder)
     return lang
 end
 
-if file.Exists("linventif/liventif_library/settings.json", "DATA") then
-    local data = util.JSONToTable(file.Read("linventif/liventif_library/settings.json", "DATA"))
+if file.Exists("linventif/linventif_library/settings.json", "DATA") then
+    local data = util.JSONToTable(file.Read("linventif/linventif_library/settings.json", "DATA"))
     if data.version < LinvLib.version then
         data.config = table.Merge(LinvLib.Config, data.config)
         data.version = LinvLib.version
-        file.Write("linventif/liventif_library/settings.json", util.TableToJSON(data, true))
+        file.Write("linventif/linventif_library/settings.json", util.TableToJSON(data, true))
     end
     LinvLib.Config = data.config
     PrintTable(data)
 else
-    if !file.Exists("linventif/liventif_library", "DATA") then
-        file.CreateDir("linventif/liventif_library")
+    if !file.Exists("linventif/linventif_library", "DATA") then
+        file.CreateDir("linventif/linventif_library")
     end
     local data = {
         ["version"] = LinvLib.version,
         ["config"] = LinvLib.Config
     }
-    file.Write("linventif/liventif_library/settings.json", util.TableToJSON(data, true))
+    file.Write("linventif/linventif_library/settings.json", util.TableToJSON(data, true))
 end
 
 */
@@ -113,14 +121,14 @@ function LinvLib:Notif(ply, text)
 end
 
 local function SaveSettings()
-    if !file.Exists("linventif/liventif_library", "DATA") then
-        file.CreateDir("linventif/liventif_library")
+    if !file.Exists("linventif/linventif_library", "DATA") then
+        file.CreateDir("linventif/linventif_library")
     end
     local data = {
         ["version"] = LinvLib.version,
         ["config"] = LinvLib.Config
     }
-    file.Write("linventif/liventif_library/settings.json", util.TableToJSON(data, true))
+    file.Write("linventif/linventif_library/settings.json", util.TableToJSON(data, true))
 end
 
 net.Receive("LinvLib:SaveSetting", function(len, ply)
@@ -168,8 +176,11 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
 end)
 
 hook.Add("Initialize", "LinvLib:LoadSettings", function()
-    if file.Exists("linventif/liventif_library/settings.json", "DATA") then
-        local data = util.JSONToTable(file.Read("linventif/liventif_library/settings.json", "DATA"))
+    if !file.Exists("linventif/linventif_library/installed.json", "DATA") then
+        file.Write("linventif/linventif_library/installed.json", util.TableToJSON({}))
+    end
+    if file.Exists("linventif/linventif_library/settings.json", "DATA") then
+        local data = util.JSONToTable(file.Read("linventif/linventif_library/settings.json", "DATA"))
         if data.version < LinvLib.version then
             data.config = table.Merge(LinvLib.Config, data.config)
             data.version = LinvLib.version
@@ -181,8 +192,25 @@ hook.Add("Initialize", "LinvLib:LoadSettings", function()
     end
 end)
 
-hook.Add("PlayerInitialSpawn", "LinvLib:SendSettings", function(ply)
-    net.Start("LinvLib:SaveSetting")
+local function SendSettings(ply)
+    net.Start("LinvLib:Action")
+        net.WriteString("LinvLib:SaveSetting")
         net.WriteString(util.TableToJSON(LinvLib.Config))
     net.Send(ply)
+end
+
+local function SendInstalled(ply)
+    net.Start("LinvLib:Action")
+        net.WriteString("LinvLib:Installed")
+        net.WriteString(file.Read("linventif/linventif_library/installed.json", "DATA"))
+    net.Send(ply)
+end
+
+net.Receive("LinvLib:Action", function(len, ply)
+    local action = net.ReadString()
+    if action == "LinvLib:GetSetting" then
+        SendSettings(ply)
+    elseif action == "LinvLib:GetInstalled" then
+        SendInstalled(ply)
+    end
 end)
