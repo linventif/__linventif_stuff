@@ -1,3 +1,5 @@
+print(language.GetPhrase("linvlib.game_starting"))
+
 function LRespW(w)
     return ScrW() * (w / 1920)
 end
@@ -8,6 +10,10 @@ end
 
 function LResp(w, h)
     return LRespW(w), LRespH(h)
+end
+
+function LinvLib:RGBtoHEX(color)
+    return string.format("#%02x%02x%02x%02x", color.r, color.g, color.b, color.a)
 end
 
 function LinvLib.LNotif(msg, enum, time, addon)
@@ -30,8 +36,9 @@ function LinvLib.CreateImgurMaterials(materials, addon_var, folder, name)
     local function getMatFromUrl(url, id)
         materials[id] = Material("nil")
 
-        if file.Exists(folder .. "/" .. id .. ".png", "DATA") then
+        if file.Exists(folder .. "/" .. id .. ".png", "DATA") && LinvLib.Config.ForceMaterial then
             addon_var[id] = Material("../data/" .. folder .. "/" .. id .. ".png", "noclamp smooth")
+            print("| " .. name .. " | Image Loaded | " .. id .. ".png")
             return
         end
 

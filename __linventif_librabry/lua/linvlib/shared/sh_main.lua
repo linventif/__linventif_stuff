@@ -1,5 +1,5 @@
 local function LinvLibVerif(LinvLibWeb)
-    LinvLib.LoadStr(LinvLib.name, LinvLib.version, LinvLib.license)
+    LinvLib.LoadStr("Linventif Library", LinvLib.version, LinvLib.license)
     if LinvLibWeb.version != LinvLib.version then
         print("Linventif Library is outdated! Please update it!")
         print(" ")
@@ -16,7 +16,7 @@ local function LinvLibVerif(LinvLibWeb)
     print(" ")
 end
 
-hook.Add("Initialize", "LinvLibUpdate", function()
+hook.Add("Initialize", "LinvLib:GetVersion", function()
     timer.Simple( 5, function()
         http.Fetch("https://api.linventif.fr/gmod-lib/info.json", function(body, length, headers, code)
             LinvLibVerif(util.JSONToTable(body))
@@ -56,14 +56,4 @@ function LinvLib.MoneyToShow(separator, money)
         end
     end
     return moneystr
-end
-
-function LinvLib.Load(name, folder, files)
-    for k, v in pairs(files) do
-        if SERVER then
-            AddCSLuaFile(folder .. "/" .. v)
-        end
-        include(folder .. "/" .. v)
-        print("| " .. name .. " | File Load | " .. folder .. "/" .. v)
-    end
 end
