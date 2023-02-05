@@ -3,6 +3,10 @@ util.AddNetworkString("LinvLib:SaveSetting")
 util.AddNetworkString("LinvLib:Notification")
 util.AddNetworkString("LinvLib:Action")
 
+-- for k, v in pairs(player.GetAll()) do
+--     v:ChatPrint("#linvlib.not_perm")
+-- end
+
 if !file.Exists("linventif/linventif_library/installed.json", "DATA") then
     local test_data = {
         ["linventif-library"] = LinvLib.version

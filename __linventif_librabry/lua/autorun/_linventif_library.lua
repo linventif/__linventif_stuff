@@ -89,36 +89,33 @@ function LinvLib.CenterStr(with, text)
     return rtn_str
 end
 
-function LinvLib.LoadTrad(folder, name)
-    if !SERVER then return end
-    local files, folders = file.Find(folder .. "/*", "GAME")
-    for k, v in pairs(files) do
-        local path = folder .. "/" .. v
-        if string.EndsWith(v, ".properties") then
-            resource.AddFile(path)
-            resource.AddSingleFile(path)
-            print("| " .. name .. " | File Load | " .. path)
-        else
-            print("| " .. name .. " | - Error - | File Name Invalid : " .. path)
+function LinvLib.LoadTrad(path, file_name, name)
+    local files, dirs = file.Find(path .. "*", "GAME")
+
+    for _, v in pairs(files) do
+        if (v == file_name .. ".properties") then
+            resource.AddFile(path .. v)
+            print("| " .. name .. " | Resource Load | " .. path .. v)
         end
     end
-    for k, v in pairs(folders) do
-        LinvLib.LoadTrad(folder .. "/" .. v, name)
+
+    for _, v in pairs(dirs) do
+        LinvLib.LoadTrad(path .. v .. "/", file_name, name)
     end
 end
 
-function LinvLib.LoadResources(name)
-    local path = "addons/" .. string.Split(debug.getinfo(1)["short_src"], "/")[2] .. "/resource/"
-    local files, folders = file.Find(path .. "*", "GAME")
-    for k, v in pairs(folders) do
-        if v == "localization" then
-            print("| " .. name .. " | Folder Load | " .. path .. v)
-            LinvLib.LoadTrad(path .. v, name)
-        else
-            print("| " .. name .. " | - Error - | Folder Name Invalid : " .. path .. v)
-        end
-    end
-end
+-- function LinvLib.LoadResources(folder, name)
+--     local path = "addons/" .. string.Split(debug.getinfo(1)["short_src"], "/")[2] .. "/resource/"
+--     local files, folders = file.Find(path .. "*", "GAME")
+--     for k, v in pairs(folders) do
+--         if v == "localization" then
+--             print("| " .. name .. " | Folder Load | " .. path .. v)
+--             LinvLib.LoadTrad(path .. v, folder, name)
+--         else
+--             print("| " .. name .. " | - Error - | Folder Name Invalid : " .. path .. v)
+--         end
+--     end
+-- end
 
 -- print(language.GetPhrase("new_setting_received"))
 -- print(GetConVar("gmod_language"):GetString())
@@ -149,8 +146,12 @@ LinvLib.Load(LinvLib.name, LinvLib.folder, {"sh_config.lua", "sh_language.lua"})
 LinvLib.Loader(LinvLib.folder .. "/server", LinvLib.name)
 LinvLib.Loader(LinvLib.folder .. "/client", LinvLib.name)
 LinvLib.Loader(LinvLib.folder .. "/shared", LinvLib.name)
-LinvLib.LoadResources(LinvLib.name)
+LinvLib.LoadTrad("resource/localization/", LinvLib.folder, LinvLib.name)
 
--- print("| " .. LinvLib.name .. " | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
+print("| " .. LinvLib.name .. " | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
 print(" ")
 print(" ")
+
+for _, v in pairs(player.GetAll()) do
+    v:ChatPrint("#linvlib.linventif_security")
+end

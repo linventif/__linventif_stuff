@@ -1,4 +1,4 @@
-print(language.GetPhrase("linvlib.game_starting"))
+-- print(language.GetPhrase("linvlib.game_starting"))
 
 function LRespW(w)
     return ScrW() * (w / 1920)

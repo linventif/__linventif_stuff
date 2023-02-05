@@ -53,6 +53,8 @@ local themes = {
     }
 }
 
+-- file.Write("themes.txt", util.TableToJSON(themes, true))
+
 // -- // -- // -- // -- // -- // -- // -- //
 // DO NOT EDIT BELOW THIS LINE
 // -- // -- // -- // -- // -- // -- // -- //
@@ -71,6 +73,10 @@ function LinvLib:GetThemesId()
         table.insert(tbl, k)
     end
     return tbl
+end
+
+function LinvLib:AddTheme(id, tbl)
+    themes[id] = tbl
 end
 
 -- function LinvLib:SetColorTheme(id, color)

@@ -54,63 +54,7 @@ local languages = {
         ["link"] = "Link",
         ["update"] = "Update",
         ["open"] = "Open",
-    },
-    ["french"] = {
-        ["not_allow_cmd"] = "Vous n'êtes pas autorisé à utiliser cette commande !",
-        ["not_perm"] = "Vous n'avez pas la permission de faire cela !",
-        ["save_setting"] = "Paramètres Sauvegardés Avec Succès.",
-        ["new_setting_received"] = "LinvLib : Nouveaux Paramètres Reçus.",
-        ["in_dev"] = "Fonctionnalité en développement.",
-        ["invalid_value"] = "Valeur Invalide",
-        ["background"] = "Fond",
-        ["border"] = "Bordure",
-        ["element"] = "Élément",
-        ["accent"] = "Accent",
-        ["hover"] = "Survol",
-        ["text"] = "Texte",
-        ["icon"] = "Icône",
-        ["red"] = "Rouge",
-        ["close"] = "Fermer",
-        ["continue"] = "Continuer",
-        ["reset"] = "Réinitialiser",
-        ["customisation"] = "Personnalisation",
-        ["border_size"] = "Taille de la Bordure",
-        ["rounded"] = "Valeur Arrondie",
-        ["other"] = "Autres",
-        ["debug_mode"] = "Mode Debug",
-        ["settings"] = "Paramètres",
-        ["global_ban"] = "Ban Globale",
-        ["linventif_security"] = "Sécurité Linventif",
-        ["admin_group"] = "Groupes Admin",
-        ["admin_ticket"] = "Ticket Admin",
-        ["admin_menu_extend"] = "Menu Admin Étendu",
-        ["admin_menu"] = "Menu Admin",
-        ["admin_suite"] = "Suite Admin",
-        ["show_if_new_addon"] = "Afficher si un nouveau addon est détecté",
-        ["show_if_need_update"] = "Afficher si un addon a besoin d'une mise à jour",
-        ["show_at_every_join"] = "Afficher à chaque connexion",
-        ["monitor"] = "Moniteur",
-        ["theme"] = "Thème",
-        ["compatible_addon"] = "Addon Compatible",
-        ["language"] = "Langue",
-        ["general"] = "Général",
-        ["ply_trust_factor"] = "Trust Factor Joueur",
-        ["ply_trust_factor_min"] = "Trust Factor Minimum Acceptable",
-        ["language_add"] = "Pour ajouter une langue custom contactez moi sur discord !",
-        ["theme_add"] = "Pour ajouter un thème custom contactez moi sur discord !",
-        ["help"] = "Aide",
-        ["install_addon"] = "Addon Installés : ",
-        ["addon_need_update"] = "Addon Nécessitant Une Mise à Jour : ",
-        ["linventif_lib"] = "Trucs Linventif",
-        ["new_addon_detected"] = "Nouvel Addon Détecté : ",
-        ["new_addon"] = "Nouvel Addon",
-        ["name"] = "Nom",
-        ["your_version"] = "Votre Version",
-        ["last_version"] = "Dernière Version",
-        ["link"] = "Lien",
-        ["update"] = "Mettre à Jour",
-        ["open"] = "Ouvrir",
-    },
+    }
 }
 
 // -- // -- // -- // -- // -- // -- // -- //
@@ -118,12 +62,22 @@ local languages = {
 // -- // -- // -- // -- // -- // -- // -- //
 
 function LinvLib:GetTrad(id)
-    if languages[LinvLib.Config.Language] && languages[LinvLib.Config.Language][id] then
-        return languages[LinvLib.Config.Language][id]
+    if !LinvLib.Config.DebugMode then
+        if CLIENT then
+            return language.GetPhrase(string.Split(debug.getinfo(1)["short_src"], "/")[4] .. ".".. id)
+        else
+            return "#" .. id
+        end
     else
-        return languages["english"][id] || id
+        if languages[LinvLib.Config.Language] && languages[LinvLib.Config.Language][id] then
+            return languages[LinvLib.Config.Language][id]
+        else
+            return languages["english"][id] || id
+        end
     end
 end
+
+-- print(language.GetPhrase("linvlib.not_perm"))
 
 function LinvLib:GetLanguageId()
     local tbl = {}
