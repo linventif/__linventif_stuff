@@ -3,7 +3,7 @@ LinvLib.Config = {}
 
 LinvLib.name = "Linventif Library"
 LinvLib.folder = "linvlib"
-LinvLib.version = "0.2.0"
+LinvLib.version = "0.2.1"
 LinvLib.author = "Linventif"
 LinvLib.license = "CC BY-SA 4.0"
 LinvLib.description = "A library for Linventif's scripts."

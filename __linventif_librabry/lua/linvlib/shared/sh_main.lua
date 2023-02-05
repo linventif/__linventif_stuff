@@ -12,7 +12,7 @@ end
 
 local function LinvLibVerif(LinvLibWeb)
     LinvLib.LoadStr("Linventif Library", LinvLib.version, LinvLib.license)
-    if LinvLibWeb.version != LinvLib.version then
+    if LinvLibWeb["linventif-library"].version != LinvLib.version then
         print("Linventif Library is outdated! Please update it!")
         print(" ")
         print("You can download the latest version here : https://linventif.fr/gmod-lib")
@@ -30,7 +30,7 @@ end
 
 hook.Add("Initialize", "LinvLib:GetVersion", function()
     timer.Simple( 5, function()
-        http.Fetch("https://api.linventif.fr/gmod-lib/info.json", function(body, length, headers, code)
+        http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
             LinvLibVerif(util.JSONToTable(body))
         end, function(message)
             print(message)
