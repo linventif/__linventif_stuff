@@ -1,3 +1,9 @@
+// -- // -- // -- // -- // -- // -- // -- //
+// THIS FILE IS FOR DEVELOPER ONLY
+// TO ADD CUSTOM LANGUAGE USE RESOURCE LOCALIZATION
+// THIS TRANSLATION IS ONLY FOR DEBUG MODE AND FOR FORCED LANGUAGE
+// -- // -- // -- // -- // -- // -- // -- //
+
 local languages = {
     ["english"] = {
         ["not_allow_cmd"] = "You are not allowed to use this command!",
@@ -57,32 +63,6 @@ local languages = {
     }
 }
 
-// -- // -- // -- // -- // -- // -- // -- //
-// DO NOT EDIT BELOW THIS LINE
-// -- // -- // -- // -- // -- // -- // -- //
-
-function LinvLib:GetTrad(id)
-    if !LinvLib.Config.DebugMode then
-        if CLIENT then
-            return language.GetPhrase(string.Split(debug.getinfo(1)["short_src"], "/")[4] .. ".".. id)
-        else
-            return "#" .. id
-        end
-    else
-        if languages[LinvLib.Config.Language] && languages[LinvLib.Config.Language][id] then
-            return languages[LinvLib.Config.Language][id]
-        else
-            return languages["english"][id] || id
-        end
-    end
-end
-
--- print(language.GetPhrase("linvlib.not_perm"))
-
-function LinvLib:GetLanguageId()
-    local tbl = {}
-    for k, v in pairs(languages) do
-        table.insert(tbl, k)
-    end
-    return tbl
+function LinvLib:GetDebugTrad(id)
+    return languages["english"][id] || id
 end

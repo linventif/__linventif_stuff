@@ -1,5 +1,4 @@
 LinvLib = {}
-linvlib = {}
 LinvLib.Config = {}
 
 LinvLib.name = "Linventif Library"
@@ -58,6 +57,17 @@ if SERVER then
     resource.AddWorkshop("2882747990")
 end
 
+function LinvLib.CenterStr(with, text)
+    local rtn_str = ""
+    local padding = math.floor((with - text:len()) / 2)
+    local paddingText = string.rep(" ", padding)
+    if text:len() % 2 == 0 then
+        rtn_str = rtn_str .. " "
+    end
+    rtn_str = rtn_str .. paddingText .. text .. paddingText
+    return rtn_str
+end
+
 function LinvLib.LoadStr(full_name, version, license)
     local width = 57
     print(" ")
@@ -78,17 +88,6 @@ function LinvLib.LoadStr(full_name, version, license)
     print(" ")
 end
 
-function LinvLib.CenterStr(with, text)
-    local rtn_str = ""
-    local padding = math.floor((with - text:len()) / 2)
-    local paddingText = string.rep(" ", padding)
-    if text:len() % 2 == 0 then
-        rtn_str = rtn_str .. " "
-    end
-    rtn_str = rtn_str .. paddingText .. text .. paddingText
-    return rtn_str
-end
-
 function LinvLib.LoadTrad(path, file_name, name)
     local files, dirs = file.Find(path .. "*", "GAME")
 
@@ -104,54 +103,13 @@ function LinvLib.LoadTrad(path, file_name, name)
     end
 end
 
--- function LinvLib.LoadResources(folder, name)
---     local path = "addons/" .. string.Split(debug.getinfo(1)["short_src"], "/")[2] .. "/resource/"
---     local files, folders = file.Find(path .. "*", "GAME")
---     for k, v in pairs(folders) do
---         if v == "localization" then
---             print("| " .. name .. " | Folder Load | " .. path .. v)
---             LinvLib.LoadTrad(path .. v, folder, name)
---         else
---             print("| " .. name .. " | - Error - | Folder Name Invalid : " .. path .. v)
---         end
---     end
--- end
-
--- print(language.GetPhrase("new_setting_received"))
--- print(GetConVar("gmod_language"):GetString())
--- LinvLib:GetActualFolder()
-
-
--- local files, folders = file.Find("" .. "*", "GAME")
--- PrintTable(files)
--- PrintTable(folders)
-
--- function LinvLib:LoadTrans(name)
---     print(GetConVar("gmod_language"):GetString())
--- end
-
--- LinvLib:LoadTrans("name")
-
--- function LinvLib:GetActualFolder()
---     -- print(string.Split(debug.getinfo(1)["short_src"], "/")[2])
---     print(debug.getinfo(2)["short_src"], "/")
---     resource.AddFile(path .. v)
--- end
-
-
--- LinvLib:GetActualFolder()
-
 LinvLib.LoadStr(LinvLib.name, LinvLib.version, LinvLib.license)
 LinvLib.Load(LinvLib.name, LinvLib.folder, {"sh_config.lua", "sh_language.lua"})
+LinvLib.LoadTrad("resource/localization/", LinvLib.folder, LinvLib.name)
 LinvLib.Loader(LinvLib.folder .. "/server", LinvLib.name)
 LinvLib.Loader(LinvLib.folder .. "/client", LinvLib.name)
 LinvLib.Loader(LinvLib.folder .. "/shared", LinvLib.name)
-LinvLib.LoadTrad("resource/localization/", LinvLib.folder, LinvLib.name)
 
 print("| " .. LinvLib.name .. " | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
 print(" ")
 print(" ")
-
-for _, v in pairs(player.GetAll()) do
-    v:ChatPrint("#linvlib.linventif_security")
-end

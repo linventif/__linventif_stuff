@@ -33,6 +33,23 @@ function LinvLib.CreateImgurMaterials(materials, addon_var, folder, name)
         file.CreateDir(folder)
     end
 
+    if LinvLib.Config.ForceMaterial then
+        local function DeleteMaterials(path)
+            local files, folders = file.Find(path .. "/*", "DATA")
+            for k, v in pairs(files) do
+                local file_name = string.gsub(v, ".png", "")
+                if !materials[file_name] then
+                    file.Delete(path .. "/" .. v)
+                    print("| " .. name .. " | Image Deleted | " .. v)
+                end
+            end
+            for k, v in pairs(folders) do
+                DeleteMaterials(path .. "/" .. v)
+            end
+        end
+        DeleteMaterials(folder)
+    end
+
     local function getMatFromUrl(url, id)
         materials[id] = Material("nil")
 

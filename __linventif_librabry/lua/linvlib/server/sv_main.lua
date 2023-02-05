@@ -8,10 +8,10 @@ util.AddNetworkString("LinvLib:Action")
 -- end
 
 if !file.Exists("linventif/linventif_library/installed.json", "DATA") then
-    local test_data = {
+    local data = {
         ["linventif-library"] = LinvLib.version
     }
-    file.Write("linventif/linventif_library/installed.json", util.TableToJSON(test_data, true))
+    file.Write("linventif/linventif_library/installed.json", util.TableToJSON(data, true))
 end
 
 function LinvLib.AddRessource(name, folder, addon_folder)
@@ -38,86 +38,6 @@ function LinvLib.LoadWorkshop(workshop, name)
     end
 end
 
-/*
-
-function LinvLib.ServerName()
-    local f = file.Open("cfg/server.cfg", "r", "MOD" )
-    while true do
-        local line = f:ReadLine()
-        if not line then break end
-        if string.find(line, "hostname") then
-            return line
-        end
-    end
-    f:Close()
-end
-
-function LinvLib.ValidLang(folder, lang)
-    if file.Exists(folder .. "/languages/" .. lang .. ".lua", "LUA") then
-        return true
-    else
-        return false
-    end
-end
-
-function LinvLib.GetValidLang(folder)
-    local serverName = LinvLib.ServerName()
-    if string.find(serverName, "[FR]") && LinvLib.ValidLang(folder, "french") then
-        lang = "french"
-    elseif string.find(serverName, "[EN]") && LinvLib.ValidLang(folder, "english") then
-        lang = "english"
-    elseif string.find(serverName, "[ES]") && LinvLib.ValidLang(folder, "spanish") then
-        lang = "spanish"
-    elseif string.find(serverName, "[DE]") && LinvLib.ValidLang(folder, "german") then
-        lang = "german"
-    elseif string.find(serverName, "[IT]") && LinvLib.ValidLang(folder, "italian") then
-        lang = "italian"
-    elseif string.find(serverName, "[RU]") && LinvLib.ValidLang(folder, "russian") then
-        lang = "russian"
-    elseif string.find(serverName, "[PT]") && LinvLib.ValidLang(folder, "portuguese") then
-        lang = "portuguese"
-    elseif string.find(serverName, "[NL]") && LinvLib.ValidLang(folder, "dutch") then
-        lang = "dutch"
-    elseif string.find(serverName, "[PL]") && LinvLib.ValidLang(folder, "polish") then
-        lang = "polish"
-    elseif string.find(serverName, "[TR]") && LinvLib.ValidLang(folder, "turkish") then
-        lang = "turkish"
-    elseif string.find(serverName, "[CN]") && LinvLib.ValidLang(folder, "chinese") then
-        lang = "chinese"
-    elseif string.find(serverName, "[JP]") && LinvLib.ValidLang(folder, "japanese") then
-        lang = "japanese"
-    elseif string.find(serverName, "[KR]") && LinvLib.ValidLang(folder, "korean") then
-        lang = "korean"
-    elseif string.find(serverName, "[AR]") && LinvLib.ValidLang(folder, "arabic") then
-        lang = "arabic"
-    else
-        lang = "english"
-    end
-    return lang
-end
-
-if file.Exists("linventif/linventif_library/settings.json", "DATA") then
-    local data = util.JSONToTable(file.Read("linventif/linventif_library/settings.json", "DATA"))
-    if data.version < LinvLib.version then
-        data.config = table.Merge(LinvLib.Config, data.config)
-        data.version = LinvLib.version
-        file.Write("linventif/linventif_library/settings.json", util.TableToJSON(data, true))
-    end
-    LinvLib.Config = data.config
-    PrintTable(data)
-else
-    if !file.Exists("linventif/linventif_library", "DATA") then
-        file.CreateDir("linventif/linventif_library")
-    end
-    local data = {
-        ["version"] = LinvLib.version,
-        ["config"] = LinvLib.Config
-    }
-    file.Write("linventif/linventif_library/settings.json", util.TableToJSON(data, true))
-end
-
-*/
-
 function LinvLib:Notif(ply, text)
     net.Start("LinvLib:Notification")
         net.WriteString(text)
@@ -136,6 +56,10 @@ local function SaveSettings()
 end
 
 net.Receive("LinvLib:SaveSetting", function(len, ply)
+    if !LinvLib.Config.InGameSettings then
+        LinvLib:Notif(ply, LinvLib:GetTrad("settings_in_file_only"))
+        return
+    end
     if LinvLib.Config.AdminGroups[ply:GetUserGroup()] then
         local id = net.ReadString()
         if id == "AdminMenu" then
@@ -180,9 +104,6 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
 end)
 
 hook.Add("Initialize", "LinvLib:LoadSettings", function()
-    if !file.Exists("linventif/linventif_library/installed.json", "DATA") then
-        file.Write("linventif/linventif_library/installed.json", util.TableToJSON({}))
-    end
     if file.Exists("linventif/linventif_library/settings.json", "DATA") then
         local data = util.JSONToTable(file.Read("linventif/linventif_library/settings.json", "DATA"))
         if data.version < LinvLib.version then

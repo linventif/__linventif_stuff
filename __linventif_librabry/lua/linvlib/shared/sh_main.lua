@@ -1,3 +1,15 @@
+function LinvLib:GetTrad(id)
+    if !LinvLib.Config.DebugMode && !LinvLib.Config.ForceLanguage then
+        if CLIENT then
+            return language.GetPhrase(LinvLib.folder .. ".".. id)
+        else
+            return "#" .. id
+        end
+    else
+        LinvLib:GetDebugTrad(id)
+    end
+end
+
 local function LinvLibVerif(LinvLibWeb)
     LinvLib.LoadStr("Linventif Library", LinvLib.version, LinvLib.license)
     if LinvLibWeb.version != LinvLib.version then

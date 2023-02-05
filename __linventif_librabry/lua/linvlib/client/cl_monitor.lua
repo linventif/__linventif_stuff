@@ -178,7 +178,19 @@ local function OpenSelect(data)
     end
 end
 
+local function GetLanguageSetting()
+    if !LinvLib.Config.ForceLanguage && !LinvLib.Config.DebugMode then
+        return "Auto"
+    else
+        return LinvLib.Config.Language
+    end
+end
+
 local function OpenSettings()
+    if !LinvLib.Config.InGameSettings then
+        LinvLib:Notif(LinvLib:GetTrad("settings_in_file_only"))
+        return
+    end
     local settings_list = {
         [1] = {
             ["name"] = LinvLib:GetTrad("general"),
@@ -186,23 +198,23 @@ local function OpenSettings()
                 [1] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        local data_table = {
-                            ["title"] = LinvLib:GetTrad("language"),
-                            ["data"] = LinvLib:GetLanguageId(),
-                            ["type"] = "simple",
-                            ["callback"] = function(data)
-                                if data == "Add Language" then
-                                    LinvLib:Notif(LinvLib:GetTrad("language_add"))
-                                else
-                                    LinvLib.Config.Language = data
-                                    SaveSetting("Language", LinvLib.Config.Language)
-                                end
-                            end
-                        }
-                        data_table.data[#data_table.data + 1] = "Add Language"
-                        OpenSelect(data_table)
+                        -- local data_table = {
+                        --     ["title"] = LinvLib:GetTrad("language"),
+                        --     ["data"] = LinvLib:GetLanguageId(),
+                        --     ["type"] = "simple",
+                        --     ["callback"] = function(data)
+                        --         if data == "Add Language" then
+                        --             LinvLib:Notif(LinvLib:GetTrad("language_add"))
+                        --         else
+                        --             LinvLib.Config.Language = data
+                        --             SaveSetting("Language", LinvLib.Config.Language)
+                        --         end
+                        --     end
+                        -- }
+                        -- data_table.data[#data_table.data + 1] = "Add Language"
+                        -- OpenSelect(data_table)
                     end,
-                    ["name"] = LinvLib:GetTrad("language") .. " : " .. LinvLib.Config.Language
+                    ["name"] = LinvLib:GetTrad("language") .. " : " .. GetLanguageSetting()
                 },
                 [2] = {
                     ["icon"] = LinvLib.Materials["edit"],
@@ -566,11 +578,11 @@ local function OpenMonitor(data)
     info:Dock(TOP)
     info:DockMargin(RespW(30), 0, RespW(30), RespH(15))
 
-    local nb_addons = LinvLib:LabelPanel(info, LinvLib:GetTrad("install_addon") .. nb_addon, "LinvFontRobo20", 305, 50)
+    local nb_addons = LinvLib:LabelPanel(info, LinvLib:GetTrad("install_addon") .. " " .. nb_addon, "LinvFontRobo20", 305, 50)
     nb_addons:Dock(LEFT)
     nb_addons:DockMargin(RespW(30), 0, 0, 0)
 
-    local nb_addon_need = LinvLib:LabelPanel(info, LinvLib:GetTrad("addon_need_update") .. nb_needupdate, "LinvFontRobo20", 305, 50)
+    local nb_addon_need = LinvLib:LabelPanel(info, LinvLib:GetTrad("addon_need_update") .. " " .. nb_needupdate, "LinvFontRobo20", 305, 50)
     nb_addon_need:Dock(RIGHT)
     nb_addon_need:DockMargin(RespW(30), 0, 0, 0)
 
@@ -762,6 +774,7 @@ local function NewAddonsDetected(data)
 end
 
 hook.Add("InitPostEntity", "LinvLib:InitAll", function()
+    if !LinvLib.Config.InGameSettings then return end
     timer.Simple(2, function()
         net.Start("LinvLib:Action")
             net.WriteString("LinvLib:GetSettings")
