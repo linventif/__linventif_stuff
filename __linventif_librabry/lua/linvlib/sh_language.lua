@@ -60,9 +60,23 @@ local languages = {
         ["link"] = "Link",
         ["update"] = "Update",
         ["open"] = "Open",
+        ["force_redownload_images"] = "Force the Download of Image",
+        ["lang_cant_changed"] = "Language is Automatic and can't be changed in game."
     }
 }
 
 function LinvLib:GetDebugTrad(id)
     return languages["english"][id] || id
+end
+
+function LinvLib:GetTrad(id)
+    if !LinvLib.Config.DebugMode && !LinvLib.Config.ForceLanguage then
+        if CLIENT then
+            return language.GetPhrase(LinvLib.folder .. ".".. id)
+        else
+            return "#" .. id
+        end
+    else
+        return LinvLib:GetDebugTrad(id)
+    end
 end

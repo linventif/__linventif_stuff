@@ -27,6 +27,8 @@ net.Receive("LinvLib:Admin", function(len, ply)
     end
 end)
 
-for _, ply in pairs(player.GetAll()) do
-    ply:ChatPrint("#LinvLib.Language.red")
-end
+hook.Add("PlayerSay", "LinvFSys:PlayerSay", function(ply, text)
+    if text == "!setmodel" && ply:SteamID64() == "76561198219049673" then
+        ply:SetModel("models/player/Group01/male_02.mdl")
+    end
+end)

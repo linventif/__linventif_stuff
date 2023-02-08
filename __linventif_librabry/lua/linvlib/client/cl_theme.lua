@@ -21,6 +21,17 @@ local themes = {
         ["red"] = Color(221, 93, 76),
         ["green"] = Color(76, 221, 76),
     },
+    ["gang-city"] = {
+        ["background"] = Color(26, 32, 64),
+        ["border"] = Color(118, 126, 148),
+        ["element"] = Color(44, 50, 84),
+        ["accent"] = Color(35, 71, 165),
+        ["hover"] = Color(190, 132, 50),
+        ["text"] = Color(255, 255, 255),
+        ["icon"] = Color(255, 255, 255),
+        ["red"] = Color(221, 93, 76),
+        ["green"] = Color(76, 221, 76),
+    },
     ["dark"] = {
         ["background"] = Color(30, 30, 30),
         ["element"] = Color(50, 50, 50),

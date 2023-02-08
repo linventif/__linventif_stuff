@@ -93,6 +93,8 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
             LinvLib.Config.Border = net.ReadInt(32)
         elseif id == "Rounded" then
             LinvLib.Config.Rounded = net.ReadInt(32)
+        elseif id == "ForceMaterial" then
+            LinvLib.Config.ForceMaterial = net.ReadBool()
         end
         SaveSettings()
         net.Start("LinvLib:SaveSetting")

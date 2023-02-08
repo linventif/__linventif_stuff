@@ -1,15 +1,3 @@
-function LinvLib:GetTrad(id)
-    if !LinvLib.Config.DebugMode && !LinvLib.Config.ForceLanguage then
-        if CLIENT then
-            return language.GetPhrase(LinvLib.folder .. ".".. id)
-        else
-            return "#" .. id
-        end
-    else
-        LinvLib:GetDebugTrad(id)
-    end
-end
-
 local function LinvLibVerif(LinvLibWeb)
     LinvLib.LoadStr("Linventif Library", LinvLib.version, LinvLib.license)
     if LinvLibWeb["linventif-library"].version != LinvLib.version then
@@ -26,6 +14,16 @@ local function LinvLibVerif(LinvLibWeb)
     end
     print(" ")
     print(" ")
+end
+
+function LinvLib:SetAddonInfo(name, version, license, folder)
+    local data = {
+        ["folder"] = folder,
+        ["name"] = name,
+        ["license"] = license,
+        ["version"] = version
+    }
+    return data
 end
 
 hook.Add("Initialize", "LinvLib:GetVersion", function()

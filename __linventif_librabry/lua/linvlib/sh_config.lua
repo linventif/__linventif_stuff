@@ -76,7 +76,7 @@ LinvLib.Config.MinPlayerTrustFactor = 50 // Min Player Trust Factor (0 to disabl
 
 LinvLib.Config.DebugMode = false // Debug (true - false)
 LinvLib.Config.ForceLanguage = false // Force Language (false = auto detect, true = force to use the language in sh_language.lua)
-LinvLib.Config.ForceMaterial = true // Force Redownload Material (true - false) (if you have a problem with the material, put it to true)
+LinvLib.Config.ForceMaterial = false // Force Redownload Material (true - false) (if you have a problem with the material, put it to true)
 LinvLib.Config.MonitorCommands = { // Monitor Commands to open the monitor
     ["!monitor"] = true,
     ["/monitor"] = true,

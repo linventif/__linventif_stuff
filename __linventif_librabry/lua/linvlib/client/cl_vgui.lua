@@ -116,8 +116,7 @@ end
 
 // -- // -- // --
 
-function LinvLib:Frame(weight, height, round)
-    if !round then round = 14 end
+function LinvLib:Frame(weight, height)
     local frame = vgui.Create("DFrame")
     frame:SetSize(RespW(weight), RespH(height))
     frame:Center()

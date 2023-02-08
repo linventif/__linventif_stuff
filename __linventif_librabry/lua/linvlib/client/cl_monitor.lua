@@ -17,6 +17,7 @@ local id_type = {
         ["MonitorShowEveryJoin"] = true,
         ["MonitorShowNewUpadte"] = true,
         ["MonitorShowNewAddon"] = true,
+        ["ForceMaterial"] = true
     },
     ["string"] = {
         ["Language"] = true,
@@ -213,6 +214,8 @@ local function OpenSettings()
                         -- }
                         -- data_table.data[#data_table.data + 1] = "Add Language"
                         -- OpenSelect(data_table)
+                        RunConsoleCommand("linvlib_settings")
+                        LinvLib:Notif(LinvLib:GetTrad("lang_cant_changed"))
                     end,
                     ["name"] = LinvLib:GetTrad("language") .. " : " .. GetLanguageSetting()
                 },
@@ -446,6 +449,20 @@ local function OpenSettings()
                         SaveSetting("DebugMode", LinvLib.Config.DebugMode)
                     end,
                     ["name"] = LinvLib:GetTrad("debug_mode")
+                },
+                [2] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.ForceMaterial,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.ForceMaterial then
+                            LinvLib.Config.ForceMaterial = false
+                        else
+                            LinvLib.Config.ForceMaterial = true
+                        end
+                        SaveSetting("ForceMaterial", LinvLib.Config.ForceMaterial)
+                    end,
+                    ["name"] = LinvLib:GetTrad("force_redownload_images")
                 },
             }
         },
