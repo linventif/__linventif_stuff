@@ -27,10 +27,11 @@ LinvLib.Config.InGameSettings = true // Put to false if you want to change the c
 //                                        //
 // -- // -- // -- // -- // -- // -- // -- //
 
-// Main Settings
+// Customization / Appearance Settings
 LinvLib.Config.Theme = "linventif" // Theme (linventif - dark - grey - light) you can add your own theme in cl_theme.lua
-LinvLib.Config.Border = 0 // Border (px 0 to disable)
 LinvLib.Config.Rounded = 8 // Rounded (px 0 to disable)
+LinvLib.Config.Border = 0 // Border (px 0 to disable)
+LinvLib.Config.CrossBorder = 0 // Cross Length (px) (0 to disable) (if < 1 it will be a percentage of the screen)
 
 // Admin Settings
 LinvLib.Config.AdminGroups = { // Admin Group
@@ -92,7 +93,7 @@ LinvLib.Config.AdminCommands = { // Admin Commands to open the admin menu
 
 // -- // -- // -- // -- // -- // -- // -- //
 //                                        //
-//           RETROCOMPATIBILITY           //
+//           RETRO-COMPATIBILITY          //
 //                                        //
 // -- // -- // -- // -- // -- // -- // -- //
 

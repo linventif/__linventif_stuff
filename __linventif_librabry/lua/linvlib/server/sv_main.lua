@@ -45,6 +45,7 @@ function LinvLib:Notif(ply, text)
 end
 
 local function SaveSettings()
+    // Save the config in a file
     if !file.Exists("linventif/linventif_library", "DATA") then
         file.CreateDir("linventif/linventif_library")
     end
@@ -53,6 +54,11 @@ local function SaveSettings()
         ["config"] = LinvLib.Config
     }
     file.Write("linventif/linventif_library/settings.json", util.TableToJSON(data, true))
+    // Send the config to all players
+    net.Start("LinvLib:Action")
+        net.WriteString("LinvLib:SaveSetting")
+        net.WriteString(util.TableToJSON(LinvLib.Config))
+    net.Broadcast()
 end
 
 net.Receive("LinvLib:SaveSetting", function(len, ply)
@@ -95,11 +101,10 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
             LinvLib.Config.Rounded = net.ReadInt(32)
         elseif id == "ForceMaterial" then
             LinvLib.Config.ForceMaterial = net.ReadBool()
+        elseif id == "CrossBorder" then
+            LinvLib.Config.CrossBorder = net.ReadDouble()
         end
         SaveSettings()
-        net.Start("LinvLib:SaveSetting")
-            net.WriteString(util.TableToJSON(LinvLib.Config))
-        net.Broadcast()
     else
         LinvLib:Notif(ply, LinvLib:GetTrad("not_perm"))
     end

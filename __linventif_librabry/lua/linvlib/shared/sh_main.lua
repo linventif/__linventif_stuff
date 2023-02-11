@@ -56,6 +56,7 @@ function LinvLib.FormatMoney(money, symbol, possition, separator)
 end
 
 function LinvLib.MoneyToShow(separator, money)
+    if !separator || !money then return end
     local monlen = string.len(money)
     local moneystr = ""
     for i = 1, monlen do

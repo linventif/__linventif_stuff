@@ -61,7 +61,9 @@ local languages = {
         ["update"] = "Update",
         ["open"] = "Open",
         ["force_redownload_images"] = "Force the Download of Image",
-        ["lang_cant_changed"] = "Language is Automatic and can't be changed in game."
+        ["lang_cant_changed"] = "Language is Automatic and can't be changed in game.",
+        ["cross_border_instruction"] = "If between 0 and 1 = percent else size in pixel !",
+        ["cross_border"] = "Cross Border Size"
     }
 }
 

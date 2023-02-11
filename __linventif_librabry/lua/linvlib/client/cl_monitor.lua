@@ -32,6 +32,9 @@ local id_type = {
     ["number"] = {
         ["Border"] = true,
         ["Rounded"] = true
+    },
+    ["double"] = {
+        ["CrossBorder"] = true
     }
 }
 
@@ -50,6 +53,8 @@ local function SaveSetting(id, data)
             net.WriteColor(data)
         elseif id_type["number"][id] then
             net.WriteInt(data, 32)
+        elseif id_type["double"][id] then
+            net.WriteDouble(data)
         end
     net.SendToServer()
 end
@@ -410,6 +415,18 @@ local function OpenSettings()
                 [1] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
+                        LinvLib:NumberPanel("Rounded", LinvLib.Config.Rounded, 0, 100000, function(value)
+                            LinvLib.Config.Rounded = value
+                            SaveSetting("Rounded", LinvLib.Config.Rounded)
+                        end, function()
+                            RunConsoleCommand("linvlib_settings")
+                        end)
+                    end,
+                    ["name"] = LinvLib:GetTrad("rounded")
+                },
+                [2] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
                         LinvLib:NumberPanel(LinvLib:GetTrad("border_size"), LinvLib.Config.Border, 0, 100000, function(value)
                             LinvLib.Config.Border = value
                             SaveSetting("Border", LinvLib.Config.Border)
@@ -419,17 +436,17 @@ local function OpenSettings()
                     end,
                     ["name"] = LinvLib:GetTrad("border_size")
                 },
-                [2] = {
+                [3] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        LinvLib:NumberPanel("Rounded", LinvLib.Config.Rounded, 0, 100000, function(value)
-                            LinvLib.Config.Rounded = value
-                            SaveSetting("Rounded", LinvLib.Config.Rounded)
+                        LinvLib:NumberPanel(LinvLib:GetTrad("cross_border"), LinvLib.Config.CrossBorder, 0, 100000, function(value)
+                            LinvLib.Config.CrossBorder = value
+                            SaveSetting("CrossBorder", LinvLib.Config.CrossBorder)
                         end, function()
                             RunConsoleCommand("linvlib_settings")
-                        end)
+                        end, LinvLib:GetTrad("cross_border_instruction"))
                     end,
-                    ["name"] = LinvLib:GetTrad("rounded")
+                    ["name"] = LinvLib:GetTrad("cross_border")
                 },
             }
         },
@@ -527,14 +544,12 @@ local function OpenSettings()
         dplist:EnableHorizontal(true)
         dplist:SetSpacing(RespW(30))
         dplist:SetPadding(RespW(0))
-        dplist.Paint = function(self, w, h)
-            draw.RoundedBox(RespW(8), 0, 0, w, h, Color(0, 0, 0, 0))
-        end
         for k2, v2 in SortedPairs(v["settings"]) do
             local panel = vgui.Create("DPanel")
             panel:SetSize(RespW(405), RespH(60))
             panel.Paint = function(self, w, h)
-                draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("element"))
+                LinvLib:NewPaint(panel, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("element"))
+                -- draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("element"))
                 -- draw.RoundedBox(RespW(8), 355, 10, 40, 40, LinvLib:GetColorTheme("accent"))
                 draw.SimpleText(v2["name"], "LinvFontRobo20", RespW(177.5), RespH(30), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
@@ -609,21 +624,17 @@ local function OpenMonitor(data)
 
     local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("icon"), "LinvFontRobo20", 84, 50)
     label_icon:Dock(LEFT)
-    label_icon:DockMargin(0, 0, 0, 0)
+    label_icon:DockMargin(0, 0, RespW(15), 0)
 
     local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("name"), "LinvFontRobo20", 100, 50)
     label_icon:Dock(FILL)
     label_icon:DockMargin(RespW(30), 0, 0, 0)
 
-    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("link"), "LinvFontRobo20", 100, 50)
+    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("last_version"), "LinvFontRobo20", 125, 50)
     label_icon:Dock(RIGHT)
-    label_icon:DockMargin(RespW(30), 0, RespW(10), 0)
+    label_icon:DockMargin(RespW(30), 0, RespW(15), 0)
 
-    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("last_version"), "LinvFontRobo20", 100, 50)
-    label_icon:Dock(RIGHT)
-    label_icon:DockMargin(RespW(30), 0, 0, 0)
-
-    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("your_version"), "LinvFontRobo20", 100, 50)
+    local label_icon = LinvLib:LabelPanel(scroll_info, LinvLib:GetTrad("your_version"), "LinvFontRobo20", 125, 50)
     label_icon:Dock(RIGHT)
     label_icon:DockMargin(RespW(30), 0, 0, 0)
 
@@ -637,10 +648,9 @@ local function OpenMonitor(data)
     for k, v in pairs(data) do
         if !LinvLib.Install[k] then continue end
         local need_update = LinvLib.Install[k] < v.version
-        local addon = LinvLib:Panel(scroll, 720, 84)
-        addon.Paint = function(self, w, h)
-            LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("element"))
-        end
+        local addon = LinvLib:Button(scroll, "", 720, 84, LinvLib:GetColorTheme("element"), true, function()
+            -- LinvLib:WebPage(v.repository)
+        end)
         addon:Dock(TOP)
         addon:DockMargin(0, 0, RespW(10), RespH(15))
         addon:DockPadding(RespW(10), RespH(10), RespW(10), RespH(10))
@@ -655,24 +665,33 @@ local function OpenMonitor(data)
         local name = LinvLib:LabelPanel(addon, v.title, "LinvFontRobo20", 100, 50)
         name:Dock(FILL)
         name:DockMargin(RespW(30), 0, 0, 0)
-        local but = LinvLib:Button(addon, need_update && LinvLib:GetTrad("update") || LinvLib:GetTrad("open"), 100, 50, LinvLib:GetColorTheme("accent"), true, function()
-            LinvLib:WebPage(v.repository)
-        end)
-        but:Dock(RIGHT)
-        but:DockMargin(RespW(30), 0, 0, 0)
-        local last_version = LinvLib:LabelPanel(addon, v.version, "LinvFontRobo20", 100, 50)
+        local last_version = LinvLib:LabelPanel(addon, v.version, "LinvFontRobo20", 125, 50)
         last_version:Dock(RIGHT)
         last_version:DockMargin(RespW(30), 0, 0, 0)
-        local your_version = LinvLib:LabelPanel(addon, LinvLib.Install[k], "LinvFontRobo20", 100, 50)
+        local your_version = LinvLib:LabelPanel(addon, LinvLib.Install[k], "LinvFontRobo20", 125, 50)
         your_version:Dock(RIGHT)
         your_version:DockMargin(RespW(30), 0, 0, 0)
         if need_update then
             your_version.Paint = function(self, w, h)
-                draw.SimpleText(LinvLib.Install[k], "LinvFontRobo25", w/2, h/2, LinvLib:GetColorTheme("red"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+                draw.SimpleText(LinvLib.Install[k], "LinvFontRobo20", w/2, h/2, LinvLib:GetColorTheme("red"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         else
             your_version.Paint = function(self, w, h)
                 draw.SimpleText(LinvLib.Install[k], "LinvFontRobo20", w/2, h/2, LinvLib:GetColorTheme("green"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+            end
+        end
+        local button_addon = LinvLib:Button(addon, "", 720, 84, LinvLib:GetColorTheme("element"), false, function()
+            LinvLib:WebPage(v.repository)
+        end)
+        button_addon.Paint = function() return end
+        button_addon.OnCursorEntered = function()
+            addon.Paint = function(self, w, h)
+                LinvLib:PaintElement(frame, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("hover"))
+            end
+        end
+        button_addon.OnCursorExited = function()
+            addon.Paint = function(self, w, h)
+                LinvLib:PaintElement(frame, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("element"))
             end
         end
     end

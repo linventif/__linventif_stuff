@@ -92,24 +92,43 @@ end
 function LinvLib:NewPaint(element, w, h, border, background, noborder)
     local round = LinvLib.Config.Rounded
     if LinvLib.Config.Border != 0 && !noborder then
-        local BorderY = RespH(LinvLib.Config.Border)
-        local BorderX = RespW(LinvLib.Config.Border)
-        draw.RoundedBox(RespW(round), 0, 0, w, h, border)
-        draw.RoundedBox(RespW(math.Clamp(round-2, 0, 100)), BorderX, BorderY, w-BorderX*2, h-BorderY*2, background)
+        if LinvLib.Config.CrossBorder != 0 then
+            local BorderY, BorderX = 0, 0
+            if LinvLib.Config.CrossBorder < 1 then
+                BorderY, BorderX = h*LinvLib.Config.CrossBorder, w*LinvLib.Config.CrossBorder
+            else
+                BorderY, BorderX = RespH(LinvLib.Config.CrossBorder), RespW(LinvLib.Config.CrossBorder)
+            end
+            draw.RoundedBox(RespW(round), w-BorderX, 0, BorderX, BorderY, border)
+            draw.RoundedBox(RespW(round), 0, 0, BorderX, BorderY, border)
+            draw.RoundedBox(RespW(round), w-BorderX, h-BorderY, BorderX, BorderY, border)
+            draw.RoundedBox(RespW(round), 0, h-BorderY, BorderX, BorderY, border)
+            local BorderY, BorderX = RespH(LinvLib.Config.Border), RespW(LinvLib.Config.Border)
+            draw.RoundedBox(RespW(math.Clamp(round-2, 0, 100)), BorderX, BorderY, w-BorderX*2, h-BorderY*2, background)
+        else
+            local BorderY, BorderX = RespH(LinvLib.Config.Border), RespW(LinvLib.Config.Border)
+            draw.RoundedBox(RespW(round), 0, 0, w, h, border)
+            draw.RoundedBox(RespW(math.Clamp(round-2, 0, 100)), BorderX, BorderY, w-BorderX*2, h-BorderY*2, background)
+        end
     else
         draw.RoundedBox(RespW(round), 0, 0, w, h, background)
     end
 end
 
+function LinvLib:PaintElement(element, w, h, color, hovercolor)
+    LinvLib:NewPaint(element, w, h, color, hovercolor)
+end
+
 function LinvLib:Hover(element, round, color, hovercolor)
+    if isnumber(element) then return end
     element.OnCursorEntered = function()
         element.Paint = function(self, w, h)
-            LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), hovercolor)
+            LinvLib:PaintElement(frame, w, h, LinvLib:GetColorTheme("border"), hovercolor)
         end
     end
     element.OnCursorExited = function()
         element.Paint = function(self, w, h)
-            LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), color)
+            LinvLib:PaintElement(frame, w, h, LinvLib:GetColorTheme("border"), color)
         end
     end
 end
@@ -341,13 +360,19 @@ end
 --     print(result)
 -- end)
 
-function LinvLib:NumberPanel(msg, value, min, max, func, remove_func)
+function LinvLib:NumberPanel(msg, value, min, max, func, remove_func, description)
     local frame = LinvLib:Frame(400, 290, 8)
     frame:DockPadding(RespW(30), RespH(30), RespW(30), RespH(30))
 
     local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 40)
     title:Dock(TOP)
-    title:DockMargin(0, 0, 0, RespW(15))
+    title:DockMargin(0, 0, 0, RespW(10))
+
+    if description then
+        local desc = LinvLib:LabelPanel(frame, description, "LinvFontRobo20", 400, 35)
+        desc:Dock(TOP)
+        desc:DockMargin(0, 0, 0, RespW(15))
+    end
 
     local entry = LinvLib:TextEntry(frame, 400, 50, value, true)
     entry:SetNumeric(true)

@@ -34,6 +34,7 @@ local themes = {
     },
     ["dark"] = {
         ["background"] = Color(30, 30, 30),
+        ["border"] = Color(124, 124, 124),
         ["element"] = Color(50, 50, 50),
         ["accent"] = Color(75, 75, 75),
         ["hover"] = Color(100, 100, 100),
@@ -44,6 +45,7 @@ local themes = {
     },
     ["grey"] = {
         ["background"] = Color(55, 55, 55),
+        ["border"] = Color(118, 126, 148),
         ["element"] = Color(80, 80, 80),
         ["accent"] = Color(115, 115, 115),
         ["hover"] = Color(135, 135, 135),
@@ -54,6 +56,7 @@ local themes = {
     },
     ["light"] = {
         ["background"] = Color(85, 85, 85),
+        ["border"] = Color(118, 126, 148),
         ["element"] = Color(110, 110, 110),
         ["accent"] = Color(140, 140, 140),
         ["hover"] = Color(165, 165, 165),
