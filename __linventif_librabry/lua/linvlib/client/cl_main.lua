@@ -28,32 +28,34 @@ function LinvLib.LNotif(msg, enum, time, addon)
     print(addon .. " : " .. msg)
 end
 
+local ImageCache = {}
+
 function LinvLib.CreateImgurMaterials(materials, addon_var, folder, name)
     if !file.Exists(folder, "DATA") then
         file.CreateDir(folder)
     end
 
-    if LinvLib.Config.ForceMaterial then
-        local function DeleteMaterials(path)
-            local files, folders = file.Find(path .. "/*", "DATA")
-            for k, v in pairs(files) do
-                local file_name = string.gsub(v, ".png", "")
-                if !materials[file_name] then
-                    file.Delete(path .. "/" .. v)
-                    print("| " .. name .. " | Image Deleted | " .. v)
-                end
-            end
-            for k, v in pairs(folders) do
-                DeleteMaterials(path .. "/" .. v)
-            end
-        end
-        DeleteMaterials(folder)
-    end
+    -- if LinvLib.Config.ForceMaterial then
+    --     local function DeleteMaterials(path)
+    --         local files, folders = file.Find(path .. "/*", "DATA")
+    --         for k, v in pairs(files) do
+    --             local file_name = string.gsub(v, ".png", "")
+    --             if !materials[file_name] then
+    --                 file.Delete(path .. "/" .. v)
+    --                 print("| " .. name .. " | Image Deleted | " .. v)
+    --             end
+    --         end
+    --         for k, v in pairs(folders) do
+    --             DeleteMaterials(path .. "/" .. v)
+    --         end
+    --     end
+    --     DeleteMaterials(folder)
+    -- end
 
     local function getMatFromUrl(url, id)
         materials[id] = Material("nil")
 
-        if file.Exists(folder .. "/" .. id .. ".png", "DATA") && LinvLib.Config.ForceMaterial then
+        if file.Exists(folder .. "/" .. id .. ".png", "DATA") && !LinvLib.Config.ForceMaterial then
             addon_var[id] = Material("../data/" .. folder .. "/" .. id .. ".png", "noclamp smooth")
             print("| " .. name .. " | Image Loaded | " .. id .. ".png")
             return
@@ -62,12 +64,24 @@ function LinvLib.CreateImgurMaterials(materials, addon_var, folder, name)
         http.Fetch(url, function(body)
             file.Write(folder .. "/" .. id .. ".png", body)
             addon_var[id] = Material("../data/" .. folder .. "/" .. id .. ".png", "noclamp smooth")
+            ImageCache[table.Count(ImageCache) + 1] = {
+                ["folder"] = folder,
+                ["addon_var"] = addon_var,
+                ["id"] = id
+            }
             print("| " .. name .. " | Image Downloaded | " .. id .. ".png")
         end)
     end
 
     for k, v in pairs(materials) do
         getMatFromUrl("https://i.imgur.com/" .. v .. ".png", k)
+    end
+end
+
+function LinvLib:RedowloadMaterials()
+    for k, v in pairs(ImageCache) do
+        v.addon_var[v.id] = Material("../data/" .. v.folder .. "/" .. v.id .. ".png", "noclamp smooth")
+        print("| " .. name .. " | Image Redownloaded | " .. v.id .. ".png")
     end
 end
 

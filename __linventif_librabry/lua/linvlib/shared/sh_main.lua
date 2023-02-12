@@ -41,7 +41,7 @@ function LinvLib.MoneyToShow(separator, money)
     local monlen = string.len(money)
     local moneystr = ""
     for i = 1, monlen do
-        if i % 3 == 0 then
+        if i % 3 == 0 && i != monlen then
             moneystr = LinvLib.Config.MoneySymbolSeparator .. string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
         else
             moneystr = string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
@@ -53,7 +53,7 @@ end
 function LinvLib.FormatMoney(money)
     local monlen = string.len(money)
     local moneystr = LinvLib.MoneyToShow(separator, money)
-    if LinvLib.Config.MoneySymbolPosition == "After" then
+    if LinvLib.Config.MoneySymbolLeft then
         moneystr = LinvLib.Config.MoneySymbol .. moneystr
     else
         moneystr = moneystr .. LinvLib.Config.MoneySymbol

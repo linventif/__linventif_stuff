@@ -64,7 +64,7 @@ local languages = {
         ["lang_cant_changed"] = "Language is Automatic and can't be changed in game.",
         ["cross_border_instruction"] = "If between 0 and 1 = percent else size in pixel !",
         ["cross_border"] = "Cross Border Size",
-        ["money_symbol_position"] = "Position of the Money Symbol",
+        ["money_symbol_position"] = "Money Symbol to the Left",
         ["money_symbol_separator"] = "Money Symbol Separator",
         ["money_symbol"] = "Money Symbol",
         ["money_settings"] = "Money Settings"

@@ -107,8 +107,8 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
             LinvLib.Config.MoneySymbolSeparator = net.ReadString()
         elseif id == "Money Symbol" then
             LinvLib.Config.MoneySymbol = net.ReadString()
-        elseif id == "Money Symbol Position" then
-            LinvLib.Config.MoneySymbolPosition = net.ReadString()
+        elseif id == "MoneySymbolLeft" then
+            LinvLib.Config.MoneySymbolLeft = net.ReadBool()
         end
         SaveSettings()
     else

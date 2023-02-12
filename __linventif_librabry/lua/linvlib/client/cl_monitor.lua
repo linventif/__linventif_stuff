@@ -17,14 +17,14 @@ local id_type = {
         ["MonitorShowEveryJoin"] = true,
         ["MonitorShowNewUpadte"] = true,
         ["MonitorShowNewAddon"] = true,
-        ["ForceMaterial"] = true
+        ["ForceMaterial"] = true,
+        ["MoneySymbolLeft"] = true
     },
     ["string"] = {
         ["Language"] = true,
         ["Theme"] = true,
         ["Money Symbol"] = true,
         ["Money Symbol Separator"] = true,
-        ["Money Symbol Position"] = true,
     },
     ["table"] = {
         ["CompatibleAddon"] = true
@@ -430,25 +430,6 @@ local function OpenSettings()
                 [2] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        local data_table = {
-                            ["title"] = LinvLib:GetTrad("money_symbol_position"),
-                            ["data"] = {
-                                "Before",
-                                "After"
-                            },
-                            ["type"] = "simple",
-                            ["callback"] = function(data)
-                                LinvLib.Config.MoneySymbolPosition = data
-                                SaveSetting("Money Symbol Position", LinvLib.Config.MoneySymbolPosition)
-                            end
-                        }
-                        OpenSelect(data_table)
-                    end,
-                    ["name"] = LinvLib:GetTrad("money_symbol_position")
-                },
-                [3] = {
-                    ["icon"] = LinvLib.Materials["edit"],
-                    ["function"] = function()
                         LinvLib:TextPanel(LinvLib:GetTrad("money_symbol_separator"), LinvLib.Config.MoneySymbolSeparator, function(value)
                             LinvLib.Config.MoneySymbolSeparator = value
                             SaveSetting("Money Symbol Separator", LinvLib.Config.MoneySymbolSeparator)
@@ -457,6 +438,20 @@ local function OpenSettings()
                         end)
                     end,
                     ["name"] = LinvLib:GetTrad("money_symbol_separator")
+                },
+                [3] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.MoneySymbolLeft,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.MoneySymbolLeft then
+                            LinvLib.Config.MoneySymbolLeft = false
+                        else
+                            LinvLib.Config.MoneySymbolLeft = true
+                        end
+                        SaveSetting("MoneySymbolLeft", LinvLib.Config.MoneySymbolLeft)
+                    end,
+                    ["name"] = LinvLib:GetTrad("money_symbol_position")
                 },
             }
         },
@@ -897,11 +892,16 @@ hook.Add("OnPlayerChat", "LinvLib:OpenChatMonitor", function( ply, text)
     end
 end)
 
+local first_time = true
 net.Receive("LinvLib:Action", function(len, ply)
     local action = net.ReadString()
     if action == "LinvLib:SaveSetting" then
         LinvLib.Config = util.JSONToTable(net.ReadString())
         LinvLib:Notif(LinvLib:GetTrad("new_setting_received"))
+        if first_time then
+            LinvLib:RedowloadMaterials()
+            first_time = false
+        end
     elseif action == "LinvLib:Installed" then
         NewAddonsDetected(util.JSONToTable(net.ReadString()))
     end
