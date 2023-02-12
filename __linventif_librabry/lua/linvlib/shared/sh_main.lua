@@ -36,35 +36,49 @@ hook.Add("Initialize", "LinvLib:GetVersion", function()
     end)
 end)
 
-function LinvLib.FormatMoney(money, symbol, possition, separator)
+function LinvLib.MoneyToShow(separator, money)
+    if !money then return end
     local monlen = string.len(money)
     local moneystr = ""
     for i = 1, monlen do
         if i % 3 == 0 then
-            moneystr = separator .. string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
+            moneystr = LinvLib.Config.MoneySymbolSeparator .. string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
         else
             moneystr = string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
         end
-    end
-    money = moneystr
-    if possition then
-        moneystr = symbol .. moneystr
-    else
-        moneystr = moneystr .. symbol
     end
     return moneystr
 end
 
-function LinvLib.MoneyToShow(separator, money)
-    if !separator || !money then return end
+function LinvLib.FormatMoney(money)
     local monlen = string.len(money)
-    local moneystr = ""
-    for i = 1, monlen do
-        if i % 3 == 0 then
-            moneystr = separator .. string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
-        else
-            moneystr = string.sub(money, monlen - i + 1, monlen - i + 1) .. moneystr
-        end
+    local moneystr = LinvLib.MoneyToShow(separator, money)
+    if LinvLib.Config.MoneySymbolPosition == "After" then
+        moneystr = LinvLib.Config.MoneySymbol .. moneystr
+    else
+        moneystr = moneystr .. LinvLib.Config.MoneySymbol
     end
     return moneystr
+end
+
+function LinvLib:GetPlyOfTeam(team)
+    local plys = {}
+    for k, v in pairs(player.GetAll()) do
+        if v:Team() == team then
+            table.insert(plys, v)
+        end
+    end
+    return plys
+end
+
+function LinvLib:GetPlyOfTeams(teams)
+    local plys = {}
+    for k, v in pairs(player.GetAll()) do
+        for k2, v2 in pairs(teams) do
+            if v:Team() == v2 then
+                table.insert(plys, v)
+            end
+        end
+    end
+    return plys
 end

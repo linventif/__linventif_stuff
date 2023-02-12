@@ -21,7 +21,10 @@ local id_type = {
     },
     ["string"] = {
         ["Language"] = true,
-        ["Theme"] = true
+        ["Theme"] = true,
+        ["Money Symbol"] = true,
+        ["Money Symbol Separator"] = true,
+        ["Money Symbol Position"] = true,
     },
     ["table"] = {
         ["CompatibleAddon"] = true
@@ -410,6 +413,54 @@ local function OpenSettings()
         },
         [4] = {
         -- [5] = {
+            ["name"] = LinvLib:GetTrad("money_settings"),
+            ["settings"] = {
+                [1] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        LinvLib:TextPanel(LinvLib:GetTrad("money_symbol"), LinvLib.Config.MoneySymbol, function(value)
+                            LinvLib.Config.MoneySymbol = value
+                            SaveSetting("Money Symbol", LinvLib.Config.MoneySymbol)
+                        end, function()
+                            RunConsoleCommand("linvlib_settings")
+                        end)
+                    end,
+                    ["name"] = LinvLib:GetTrad("money_symbol")
+                },
+                [2] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        local data_table = {
+                            ["title"] = LinvLib:GetTrad("money_symbol_position"),
+                            ["data"] = {
+                                "Before",
+                                "After"
+                            },
+                            ["type"] = "simple",
+                            ["callback"] = function(data)
+                                LinvLib.Config.MoneySymbolPosition = data
+                                SaveSetting("Money Symbol Position", LinvLib.Config.MoneySymbolPosition)
+                            end
+                        }
+                        OpenSelect(data_table)
+                    end,
+                    ["name"] = LinvLib:GetTrad("money_symbol_position")
+                },
+                [3] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        LinvLib:TextPanel(LinvLib:GetTrad("money_symbol_separator"), LinvLib.Config.MoneySymbolSeparator, function(value)
+                            LinvLib.Config.MoneySymbolSeparator = value
+                            SaveSetting("Money Symbol Separator", LinvLib.Config.MoneySymbolSeparator)
+                        end, function()
+                            RunConsoleCommand("linvlib_settings")
+                        end)
+                    end,
+                    ["name"] = LinvLib:GetTrad("money_symbol_separator")
+                },
+            }
+        },
+        [5] = {
             ["name"] = LinvLib:GetTrad("customisation"),
             ["settings"] = {
                 [1] = {

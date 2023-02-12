@@ -70,3 +70,9 @@ function LinvLib.CreateImgurMaterials(materials, addon_var, folder, name)
         getMatFromUrl("https://i.imgur.com/" .. v .. ".png", k)
     end
 end
+
+hook.Add("InitPostEntity", "LinvLib:GetSettings", function()
+    net.Start("LinvLib:Action")
+        net.WriteString("LinvLib:GetSetting")
+    net.SendToServer()
+end)

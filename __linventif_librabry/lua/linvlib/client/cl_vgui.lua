@@ -411,3 +411,40 @@ function LinvLib:NumberPanel(msg, value, min, max, func, remove_func, descriptio
     end)
     but_continue:Dock(RIGHT)
 end
+
+function LinvLib:TextPanel(msg, value, func, remove_func, description)
+    local frame = LinvLib:Frame(400, 290, 8)
+    frame:DockPadding(RespW(30), RespH(30), RespW(30), RespH(30))
+
+    local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 40)
+    title:Dock(TOP)
+    title:DockMargin(0, 0, 0, RespW(10))
+
+    if description then
+        local desc = LinvLib:LabelPanel(frame, description, "LinvFontRobo20", 400, 35)
+        desc:Dock(TOP)
+        desc:DockMargin(0, 0, 0, RespW(15))
+    end
+
+    local entry = LinvLib:TextEntry(frame, 400, 50, value, true)
+    entry:Dock(TOP)
+    entry:DockMargin(0, 0, 0, RespW(15))
+
+    local panel_but = LinvLib:Panel(frame, 400, 50)
+    panel_but:Dock(BOTTOM)
+    panel_but:DockMargin(0, RespW(15), 0, 0)
+    panel_but.Paint = function(self, w, h) end
+
+    local but_close = LinvLib:Button(panel_but, LinvLib:GetTrad("close"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
+        if remove_func then remove_func() end
+        frame:Remove()
+    end)
+    but_close:Dock(LEFT)
+
+    local but_continue = LinvLib:Button(panel_but, LinvLib:GetTrad("continue"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
+        func(entry:GetValue())
+        if remove_func then remove_func() end
+        frame:Remove()
+    end)
+    but_continue:Dock(RIGHT)
+end

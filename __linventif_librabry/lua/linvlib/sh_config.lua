@@ -33,6 +33,11 @@ LinvLib.Config.Rounded = 8 // Rounded (px 0 to disable)
 LinvLib.Config.Border = 0 // Border (px 0 to disable)
 LinvLib.Config.CrossBorder = 0 // Cross Length (px) (0 to disable) (if < 1 it will be a percentage of the screen)
 
+// Money Settings
+LinvLib.Config.MoneySymbol = "€" // Money Symbol
+LinvLib.Config.MoneySymbolPosition = "After" // Money Symbol Position (before - after)
+LinvLib.Config.MoneySymbolSeparator = " " // Money Symbol between the number
+
 // Admin Settings
 LinvLib.Config.AdminGroups = { // Admin Group
     ["superadmin"] = true,

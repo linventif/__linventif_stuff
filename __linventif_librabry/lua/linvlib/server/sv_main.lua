@@ -103,6 +103,12 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
             LinvLib.Config.ForceMaterial = net.ReadBool()
         elseif id == "CrossBorder" then
             LinvLib.Config.CrossBorder = net.ReadDouble()
+        elseif id == "Money Symbol Separator" then
+            LinvLib.Config.MoneySymbolSeparator = net.ReadString()
+        elseif id == "Money Symbol" then
+            LinvLib.Config.MoneySymbol = net.ReadString()
+        elseif id == "Money Symbol Position" then
+            LinvLib.Config.MoneySymbolPosition = net.ReadString()
         end
         SaveSettings()
     else
