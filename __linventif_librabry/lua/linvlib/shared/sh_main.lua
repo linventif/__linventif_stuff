@@ -61,6 +61,10 @@ function LinvLib.FormatMoney(money)
     return moneystr
 end
 
+function LinvLib:MoneyFormat(money)
+    return LinvLib.FormatMoney(money)
+end
+
 function LinvLib:GetPlyOfTeam(team)
     local plys = {}
     for k, v in pairs(player.GetAll()) do
