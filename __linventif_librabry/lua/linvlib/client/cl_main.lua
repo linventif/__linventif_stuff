@@ -81,9 +81,17 @@ end
 function LinvLib:RedowloadMaterials()
     for k, v in pairs(ImageCache) do
         v.addon_var[v.id] = Material("../data/" .. v.folder .. "/" .. v.id .. ".png", "noclamp smooth")
-        print("| " .. v.name .. " | Image Redownloaded | " .. v.id .. ".png")
+        print("| " .. "v.name" .. " | Image Redownloaded | " .. v.id .. ".png")
     end
 end
+
+concommand.Add("linvlib_redownload_materials", function()
+    LinvLib:RedowloadMaterials()
+end)
+
+concommand.Add("linvlib_show_materials", function()
+    PrintTable(ImageCache)
+end)
 
 hook.Add("InitPostEntity", "LinvLib:GetSettings", function()
     net.Start("LinvLib:Action")
