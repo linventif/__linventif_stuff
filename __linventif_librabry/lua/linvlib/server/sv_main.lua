@@ -109,6 +109,8 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
             LinvLib.Config.MoneySymbol = net.ReadString()
         elseif id == "MoneySymbolLeft" then
             LinvLib.Config.MoneySymbolLeft = net.ReadBool()
+        elseif id == "ShowNPCName" then
+            LinvLib.Config.ShowName = net.ReadBool()
         end
         SaveSettings()
     else

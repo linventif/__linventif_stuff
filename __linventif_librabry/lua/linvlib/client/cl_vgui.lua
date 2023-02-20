@@ -1,9 +1,31 @@
-local function RespW(x)
+function LinvLib:RespW(x)
     return ScrW() / 1920 * x
 end
 
-local function RespH(y)
+function LinvLib:RespH(y)
     return ScrH() / 1080 * y
+end
+
+
+function LinvLib:DrawNPCText(self, text, height_pos)
+    if text == "" || !LinvLib.Config.ShowName then return end
+    if !height_pos then height_pos = 3200 end
+    local pos = self:GetPos()
+	local ang = self:GetAngles()
+    local width_text = string.len(text)*59 + 150
+    if string.len(text) < 10 then
+        width_text = 800
+    end
+
+	ang:RotateAroundAxis(ang:Up(), 0)
+	ang:RotateAroundAxis(ang:Forward(), 85)
+
+	if LocalPlayer():GetPos():DistToSqr(self:GetPos()) < 40000 then
+		cam.Start3D2D(pos + ang:Up()*0, Angle(0,LocalPlayer():EyeAngles().y-90, 90), 0.025)
+			draw.RoundedBox(LinvLib.Config.Rounded*4, width_text/-2, -125 -height_pos, width_text, 260, LinvLib:GetColorTheme("background"))
+			draw.SimpleText(text, "LinvFontResp01", 0, -height_pos, LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+		cam.End3D2D()
+	end
 end
 
 function LinvLib.Hover(element, round, border, color, hovercolor, bordercolor, bordercolorhover)
@@ -73,18 +95,18 @@ function LinvLib.UIButton(element, color, border, radius1, radius2)
     element:SetTextColor(color["text"])
     element.Paint = function(self, w, h)
         draw.RoundedBox(radius1, 0, 0, w, h, color["border"])
-        draw.RoundedBox(radius2, RespW(radius2/2), RespH(radius2/2), w-RespW(radius2), h-RespH(radius2), color["background"])
+        draw.RoundedBox(radius2, LinvLib:RespW(radius2/2), LinvLib:RespH(radius2/2), w-LinvLib:RespW(radius2), h-LinvLib:RespH(radius2), color["background"])
     end
     element.OnCursorEntered = function()
         element.Paint = function(self, w, h)
             draw.RoundedBox(radius1, 0, 0, w, h, color["hover_border"])
-            draw.RoundedBox(radius2, RespW(radius2/2), RespH(radius2/2), w-RespW(radius2), h-RespH(radius2), color["hover"])
+            draw.RoundedBox(radius2, LinvLib:RespW(radius2/2), LinvLib:RespH(radius2/2), w-LinvLib:RespW(radius2), h-LinvLib:RespH(radius2), color["hover"])
         end
     end
     element.OnCursorExited = function()
         element.Paint = function(self, w, h)
             draw.RoundedBox(radius1, 0, 0, w, h, color["border"])
-            draw.RoundedBox(radius2, RespW(radius2/2), RespH(radius2/2), w-RespW(radius2), h-RespH(radius2), color["background"])
+            draw.RoundedBox(radius2, LinvLib:RespW(radius2/2), LinvLib:RespH(radius2/2), w-LinvLib:RespW(radius2), h-LinvLib:RespH(radius2), color["background"])
         end
     end
 end
@@ -97,21 +119,21 @@ function LinvLib:NewPaint(element, w, h, border, background, noborder)
             if LinvLib.Config.CrossBorder < 1 then
                 BorderY, BorderX = h*LinvLib.Config.CrossBorder, w*LinvLib.Config.CrossBorder
             else
-                BorderY, BorderX = RespH(LinvLib.Config.CrossBorder), RespW(LinvLib.Config.CrossBorder)
+                BorderY, BorderX = LinvLib:RespH(LinvLib.Config.CrossBorder), LinvLib:RespW(LinvLib.Config.CrossBorder)
             end
-            draw.RoundedBox(RespW(round), w-BorderX, 0, BorderX, BorderY, border)
-            draw.RoundedBox(RespW(round), 0, 0, BorderX, BorderY, border)
-            draw.RoundedBox(RespW(round), w-BorderX, h-BorderY, BorderX, BorderY, border)
-            draw.RoundedBox(RespW(round), 0, h-BorderY, BorderX, BorderY, border)
-            local BorderY, BorderX = RespH(LinvLib.Config.Border), RespW(LinvLib.Config.Border)
-            draw.RoundedBox(RespW(math.Clamp(round-2, 0, 100)), BorderX, BorderY, w-BorderX*2, h-BorderY*2, background)
+            draw.RoundedBox(LinvLib:RespW(round), w-BorderX, 0, BorderX, BorderY, border)
+            draw.RoundedBox(LinvLib:RespW(round), 0, 0, BorderX, BorderY, border)
+            draw.RoundedBox(LinvLib:RespW(round), w-BorderX, h-BorderY, BorderX, BorderY, border)
+            draw.RoundedBox(LinvLib:RespW(round), 0, h-BorderY, BorderX, BorderY, border)
+            local BorderY, BorderX = LinvLib:RespH(LinvLib.Config.Border), LinvLib:RespW(LinvLib.Config.Border)
+            draw.RoundedBox(LinvLib:RespW(math.Clamp(round-2, 0, 100)), BorderX, BorderY, w-BorderX*2, h-BorderY*2, background)
         else
-            local BorderY, BorderX = RespH(LinvLib.Config.Border), RespW(LinvLib.Config.Border)
-            draw.RoundedBox(RespW(round), 0, 0, w, h, border)
-            draw.RoundedBox(RespW(math.Clamp(round-2, 0, 100)), BorderX, BorderY, w-BorderX*2, h-BorderY*2, background)
+            local BorderY, BorderX = LinvLib:RespH(LinvLib.Config.Border), LinvLib:RespW(LinvLib.Config.Border)
+            draw.RoundedBox(LinvLib:RespW(round), 0, 0, w, h, border)
+            draw.RoundedBox(LinvLib:RespW(math.Clamp(round-2, 0, 100)), BorderX, BorderY, w-BorderX*2, h-BorderY*2, background)
         end
     else
-        draw.RoundedBox(RespW(round), 0, 0, w, h, background)
+        draw.RoundedBox(LinvLib:RespW(round), 0, 0, w, h, background)
     end
 end
 
@@ -137,7 +159,7 @@ end
 
 function LinvLib:Frame(weight, height)
     local frame = vgui.Create("DFrame")
-    frame:SetSize(RespW(weight), RespH(height))
+    frame:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     frame:Center()
     frame:SetTitle("")
     frame:MakePopup()
@@ -151,7 +173,7 @@ end
 
 function LinvLib:Panel(frame, weight, height, noborder, bord_color, back_color)
     local panel = vgui.Create("DPanel", frame)
-    panel:SetSize(RespW(weight), RespH(height))
+    panel:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     panel.Paint = function(self, w, h)
         LinvLib:NewPaint(frame, w, h, bord_color || LinvLib:GetColorTheme("border"), back_color || LinvLib:GetColorTheme("background"), noborder)
     end
@@ -160,7 +182,7 @@ end
 
 function LinvLib:Button(frame, text, weight, height, color, hover, func)
     local but = vgui.Create("DButton", frame)
-    but:SetSize(RespW(weight), RespH(height))
+    but:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     but:SetText(text)
     but:SetTextColor(LinvLib:GetColorTheme("text"))
     but:SetFont("LinvFontRobo20")
@@ -168,7 +190,7 @@ function LinvLib:Button(frame, text, weight, height, color, hover, func)
         LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), color)
     end
     if hover then
-        LinvLib:Hover(but, RespW(8), color, LinvLib:GetColorTheme("hover"))
+        LinvLib:Hover(but, LinvLib:RespW(8), color, LinvLib:GetColorTheme("hover"))
     end
     but.DoClick = func
     return but
@@ -177,15 +199,15 @@ end
 function LinvLib:Scroll(frame, weight, height, round)
     if !round then round = 4 end
     local scroll = vgui.Create("DScrollPanel", frame)
-    scroll:SetSize(RespW(weight), RespH(height))
+    scroll:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     scroll.Paint = function() return end
     scroll.VBar:SetHideButtons(true)
     scroll.VBar.Paint = function()
-        draw.RoundedBox(RespW(round), 0, 0, 10, scroll.VBar:GetTall(), LinvLib:GetColorTheme("element"))
+        draw.RoundedBox(LinvLib:RespW(round), 0, 0, 10, scroll.VBar:GetTall(), LinvLib:GetColorTheme("element"))
     end
     scroll.VBar:SetWide(10)
     scroll.VBar.btnGrip.Paint = function(self, w, h)
-        draw.RoundedBox(RespW(round), 0, 0, w, h, LinvLib:GetColorTheme("accent"))
+        draw.RoundedBox(LinvLib:RespW(round), 0, 0, w, h, LinvLib:GetColorTheme("accent"))
     end
     return scroll
 end
@@ -195,16 +217,16 @@ function LinvLib:Notif(text)
     if cooldown > CurTime() then return end
     cooldown = CurTime() + 2
     local frame = vgui.Create("DPanel")
-    frame:SetSize(RespW(600), RespH(40))
-    frame:SetPos(ScrW()/2-RespW(300), RespH(-100))
+    frame:SetSize(LinvLib:RespW(600), LinvLib:RespH(40))
+    frame:SetPos(ScrW()/2-LinvLib:RespW(300), LinvLib:RespH(-100))
     frame.Paint = function(self, w, h)
         draw.RoundedBox(8, 0, 0, w, h, LinvLib:GetColorTheme("background"))
-        draw.SimpleText(text, "LinvFontRobo20", RespW(600)/2, RespH(20), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        draw.SimpleText(text, "LinvFontRobo20", LinvLib:RespW(600)/2, LinvLib:RespH(20), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
     end
     print(text)
-    frame:MoveTo(ScrW()/2-RespW(300), RespH(10), 0.5, 0, 1)
+    frame:MoveTo(ScrW()/2-LinvLib:RespW(300), LinvLib:RespH(10), 0.5, 0, 1)
     timer.Simple(4, function()
-        frame:MoveTo(ScrW()/2-RespW(300), -RespH(100), 0.5, 0, 1)
+        frame:MoveTo(ScrW()/2-LinvLib:RespW(300), -LinvLib:RespH(100), 0.5, 0, 1)
         timer.Simple(0.5, function()
             frame:Remove()
         end)
@@ -261,16 +283,16 @@ function LinvLib:WebPage(url)
     frame:SetDraggable(true)
     local url_label = LinvLib:Label(frame, url)
     // set text center
-    url_label:SetPos(RespW((1920*0.8+60)/2)-url_label:GetWide()/2, RespH(5))
+    url_label:SetPos(LinvLib:RespW((1920*0.8+60)/2)-url_label:GetWide()/2, LinvLib:RespH(5))
     local web = vgui.Create("DHTML", frame)
-    web:SetSize(RespW(1920*0.8), RespH(1080*0.8))
+    web:SetSize(LinvLib:RespW(1920*0.8), LinvLib:RespH(1080*0.8))
     web:OpenURL(url)
     web:Center()
 end
 
 function LinvLib:TextEntry(frame, weight, height, text)
     local entry = vgui.Create("DTextEntry", frame)
-    entry:SetSize(RespW(weight), RespH(height))
+    entry:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     entry:SetValue(text)
     entry:SetFont("LinvFontRobo20")
     entry:SetTextColor(LinvLib:GetColorTheme("text"))
@@ -291,11 +313,11 @@ end)
 --     if !defaut_color then defaut_color = Color(255, 255, 255) end
 
 --     local frame = LinvLib:Frame(400, 475, 8)
---     frame:DockPadding(RespW(30), RespW(30), RespW(30), RespW(30))
+--     frame:DockPadding(LinvLib:RespW(30), LinvLib:RespW(30), LinvLib:RespW(30), LinvLib:RespW(30))
 
 --     local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 60)
 --     title:Dock(TOP)
---     title:DockMargin(0, 0, 0, RespW(15))
+--     title:DockMargin(0, 0, 0, LinvLib:RespW(15))
 
 --     local color_mixer = vgui.Create("DColorMixer", frame)
 --     color_mixer:Dock(FILL)
@@ -306,7 +328,7 @@ end)
 
 --     local panel_but = LinvLib:Panel(frame, 400, 50)
 --     panel_but:Dock(BOTTOM)
---     panel_but:DockMargin(0, RespW(30), 0, 0)
+--     panel_but:DockMargin(0, LinvLib:RespW(30), 0, 0)
 --     panel_but.Paint = function(self, w, h) end
 
 --     local but_close = LinvLib:Button(panel_but, LinvLib:GetTrad("close"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
@@ -325,11 +347,11 @@ function LinvLib:NumSlidePanel(msg, default, min, max, deci, func)
     if !defaut_color then defaut_color = Color(255, 255, 255) end
 
     local frame = LinvLib:Frame(400, 475, 8)
-    frame:DockPadding(RespW(30), RespW(30), RespW(30), RespW(30))
+    frame:DockPadding(LinvLib:RespW(30), LinvLib:RespW(30), LinvLib:RespW(30), LinvLib:RespW(30))
 
     local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 60)
     title:Dock(TOP)
-    title:DockMargin(0, 0, 0, RespW(15))
+    title:DockMargin(0, 0, 0, LinvLib:RespW(15))
 
     local DermaNumSlider = vgui.Create( "DNumSlider", frame )
     DermaNumSlider:SetSize( 400, 100 )
@@ -341,7 +363,7 @@ function LinvLib:NumSlidePanel(msg, default, min, max, deci, func)
 
     local panel_but = LinvLib:Panel(frame, 400, 50)
     panel_but:Dock(BOTTOM)
-    panel_but:DockMargin(0, RespW(30), 0, 0)
+    panel_but:DockMargin(0, LinvLib:RespW(30), 0, 0)
     panel_but.Paint = function(self, w, h) end
 
     local but_close = LinvLib:Button(panel_but, LinvLib:GetTrad("close"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
@@ -362,16 +384,16 @@ end
 
 function LinvLib:NumberPanel(msg, value, min, max, func, remove_func, description)
     local frame = LinvLib:Frame(400, 290, 8)
-    frame:DockPadding(RespW(30), RespH(30), RespW(30), RespH(30))
+    frame:DockPadding(LinvLib:RespW(30), LinvLib:RespH(30), LinvLib:RespW(30), LinvLib:RespH(30))
 
     local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 40)
     title:Dock(TOP)
-    title:DockMargin(0, 0, 0, RespW(10))
+    title:DockMargin(0, 0, 0, LinvLib:RespW(10))
 
     if description then
         local desc = LinvLib:LabelPanel(frame, description, "LinvFontRobo20", 400, 35)
         desc:Dock(TOP)
-        desc:DockMargin(0, 0, 0, RespW(15))
+        desc:DockMargin(0, 0, 0, LinvLib:RespW(15))
     end
 
     local entry = LinvLib:TextEntry(frame, 400, 50, value, true)
@@ -387,11 +409,11 @@ function LinvLib:NumberPanel(msg, value, min, max, func, remove_func, descriptio
         end
     end
     entry:Dock(TOP)
-    entry:DockMargin(0, 0, 0, RespW(15))
+    entry:DockMargin(0, 0, 0, LinvLib:RespW(15))
 
     local panel_but = LinvLib:Panel(frame, 400, 50)
     panel_but:Dock(BOTTOM)
-    panel_but:DockMargin(0, RespW(15), 0, 0)
+    panel_but:DockMargin(0, LinvLib:RespW(15), 0, 0)
     panel_but.Paint = function(self, w, h) end
 
     local but_close = LinvLib:Button(panel_but, LinvLib:GetTrad("close"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
@@ -414,25 +436,25 @@ end
 
 function LinvLib:TextPanel(msg, value, func, remove_func, description)
     local frame = LinvLib:Frame(400, 290, 8)
-    frame:DockPadding(RespW(30), RespH(30), RespW(30), RespH(30))
+    frame:DockPadding(LinvLib:RespW(30), LinvLib:RespH(30), LinvLib:RespW(30), LinvLib:RespH(30))
 
     local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 40)
     title:Dock(TOP)
-    title:DockMargin(0, 0, 0, RespW(10))
+    title:DockMargin(0, 0, 0, LinvLib:RespW(10))
 
     if description then
         local desc = LinvLib:LabelPanel(frame, description, "LinvFontRobo20", 400, 35)
         desc:Dock(TOP)
-        desc:DockMargin(0, 0, 0, RespW(15))
+        desc:DockMargin(0, 0, 0, LinvLib:RespW(15))
     end
 
     local entry = LinvLib:TextEntry(frame, 400, 50, value, true)
     entry:Dock(TOP)
-    entry:DockMargin(0, 0, 0, RespW(15))
+    entry:DockMargin(0, 0, 0, LinvLib:RespW(15))
 
     local panel_but = LinvLib:Panel(frame, 400, 50)
     panel_but:Dock(BOTTOM)
-    panel_but:DockMargin(0, RespW(15), 0, 0)
+    panel_but:DockMargin(0, LinvLib:RespW(15), 0, 0)
     panel_but.Paint = function(self, w, h) end
 
     local but_close = LinvLib:Button(panel_but, LinvLib:GetTrad("close"), 155, 50, LinvLib:GetColorTheme("element"), true, function()

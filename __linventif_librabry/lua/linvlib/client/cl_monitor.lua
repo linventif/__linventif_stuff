@@ -18,7 +18,8 @@ local id_type = {
         ["MonitorShowNewUpadte"] = true,
         ["MonitorShowNewAddon"] = true,
         ["ForceMaterial"] = true,
-        ["MoneySymbolLeft"] = true
+        ["MoneySymbolLeft"] = true,
+        ["ShowNPCName"] = true
     },
     ["string"] = {
         ["Language"] = true,
@@ -461,18 +462,6 @@ local function OpenSettings()
                 [1] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        LinvLib:NumberPanel("Rounded", LinvLib.Config.Rounded, 0, 100000, function(value)
-                            LinvLib.Config.Rounded = value
-                            SaveSetting("Rounded", LinvLib.Config.Rounded)
-                        end, function()
-                            RunConsoleCommand("linvlib_settings")
-                        end)
-                    end,
-                    ["name"] = LinvLib:GetTrad("rounded")
-                },
-                [2] = {
-                    ["icon"] = LinvLib.Materials["edit"],
-                    ["function"] = function()
                         LinvLib:NumberPanel(LinvLib:GetTrad("border_size"), LinvLib.Config.Border, 0, 100000, function(value)
                             LinvLib.Config.Border = value
                             SaveSetting("Border", LinvLib.Config.Border)
@@ -482,7 +471,7 @@ local function OpenSettings()
                     end,
                     ["name"] = LinvLib:GetTrad("border_size")
                 },
-                [3] = {
+                [2] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
                         LinvLib:NumberPanel(LinvLib:GetTrad("cross_border"), LinvLib.Config.CrossBorder, 0, 100000, function(value)
@@ -493,6 +482,32 @@ local function OpenSettings()
                         end, LinvLib:GetTrad("cross_border_instruction"))
                     end,
                     ["name"] = LinvLib:GetTrad("cross_border")
+                },
+                [3] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        LinvLib:NumberPanel("Rounded", LinvLib.Config.Rounded, 0, 100000, function(value)
+                            LinvLib.Config.Rounded = value
+                            SaveSetting("Rounded", LinvLib.Config.Rounded)
+                        end, function()
+                            RunConsoleCommand("linvlib_settings")
+                        end)
+                    end,
+                    ["name"] = LinvLib:GetTrad("rounded")
+                },
+                [4] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.ShowName,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        if LinvLib.Config.ShowName then
+                            LinvLib.Config.ShowName = false
+                        else
+                            LinvLib.Config.ShowName = true
+                        end
+                        SaveSetting("ShowNPCName", LinvLib.Config.ShowName)
+                    end,
+                    ["name"] = LinvLib:GetTrad("show_npc_name")
                 },
             }
         },

@@ -81,7 +81,7 @@ end
 function LinvLib:RedowloadMaterials()
     for k, v in pairs(ImageCache) do
         v.addon_var[v.id] = Material("../data/" .. v.folder .. "/" .. v.id .. ".png", "noclamp smooth")
-        print("| " .. name .. " | Image Redownloaded | " .. v.id .. ".png")
+        print("| " .. v.name .. " | Image Redownloaded | " .. v.id .. ".png")
     end
 end
 

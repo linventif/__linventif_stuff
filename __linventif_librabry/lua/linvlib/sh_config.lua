@@ -38,6 +38,9 @@ LinvLib.Config.MoneySymbol = "€" // Money Symbol
 LinvLib.Config.MoneySymbolPosition = "After" // Money Symbol Position (before - after)
 LinvLib.Config.MoneySymbolSeparator = " " // Money Symbol between the number
 
+// NPC Settings
+LinvLib.Config.ShowName = true // Show NPC Name (true - false)
+
 // Admin Settings
 LinvLib.Config.AdminGroups = { // Admin Group
     ["superadmin"] = true,

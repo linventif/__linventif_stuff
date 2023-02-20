@@ -12,7 +12,9 @@ local imgurID = {
     ["new-gen-reroll"] = "6l6D2j0",
     ["unknow"] = "Y1vYS2L",
     ["linventif-library"] = "TrKSTE3",
-    ["close_test"] = "hb7oCvK"
+    ["close_test"] = "hb7oCvK",
+    ["check"] = "FAmDUm7",
+    ["cross"] = "cQ0mMqv"
 }
 
 LinvLib.CreateImgurMaterials(imgurID, LinvLib.Materials, "linventif/linvlib/material", "Linventif Library")
