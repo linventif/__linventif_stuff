@@ -709,26 +709,37 @@ local function OpenMonitor(data)
     for k, v in pairs(data) do
         if !LinvLib.Install[k] then continue end
         local need_update = LinvLib.Install[k] < v.version
-        local addon = LinvLib:Button(scroll, "", 720, 84, LinvLib:GetColorTheme("element"), true, function()
-            -- LinvLib:WebPage(v.repository)
-        end)
+        -- local addon = LinvLib:Button(scroll, "", 720, 84, LinvLib:GetColorTheme("element"), true, false)
+        local addon = LinvLib:Panel(scroll, 720, 84, false, false, LinvLib:GetColorTheme("element"))
         addon:Dock(TOP)
         addon:DockMargin(0, 0, RespW(10), RespH(15))
         addon:DockPadding(RespW(10), RespH(10), RespW(10), RespH(10))
-        local icon_panel = LinvLib:Panel(addon, 64, 64)
-        icon_panel.Paint = function(self, w, h)
-            surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
-            surface.SetMaterial(LinvLib.Materials[k] || LinvLib.Materials["unknow"])
-            surface.DrawTexturedRect(0, 0, w, h)
+
+        if v.imgur then
+            local icon_panel = vgui.Create("DHTML", addon)
+            icon_panel:SetSize(RespW(64), RespH(64))
+            icon_panel:SetHTML("<style> body, html { height: 100%; margin: 0; } .icon { background-image: url(https://i.imgur.com/" .. v.imgur .. ".png); height: 100%; background-position: center; background-repeat: no-repeat; background-size: cover; overflow: hidden;} </style> <body> <div class=\"icon\"></div> </body>")
+            icon_panel:Dock(LEFT)
+            icon_panel:DockMargin(0, 0, RespW(15), 0)
+        else
+            local icon_panel = LinvLib:Panel(addon, 64, 64)
+            icon_panel.Paint = function(self, w, h)
+                surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
+                surface.SetMaterial(LinvLib.Materials[k] || LinvLib.Materials["unknow"])
+                surface.DrawTexturedRect(0, 0, w, h)
+            end
+            icon_panel:Dock(LEFT)
+            icon_panel:DockMargin(0, 0, RespW(15), 0)
         end
-        icon_panel:Dock(LEFT)
-        icon_panel:DockMargin(0, 0, RespW(15), 0)
+
         local name = LinvLib:LabelPanel(addon, v.title, "LinvFontRobo20", 100, 50)
         name:Dock(FILL)
         name:DockMargin(RespW(30), 0, 0, 0)
+
         local last_version = LinvLib:LabelPanel(addon, v.version, "LinvFontRobo20", 125, 50)
         last_version:Dock(RIGHT)
         last_version:DockMargin(RespW(30), 0, 0, 0)
+
         local your_version = LinvLib:LabelPanel(addon, LinvLib.Install[k], "LinvFontRobo20", 125, 50)
         your_version:Dock(RIGHT)
         your_version:DockMargin(RespW(30), 0, 0, 0)
@@ -741,6 +752,7 @@ local function OpenMonitor(data)
                 draw.SimpleText(LinvLib.Install[k], "LinvFontRobo20", w/2, h/2, LinvLib:GetColorTheme("green"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
         end
+
         local button_addon = LinvLib:Button(addon, "", 720, 84, LinvLib:GetColorTheme("element"), false, function()
             LinvLib:WebPage(v.repository)
         end)

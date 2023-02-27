@@ -11,6 +11,25 @@ LinvLib.Install = {
     ["linventif-library"] = LinvLib.version
 }
 
+function LinvLib.LoadTrad(path, file_name, name)
+    if not file.Exists(path, "GAME") then
+        return
+    end
+
+    local files, dirs = file.Find(path .. "*", "GAME")
+
+    for _, v in pairs(files) do
+        if (v == file_name .. ".properties") then
+            resource.AddFile(path .. v)
+            print("| " .. name .. " | Resource Load | " .. path .. v)
+        end
+    end
+
+    for _, v in pairs(dirs) do
+        LinvLib.LoadTrad(path .. v .. "/", file_name, name)
+    end
+end
+
 function LinvLib.Loader(folder, name)
     local files, folders = file.Find(folder .. "/*", "LUA")
     for k, v in pairs(files) do
@@ -88,27 +107,9 @@ function LinvLib.LoadStr(full_name, version, license)
     print(" ")
 end
 
-function LinvLib.LoadTrad(path, file_name, name)
-    local files, dirs = file.Find(path .. "*", "GAME")
-
-    for _, v in pairs(files) do
-        if (v == file_name .. ".properties") then
-            resource.AddFile(path .. v)
-            print("| " .. name .. " | Resource Load | " .. path .. v)
-        end
-    end
-
-    for _, v in pairs(dirs) do
-        LinvLib.LoadTrad(path .. v .. "/", file_name, name)
-    end
-end
-
 LinvLib.LoadStr(LinvLib.name, LinvLib.version, LinvLib.license)
-LinvLib.Load(LinvLib.name, LinvLib.folder, {"sh_config.lua", "sh_language.lua"})
 LinvLib.LoadTrad("resource/localization/", LinvLib.folder, LinvLib.name)
-LinvLib.Loader(LinvLib.folder .. "/server", LinvLib.name)
-LinvLib.Loader(LinvLib.folder .. "/client", LinvLib.name)
-LinvLib.Loader(LinvLib.folder .. "/shared", LinvLib.name)
+LinvLib.Loader(LinvLib.folder, LinvLib.name)
 
 print("| " .. LinvLib.name .. " | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
 print(" ")

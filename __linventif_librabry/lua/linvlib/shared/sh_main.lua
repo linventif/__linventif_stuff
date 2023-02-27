@@ -1,19 +1,13 @@
 local function LinvLibVerif(LinvLibWeb)
     LinvLib.LoadStr("Linventif Library", LinvLib.version, LinvLib.license)
     if LinvLibWeb["linventif-library"].version != LinvLib.version then
-        print("Linventif Library is outdated! Please update it!")
-        print(" ")
-        print("You can download the latest version here : https://linventif.fr/gmod-lib")
-        print("Or you can download it directly from the github : https://github.com/linventif/gmod-lib")
-        print("Or you can download it directly from the workshop : https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
-        print("If you don't know how to update it, please read the documentation : https://docs.linventif.fr/gmod-lib")
-        print("If you have any questions, you can join my discord : https://linventif.fr/discord")
-        print("If you don't update it, some scripts may not work properly.")
-    else
-        print("Linventif Library is up to date!")
+        print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
+        print(" -                                                                                         - ")
+        print(" -                             Linventif Library is outdated !                             - ")
+        print(" -             Information and Download Links : https://linv.dev/docs/#library             - ")
+        print(" -                                                                                         - ")
+        print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
     end
-    print(" ")
-    print(" ")
 end
 
 function LinvLib:SetAddonInfo(name, version, license, folder)

@@ -6,7 +6,7 @@ function LinvLib:RespH(y)
     return ScrH() / 1080 * y
 end
 
-
+local txt_cooldown = 0
 function LinvLib:DrawNPCText(self, text, height_pos)
     if text == "" || !LinvLib.Config.ShowName then return end
     if !height_pos then height_pos = 3200 end
@@ -271,23 +271,22 @@ end
 
 function LinvLib:LabelPanel(frame, text, font, weight, height)
     local panel = LinvLib:Panel(frame, weight, height)
-    panel.Paint = function(self, w, h)
-        draw.SimpleText(text, font, w/2, h/2, LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+    local background = nil
+    local function RePaint(new_text)
+        panel.Paint = function(self, w, h)
+            if background then LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), background) end
+            draw.SimpleText(new_text || text, font, w/2, h/2, LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
+        end
+    end
+    RePaint()
+    function panel:SetText(text)
+        RePaint(text)
+    end
+    function panel:SetBackground(color)
+        background = color
+        RePaint()
     end
     return panel
-end
-
-function LinvLib:WebPage(url)
-    local frame = LinvLib:Frame(1920*0.8+60, 1080*0.8+60, 8)
-    frame:ShowCloseButton(true)
-    frame:SetDraggable(true)
-    local url_label = LinvLib:Label(frame, url)
-    // set text center
-    url_label:SetPos(LinvLib:RespW((1920*0.8+60)/2)-url_label:GetWide()/2, LinvLib:RespH(5))
-    local web = vgui.Create("DHTML", frame)
-    web:SetSize(LinvLib:RespW(1920*0.8), LinvLib:RespH(1080*0.8))
-    web:OpenURL(url)
-    web:Center()
 end
 
 function LinvLib:TextEntry(frame, weight, height, text)
@@ -309,39 +308,41 @@ net.Receive("LinvLib:Notification", function()
 end)
 
 
--- function LinvLib:ColorPanel(msg, defaut_color, func)
---     if !defaut_color then defaut_color = Color(255, 255, 255) end
+function LinvLib:ColorPanel(msg, defaut_color, func)
+    if !defaut_color then defaut_color = Color(255, 255, 255) end
 
---     local frame = LinvLib:Frame(400, 475, 8)
---     frame:DockPadding(LinvLib:RespW(30), LinvLib:RespW(30), LinvLib:RespW(30), LinvLib:RespW(30))
+    local frame = LinvLib:Frame(400, 475, 8)
+    frame:DockPadding(LinvLib:RespW(30), LinvLib:RespW(30), LinvLib:RespW(30), LinvLib:RespW(30))
 
---     local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 400, 60)
---     title:Dock(TOP)
---     title:DockMargin(0, 0, 0, LinvLib:RespW(15))
+    local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo30", 400, 60)
+    title:Dock(TOP)
+    title:DockMargin(0, 0, 0, LinvLib:RespW(15))
 
---     local color_mixer = vgui.Create("DColorMixer", frame)
---     color_mixer:Dock(FILL)
---     color_mixer:SetPalette(true)
---     color_mixer:SetAlphaBar(true)
---     color_mixer:SetWangs(true)
---     color_mixer:SetColor(defaut_color)
+    local color_mixer = vgui.Create("DColorMixer", frame)
+    color_mixer:Dock(FILL)
+    color_mixer:SetPalette(true)
+    color_mixer:SetAlphaBar(true)
+    color_mixer:SetWangs(true)
+    color_mixer:SetColor(defaut_color)
 
---     local panel_but = LinvLib:Panel(frame, 400, 50)
---     panel_but:Dock(BOTTOM)
---     panel_but:DockMargin(0, LinvLib:RespW(30), 0, 0)
---     panel_but.Paint = function(self, w, h) end
+    local panel_but = LinvLib:Panel(frame, 400, 50)
+    panel_but:Dock(BOTTOM)
+    panel_but:DockMargin(0, LinvLib:RespW(30), 0, 0)
+    panel_but.Paint = function(self, w, h) end
 
---     local but_close = LinvLib:Button(panel_but, LinvLib:GetTrad("close"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
---         frame:Remove()
---     end)
---     but_close:Dock(LEFT)
+    local but_close = LinvLib:Button(panel_but, LinvLib:GetTrad("close"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
+        frame:Remove()
+    end)
+    but_close:Dock(LEFT)
 
---     local but_continue = LinvLib:Button(panel_but, LinvLib:GetTrad("continue"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
---         func(color_mixer:GetColor())
---         frame:Remove()
---     end)
---     but_continue:Dock(RIGHT)
--- end
+    local but_continue = LinvLib:Button(panel_but, LinvLib:GetTrad("continue"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
+        func(color_mixer:GetColor())
+        frame:Remove()
+    end)
+    but_continue:Dock(RIGHT)
+
+    return frame
+end
 
 function LinvLib:NumSlidePanel(msg, default, min, max, deci, func)
     if !defaut_color then defaut_color = Color(255, 255, 255) end
@@ -469,4 +470,54 @@ function LinvLib:TextPanel(msg, value, func, remove_func, description)
         frame:Remove()
     end)
     but_continue:Dock(RIGHT)
+end
+
+function LinvLib:CloseButton(parent, w, h, x, y, func)
+    local close = LinvLib:Button(parent, " ", w, h, LinvLib:GetColorTheme("element"), false, function()
+        func()
+    end)
+    close:SetPos(x, y)
+    close.Paint = function(self, w, h)
+        surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
+        surface.SetMaterial(LinvLib.Materials["cancel"])
+        surface.DrawTexturedRect(0, 0, LinvLib:RespW(w), LinvLib:RespH(h))
+    end
+    return close
+end
+
+function LinvLib:Icon(element, mat, hover)
+    element.Paint = function(self, w, h)
+        surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
+        surface.SetMaterial(mat)
+        surface.DrawTexturedRect(0, 0, LinvLib:RespW(w), LinvLib:RespH(h))
+    end
+    if hover then
+        element.OnCursorEntered = function(self)
+            self.Paint = function(self, w, h)
+                surface.SetDrawColor(LinvLib:GetColorTheme("hover"))
+                surface.SetMaterial(mat)
+                surface.DrawTexturedRect(0, 0, LinvLib:RespW(w), LinvLib:RespH(h))
+            end
+        end
+        element.OnCursorExited = function(self)
+            self.Paint = function(self, w, h)
+                surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
+                surface.SetMaterial(mat)
+                surface.DrawTexturedRect(0, 0, LinvLib:RespW(w), LinvLib:RespH(h))
+            end
+        end
+    end
+end
+
+function LinvLib:WebPage(url)
+    local frame = LinvLib:Frame(1920*0.8+90, 1080*0.8+90, 8)
+    local url_label = LinvLib:Label(frame, url)
+    url_label:SetPos(LinvLib:RespW((1920*0.8+120)/2)-url_label:GetWide()/2, LinvLib:RespH(15))
+    local web = vgui.Create("DHTML", frame)
+    web:SetSize(LinvLib:RespW(1920*0.8), LinvLib:RespH(1080*0.8))
+    web:OpenURL(url)
+    web:Center()
+    local close = LinvLib:CloseButton(frame, LinvLib:RespW(30), LinvLib:RespH(30), LinvLib:RespW(1920*0.8+50), LinvLib:RespH(10), function()
+        frame:Remove()
+    end)
 end

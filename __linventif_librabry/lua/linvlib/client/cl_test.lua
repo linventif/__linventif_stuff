@@ -171,3 +171,10 @@
 --     end
 --     count = count + 1
 -- end
+
+-- local frame = LinvLib:Frame(400, 400)
+-- frame.Paint = function(self, w, h)
+--     surface.SetDrawColor(255, 255, 255, 255)
+--     surface.SetMaterial(LinvLib.Materials["earth"])
+--     surface.DrawTexturedRect(0, 20, w, h-20)
+-- end

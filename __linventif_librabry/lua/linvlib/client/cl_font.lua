@@ -18,6 +18,14 @@ surface.CreateFont("LinvFontRobo50", {
     shadow = false
 })
 
+surface.CreateFont("LinvFontRobo40", {
+    font = "Roboto",
+    size = RespW(40),
+    weight = 500,
+    antialias = true,
+    shadow = false
+})
+
 surface.CreateFont("LinvFontRobo35", {
     font = "Roboto",
     size = RespW(35),

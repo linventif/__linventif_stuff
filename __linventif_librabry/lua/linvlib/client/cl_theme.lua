@@ -20,6 +20,7 @@ local themes = {
         ["icon"] = Color(255, 255, 255),
         ["red"] = Color(221, 93, 76),
         ["green"] = Color(76, 221, 76),
+        ["orange"] = Color(255, 140, 0),
     },
     ["gang-city"] = {
         ["background"] = Color(26, 32, 64),
@@ -31,6 +32,7 @@ local themes = {
         ["icon"] = Color(255, 255, 255),
         ["red"] = Color(221, 93, 76),
         ["green"] = Color(76, 221, 76),
+        ["orange"] = Color(255, 140, 0),
     },
     ["dark"] = {
         ["background"] = Color(30, 30, 30),
@@ -42,6 +44,7 @@ local themes = {
         ["icon"] = Color(230, 230, 230),
         ["red"] = Color(221, 93, 76),
         ["green"] = Color(76, 221, 76),
+        ["orange"] = Color(255, 140, 0),
     },
     ["grey"] = {
         ["background"] = Color(55, 55, 55),
@@ -53,6 +56,7 @@ local themes = {
         ["icon"] = Color(255, 255, 255),
         ["red"] = Color(221, 93, 76),
         ["green"] = Color(76, 221, 76),
+        ["orange"] = Color(255, 140, 0),
     },
     ["light"] = {
         ["background"] = Color(85, 85, 85),
@@ -64,6 +68,7 @@ local themes = {
         ["icon"] = Color(255, 255, 255),
         ["red"] = Color(221, 93, 76),
         ["green"] = Color(76, 221, 76),
+        ["orange"] = Color(255, 140, 0),
     }
 }
 
