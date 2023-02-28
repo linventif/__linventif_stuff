@@ -36,7 +36,7 @@ To open the monitor say `!monitor` in chat.
 
 Need Help ? Join my discord and create a ticket in the #support channel.
 
-[![Linventif's Creations](https://i.imgur.com/jG8Luis.png)](https://linventif.fr/discord)
+[![Linventif's Creations](https://i.imgur.com/Ro6EtDP.png)](https://linventif.fr/discord)
 
 ## License
 
