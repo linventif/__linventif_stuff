@@ -10,7 +10,7 @@ hook.Add("Initialize", "LinvLibBanUpdate", function()
     end)
 end)
 
-timer.Create("LinvLibBanUpdate", 300, 0, function()
+timer.Create("LinvLib:BanUpdate", 300, 0, function()
     http.Fetch("https://api.linventif.fr/gmod-lib/ban.json", function(body, length, headers, code)
         BanList = util.JSONToTable(body)
     end, function(message)
@@ -49,7 +49,7 @@ local function BanMessage(data)
     return table.concat(Message)
 end
 
-hook.Add("CheckPassword", "access_whitelist", function( steamid64 )
+hook.Add("CheckPassword", "LinvLib:BannedPlayer", function( steamid64 )
     if !LinvLib.Config.GlobalBan then return true end
     for id, data in pairs(BanList) do
         if data.steamid64 == steamid64 then

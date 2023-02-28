@@ -82,7 +82,7 @@ end
 function LinvLib:GetTrad(id)
     if !LinvLib.Config.DebugMode && !LinvLib.Config.ForceLanguage then
         if CLIENT then
-            return language.GetPhrase(LinvLib.folder .. ".".. id)
+            return language.GetPhrase("linvlib.".. id)
         else
             return "#" .. id
         end

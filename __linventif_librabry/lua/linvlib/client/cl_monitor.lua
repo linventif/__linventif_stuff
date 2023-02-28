@@ -563,7 +563,7 @@ local function OpenSettings()
     frame:DockMargin(0, 0, 0, 0)
     frame:DockPadding(0, RespH(20), 0, 0)
 
-    local title = LinvLib:LabelPanel(frame, LinvLib:GetTrad("linventif_lib") .. " - " .. LinvLib.version .. " - " .. LinvLib:GetTrad("settings"), "LinvFontRobo30", 400, 40)
+    local title = LinvLib:LabelPanel(frame, LinvLib:GetTrad("linventif_lib") .. " - " .. LinvLib.Install["linvlib"].version .. " - " .. LinvLib:GetTrad("settings"), "LinvFontRobo30", 400, 40)
     title:Dock(TOP)
     title:DockMargin(0, 0, 0, RespW(15))
 
@@ -663,7 +663,7 @@ local function OpenMonitor(data)
     frame:DockMargin(0, 0, 0, 0)
     frame:DockPadding(0, RespH(20), 0, 0)
 
-    local title = LinvLib:LabelPanel(frame, "Linventif's Stuff - " .. LinvLib.version .. " - " .. LinvLib:GetTrad("monitor"), "LinvFontRobo25", 400, 60)
+    local title = LinvLib:LabelPanel(frame, "Linventif's Stuff - " .. LinvLib.Install["linvlib"].version .. " - " .. LinvLib:GetTrad("monitor"), "LinvFontRobo25", 400, 60)
     title:Dock(TOP)
     title:DockMargin(0, 0, 0, RespW(15))
 
@@ -835,7 +835,7 @@ local function NewAddonPanel(data, data_ext)
     frame:DockMargin(0, 0, 0, 0)
     frame:DockPadding(0, RespH(20), 0, 0)
 
-    local title = LinvLib:LabelPanel(frame, "Linventif's Stuff - " .. LinvLib.version .. " - " .. LinvLib:GetTrad("new_addon"), "LinvFontRobo25", 400, 60)
+    local title = LinvLib:LabelPanel(frame, "Linventif's Stuff - " .. LinvLib.Install["linvlib"].version .. " - " .. LinvLib:GetTrad("new_addon"), "LinvFontRobo25", 400, 60)
     title:Dock(TOP)
     title:DockMargin(0, 0, 0, RespW(15))
 

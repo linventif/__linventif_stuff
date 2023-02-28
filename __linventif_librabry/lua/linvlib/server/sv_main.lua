@@ -9,7 +9,7 @@ util.AddNetworkString("LinvLib:Action")
 
 if !file.Exists("linventif/linventif_library/installed.json", "DATA") then
     local data = {
-        ["linventif-library"] = LinvLib.version
+        ["linventif-library"] = LinvLib.Install["linvlib"].version
     }
     file.Write("linventif/linventif_library/installed.json", util.TableToJSON(data, true))
 end
@@ -50,7 +50,7 @@ local function SaveSettings()
         file.CreateDir("linventif/linventif_library")
     end
     local data = {
-        ["version"] = LinvLib.version,
+        ["version"] = LinvLib.Install["linvlib"].version,
         ["config"] = LinvLib.Config
     }
     file.Write("linventif/linventif_library/settings.json", util.TableToJSON(data, true))
@@ -121,9 +121,9 @@ end)
 hook.Add("Initialize", "LinvLib:LoadSettings", function()
     if file.Exists("linventif/linventif_library/settings.json", "DATA") then
         local data = util.JSONToTable(file.Read("linventif/linventif_library/settings.json", "DATA"))
-        if data.version < LinvLib.version then
+        if data.version < LinvLib.Install["linvlib"].version then
             data.config = table.Merge(LinvLib.Config, data.config)
-            data.version = LinvLib.version
+            data.version = LinvLib.Install["linvlib"].version
             SaveSettings()
         end
         LinvLib.Config = data.config
