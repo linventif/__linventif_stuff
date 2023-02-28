@@ -1,8 +1,10 @@
 # Linventif Stuff Informations
 
-**Do not add this repository to your server**, it is only for development purposes use steam workshop : [Linventif's Stuff](https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990)
-
 This repository contains all stuffs I use to create my addons.
+
+**Do not add this repository to your server**, it is only for development purposes.
+
+This content can't work if you manually add it to your server.
 
 ## Features
 
@@ -25,7 +27,9 @@ This repository contains all stuffs I use to create my addons.
 ## Configuration & Language
 
 Language are automatically loaded from the client language.
+
 Configuration menu can be open with the parameter button of the monitor.
+
 To open the monitor say `!monitor` in chat.
 
 ## Support & Discord
