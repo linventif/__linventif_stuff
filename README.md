@@ -4,7 +4,7 @@ This repository contains all stuffs I use to create my addons.
 
 **Do not add this repository to your server**, it is only for development purposes.
 
-This content can't work if you manually add it to your server.
+This content can't work if you manually add it to your server, you need to use the workshop content.
 
 ## Features
 
@@ -36,7 +36,7 @@ To open the monitor say `!monitor` in chat.
 
 Need Help ? Join my discord and create a ticket in the #support channel.
 
-[![Linventif's Creations](https://i.imgur.com/Ro6EtDP.png)](https://linventif.fr/discord)
+[![Linventif's Creations](https://i.imgur.com/Ro6EtDP.png)](https://linv.dev/discord)
 
 ## License
 
