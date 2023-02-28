@@ -12,7 +12,7 @@ if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !string.f
 local folder = "linvlib"
 local name = "Linventif Library"
 local license = "CC BY-SA 4.0"
-local version = "0.2.3"
+local version = "0.2.4"
 
 LinvLib = {
     ["Config"] = {},
