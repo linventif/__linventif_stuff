@@ -3,13 +3,9 @@ util.AddNetworkString("LinvLib:SaveSetting")
 util.AddNetworkString("LinvLib:Notification")
 util.AddNetworkString("LinvLib:Action")
 
--- for k, v in pairs(player.GetAll()) do
---     v:ChatPrint("#linvlib.not_perm")
--- end
-
 if !file.Exists("linventif/linventif_library/installed.json", "DATA") then
     local data = {
-        ["linventif-library"] = LinvLib.Install["linvlib"].version
+        ["linventif-library"] = LinvLib.Info.version
     }
     file.Write("linventif/linventif_library/installed.json", util.TableToJSON(data, true))
 end
@@ -50,7 +46,7 @@ local function SaveSettings()
         file.CreateDir("linventif/linventif_library")
     end
     local data = {
-        ["version"] = LinvLib.Install["linvlib"].version,
+        ["version"] = LinvLib.Info.version,
         ["config"] = LinvLib.Config
     }
     file.Write("linventif/linventif_library/settings.json", util.TableToJSON(data, true))
@@ -121,9 +117,9 @@ end)
 hook.Add("Initialize", "LinvLib:LoadSettings", function()
     if file.Exists("linventif/linventif_library/settings.json", "DATA") then
         local data = util.JSONToTable(file.Read("linventif/linventif_library/settings.json", "DATA"))
-        if data.version < LinvLib.Install["linvlib"].version then
+        if data.version < LinvLib.Info.version then
             data.config = table.Merge(LinvLib.Config, data.config)
-            data.version = LinvLib.Install["linvlib"].version
+            data.version = LinvLib.Info.version
             SaveSettings()
         end
         LinvLib.Config = data.config

@@ -1,23 +1,8 @@
-// -- // -- // -- // -- // -- // -- // -- //
-//                                        //
-//          Informations & Help           //
-//                                        //
-// -- // -- // -- // -- // -- // -- // -- //
-//
-// ## Before editing this file
-// If you want to change the configuration of the library in this file
-// you need to put the variable LinvLib.Config.InGameSettings to false
-//
-// ## Language
-// Language are auto detected, if you want to force the language you can
-// put the variable LinvLib.Config.ForceLanguage to true and change the
-// variable LinvLib.Config.Language to the language you want the
-// language are in the file sh_language.lua
-//
-// ## Need Help ?
-// Join our discord : https://discord.gg/EkVPk9y
-//
-// -- // -- // -- // -- // -- // -- // -- //
+// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+// Please don't use a static version of this addon
+// Please use the workshop version : https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990
+// If you don't use the workshop version, you will not receive any update and you will not be able to use new features or addons I will create.
+// -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 LinvLib.Config.InGameSettings = true // Put to false if you want to change the configuration in this file
 
