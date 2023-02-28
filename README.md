@@ -1,9 +1,8 @@
 # Linventif Stuff Informations
 
-This repository contains all the necessary components for creating efficient and dynamic content within the Garry's Mod environment.
-Do not add this repository to your server, it is only for development purposes use steam workshop : [Linventif's Stuff](https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990)
+**Do not add this repository to your server**, it is only for development purposes use steam workshop : [Linventif's Stuff](https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990)
 
-Need more or help contact me on discord : [Linventif's Creations](https://linv.dev/discord)
+This repository contains all stuffs I use to create my addons.
 
 ## Features
 
