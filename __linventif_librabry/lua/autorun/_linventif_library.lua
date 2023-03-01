@@ -5,14 +5,14 @@
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 local server_name = GetHostName()
-if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !string.find(server_name, "Linventif") then return end
+if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linventif/debug.txt", "DATA") then return end
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 local folder = "linvlib"
 local name = "Linventif Library"
 local license = "CC BY-SA 4.0"
-local version = "0.2.4"
+local version = "0.2.5"
 
 LinvLib = {
     ["Config"] = {},

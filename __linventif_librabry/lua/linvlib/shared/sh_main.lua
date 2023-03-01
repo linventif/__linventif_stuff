@@ -1,6 +1,6 @@
 local function LinvLibVerif(LinvLibWeb)
-    LinvLib.LoadStr("Linventif Library", LinvLib.Info.version, "CC BY-SA 4.0")
-    if LinvLibWeb["linventif-library"].version != LinvLib.Info.version then
+    LinvLib.LoadStr(LinvLib.Info.name, LinvLib.Info.version, LinvLib.Info.license)
+    if LinvLibWeb[LinvLib.Info.folder].version != LinvLib.Info.version then
         print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
         print(" -                                                                                         - ")
         print(" -                             Linventif Library is outdated !                             - ")
