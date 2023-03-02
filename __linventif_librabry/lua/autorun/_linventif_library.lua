@@ -4,8 +4,10 @@
 // If you don't use the workshop version, you will not receive any update and you will not be able to use new features or addons I will create.
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
-local server_name = GetHostName()
-if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linventif/debug.txt", "DATA") then return end
+if SERVER then
+    local server_name = GetHostName()
+    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linventif/debug.txt", "DATA") then return end
+end
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
