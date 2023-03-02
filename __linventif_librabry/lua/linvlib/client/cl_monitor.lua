@@ -639,7 +639,7 @@ end
 
 local nb_needupdate, nb_addon = 0, 0
 
-local function OpenMonitor(data)
+local function OpenMonitor(data, order)
     if !data then
         http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
             OpenMonitor(util.JSONToTable(body))
@@ -647,16 +647,22 @@ local function OpenMonitor(data)
             print(message)
         end)
         return
+    elseif !order then
+        http.Fetch("https://api.linventif.fr/addons_order.json", function(body, length, headers, code)
+            OpenMonitor(data, util.JSONToTable(body))
+        end, function(message)
+            print(message)
+        end)
+        return
     end
 
     local nb_needupdate, nb_addon = 0, 0
-
     for k, v in pairs(data) do
         if !LinvLib.Install[k] then continue end
-        nb_addon = nb_addon + 1
         if LinvLib.Install[k] < v.version then
             nb_needupdate = nb_needupdate + 1
         end
+        nb_addon = nb_addon + 1
     end
 
     local frame = LinvLib:Frame(720, 795)
@@ -706,8 +712,10 @@ local function OpenMonitor(data)
     else
         scroll:DockMargin(RespW(30), 0, RespW(20), RespH(30))
     end
-    for k, v in pairs(data) do
-        if !LinvLib.Install[k] then continue end
+    for id, addon_folder in SortedPairs(order) do
+        local k = addon_folder
+        local v = data[addon_folder]
+        if !LinvLib.Install[addon_folder] || !v || !k then continue end
         local need_update = LinvLib.Install[k] < v.version
         -- local addon = LinvLib:Button(scroll, "", 720, 84, LinvLib:GetColorTheme("element"), true, false)
         local addon = LinvLib:Panel(scroll, 720, 84, false, false, LinvLib:GetColorTheme("element"))
@@ -780,7 +788,7 @@ local function OpenMonitor(data)
     but_settings:Dock(LEFT)
 
     local but_help = LinvLib:Button(bottom_but, LinvLib:GetTrad("help"), 200, 50, LinvLib:GetColorTheme("element"), true, function()
-        LinvLib:WebPage("https://linventif.fr/discord")
+        LinvLib:WebPage("https://linv.dev/discord")
     end)
     but_help:Dock(LEFT)
     but_help:DockMargin(RespW(30), 0, 0, 0)
@@ -811,7 +819,7 @@ local function AddonNeedUpdate(data)
     end
     local addon_need_update = 0
     for k, v in pairs(data) do
-        if LinvLib.Install[k] && (LinvLib.Install[k]["version"] < v["version"])then
+        if LinvLib.Install[k] && LinvLib.Install[k]["version"] && (LinvLib.Install[k]["version"] < v["version"])then
             addon_need_update = addon_need_update + 1
         end
     end
