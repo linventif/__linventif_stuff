@@ -219,6 +219,8 @@ local function OpenStringList(data, func)
         end
         local name = LinvLib:LabelPanel(panel, k, "LinvFontRobo20", 400, 60)
         name:Dock(FILL)
+        scroll:AddItem(panel)
+        if k == "superadmin" || k == LocalPlayer():GetUserGroup() then continue end
         local but_remove = LinvLib:Button(panel, "", 40, 40, Color(0, 0, 0, 0), true, function()
             data[k] = nil
             func(data)
@@ -226,7 +228,6 @@ local function OpenStringList(data, func)
         end)
         LinvLib:Icon(but_remove, LinvLib.Materials["cross"], true)
         but_remove:Dock(RIGHT)
-        scroll:AddItem(panel)
     end
 
     local close = LinvLib:Button(frame, LinvLib:GetTrad("close"), 200, 50, LinvLib:GetColorTheme("element"), true, function()
@@ -320,6 +321,16 @@ local function OpenSettings()
                         end)
                     end,
                     ["name"] = LinvLib:GetTrad("admin_group")
+                },
+                [4] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        OpenStringList(LinvLib.Config.SuperAdminGroups, function(data)
+                            LinvLib.Config.SuperAdminGroups = data
+                            SaveSetting("SuperAdminGroups", LinvLib.Config.SuperAdminGroups)
+                        end)
+                    end,
+                    ["name"] = LinvLib:GetTrad("super_admin_group")
                 },
                 -- [3] = {
                 --     ["icon"] = LinvLib.Materials["edit"],

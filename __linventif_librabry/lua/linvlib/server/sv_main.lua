@@ -108,7 +108,17 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
         elseif id == "ShowNPCName" then
             LinvLib.Config.ShowName = net.ReadBool()
         elseif id == "AdminGroups" then
-            LinvLib.Config.AdminGroups = util.JSONToTable(net.ReadString())
+            if LinvLib.Config.SuperAdminGroups[ply:GetUserGroup()] then
+                LinvLib.Config.AdminGroups = util.JSONToTable(net.ReadString())
+            else
+                LinvLib:Notif(ply, LinvLib:GetTrad("not_perm"))
+            end
+        elseif id == "SuperAdminGroups" then
+            if LinvLib.Config.SuperAdminGroups[ply:GetUserGroup()] then
+                LinvLib.Config.SuperAdminGroups = util.JSONToTable(net.ReadString())
+            else
+                LinvLib:Notif(ply, LinvLib:GetTrad("not_perm"))
+            end
         end
         SaveSettings()
     else

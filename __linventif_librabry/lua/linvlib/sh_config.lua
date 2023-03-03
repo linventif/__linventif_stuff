@@ -26,6 +26,11 @@ LinvLib.Config.MoneySymbolSeparator = " " // Money Symbol between the number
 // NPC Settings
 LinvLib.Config.ShowName = true // Show NPC Name (true - false)
 
+// Super Admin Settings
+LinvLib.Config.SuperAdminGroups = { // Admin Group (ALL PERMISSIONS)
+    ["superadmin"] = true,
+}
+
 // Admin Settings
 LinvLib.Config.AdminGroups = { // Admin Group
     ["superadmin"] = true,
