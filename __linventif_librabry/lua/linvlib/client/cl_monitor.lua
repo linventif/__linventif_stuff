@@ -28,7 +28,8 @@ local id_type = {
         ["Money Symbol Separator"] = true,
     },
     ["table"] = {
-        ["CompatibleAddon"] = true
+        ["CompatibleAddon"] = true,
+        ["AdminGroups"] = true
     },
     ["color"] = {
         ["background"] = true
@@ -188,6 +189,67 @@ local function OpenSelect(data)
     end
 end
 
+local function OpenStringList(data, func)
+    local frame = LinvLib:Frame(450, 480)
+    frame:DockMargin(0, 0, 0, 0)
+    frame:DockPadding(LinvLib:RespW(30), LinvLib:RespH(20), LinvLib:RespW(30), LinvLib:RespH(30))
+
+    local title = LinvLib:LabelPanel(frame, LinvLib:GetTrad("admin_group"), "LinvFontRobo30", 400, 40)
+    title:Dock(TOP)
+    title:DockMargin(0, 0, 0, LinvLib:RespH(15))
+
+    local scroll = LinvLib:Scroll(frame, 540, 500)
+    scroll:Dock(FILL)
+    if table.Count(data) > 4 then
+        scroll:DockMargin(0, 0, RespW(-20), RespH(15))
+    else
+        scroll:DockMargin(0, 0, RespW(0), RespH(15))
+    end
+    for k, v in pairs(data) do
+        local panel = LinvLib:Panel(scroll, 540, 50)
+        panel:Dock(TOP)
+        if table.Count(data) > 4 then
+            panel:DockMargin(0, 0, RespW(10), RespH(15))
+        else
+            panel:DockMargin(0, 0, RespW(0), RespH(15))
+        end
+        panel:DockPadding(LinvLib:RespW(5), LinvLib:RespH(5), LinvLib:RespW(5), LinvLib:RespH(5))
+        panel.Paint = function(self, w, h)
+            draw.RoundedBox(LinvLib:RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("element"))
+        end
+        local name = LinvLib:LabelPanel(panel, k, "LinvFontRobo20", 400, 60)
+        name:Dock(FILL)
+        local but_remove = LinvLib:Button(panel, "", 40, 40, Color(0, 0, 0, 0), true, function()
+            data[k] = nil
+            func(data)
+            frame:Close()
+        end)
+        LinvLib:Icon(but_remove, LinvLib.Materials["cross"], true)
+        but_remove:Dock(RIGHT)
+        scroll:AddItem(panel)
+    end
+
+    local close = LinvLib:Button(frame, LinvLib:GetTrad("close"), 200, 50, LinvLib:GetColorTheme("element"), true, function()
+        frame:Close()
+    end)
+
+    local add = LinvLib:TextEntry(frame, 540, 50, LinvLib:GetTrad("add_group"))
+    add:Dock(BOTTOM)
+    add:DockMargin(0, 0, 0, LinvLib:RespH(15))
+    add.OnEnter = function()
+        if !add:GetValue() then return end
+        data[add:GetValue()] = true
+        func(data)
+        frame:Close()
+    end
+
+    frame.OnRemove = function()
+        RunConsoleCommand("linvlib_settings")
+    end
+
+    close:Dock(BOTTOM)
+end
+
 local function GetLanguageSetting()
     if !LinvLib.Config.ForceLanguage && !LinvLib.Config.DebugMode then
         return "Auto"
@@ -248,6 +310,16 @@ local function OpenSettings()
                         OpenSelect(data_table)
                     end,
                     ["name"] = LinvLib:GetTrad("theme") .. " : " .. LinvLib.Config.Theme
+                },
+                [3] = {
+                    ["icon"] = LinvLib.Materials["edit"],
+                    ["function"] = function()
+                        OpenStringList(LinvLib.Config.AdminGroups, function(data)
+                            LinvLib.Config.AdminGroups = data
+                            SaveSetting("AdminGroups", LinvLib.Config.AdminGroups)
+                        end)
+                    end,
+                    ["name"] = LinvLib:GetTrad("admin_group")
                 },
                 -- [3] = {
                 --     ["icon"] = LinvLib.Materials["edit"],

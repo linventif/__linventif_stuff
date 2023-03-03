@@ -107,6 +107,8 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
             LinvLib.Config.MoneySymbolLeft = net.ReadBool()
         elseif id == "ShowNPCName" then
             LinvLib.Config.ShowName = net.ReadBool()
+        elseif id == "AdminGroups" then
+            LinvLib.Config.AdminGroups = util.JSONToTable(net.ReadString())
         end
         SaveSettings()
     else

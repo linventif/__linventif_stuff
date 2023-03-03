@@ -178,3 +178,16 @@
 --     surface.SetMaterial(LinvLib.Materials["earth"])
 --     surface.DrawTexturedRect(0, 20, w, h-20)
 -- end
+
+
+-- local entity
+
+-- concommand.Add( "test_csent", function( ply )
+
+-- 	local trace = ply:GetEyeTrace()
+
+-- 	entity = ClientsideModel( "models/props_c17/oildrum001_explosive.mdl" )
+-- 	entity:SetPos( trace.HitPos + trace.HitNormal * 24 )
+-- 	entity:Spawn()
+
+-- end )

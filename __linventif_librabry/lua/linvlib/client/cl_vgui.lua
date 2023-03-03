@@ -521,3 +521,40 @@ function LinvLib:WebPage(url)
         frame:Remove()
     end)
 end
+
+function LinvLib:CheckBox(parent, w, h, func)
+    -- local panel = LinvLib:Panel(parent, w, h)
+    -- panel:SetPos(x, y)
+    -- panel.IsChecked = false
+    -- LinvLib:Icon(panel, LinvLib.Materials["check"], true)
+    -- panel.OnMousePressed = function(self)
+    --     if self.IsChecked then
+    --         self.IsChecked = false
+    --         self.Paint = function(self, w, h)
+    --             surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
+    --             surface.SetMaterial(LinvLib.Materials["check"])
+    --             surface.DrawTexturedRect(0, 0, LinvLib:RespW(w), LinvLib:RespH(h))
+    --         end
+    --         func(self.IsChecked)
+    --     else
+    --         self.IsChecked = true
+    --         self.Paint = function(self, w, h)
+    --             surface.SetDrawColor(LinvLib:GetColorTheme("hover"))
+    --             surface.SetMaterial(LinvLib.Materials["check"])
+    --             surface.DrawTexturedRect(0, 0, LinvLib:RespW(w), LinvLib:RespH(h))
+    --         end
+    --     end
+    --     func(self.IsChecked)
+    -- end
+    local but = LinvLib:Button(parent, " ", w, h, LinvLib:GetColorTheme("element"), false, function()
+        if but.IsChecked then
+            but.IsChecked = false
+            LinvLib:Icon(panel, LinvLib.Materials["check"], true)
+            func(but.IsChecked)
+        else
+            LinvLib:Icon(panel, LinvLib.Materials["cross"], true)
+            but.IsChecked = true
+        end
+        func(but.IsChecked)
+    end)
+end

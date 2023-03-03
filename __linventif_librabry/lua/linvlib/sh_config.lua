@@ -32,6 +32,7 @@ LinvLib.Config.AdminGroups = { // Admin Group
     ["admin"] = true,
     ["moderator"] = true,
     ["helper"] = true,
+    ["autre"] = true,
 }
 
 // -- // -- // -- // -- // -- // -- // -- //

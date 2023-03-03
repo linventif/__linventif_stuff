@@ -67,7 +67,9 @@ local languages = {
         ["money_symbol_separator"] = "Money Symbol Separator",
         ["money_symbol"] = "Money Symbol",
         ["money_settings"] = "Money Settings",
-        ["show_npc_name"] = "Show NPC's Name"
+        ["show_npc_name"] = "Show NPC's Name",
+        ["admin_group"] = "Admin Group",
+        ["add_group"] = "Add New Group (enter = confirm)"
     }
 }
 

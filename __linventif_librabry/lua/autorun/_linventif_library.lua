@@ -14,7 +14,7 @@ end
 local folder = "linvlib"
 local name = "Linventif Library"
 local license = "CC BY-SA 4.0"
-local version = "0.2.5"
+local version = "0.2.6"
 
 LinvLib = {
     ["Config"] = {},
