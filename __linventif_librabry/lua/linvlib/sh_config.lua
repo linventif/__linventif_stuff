@@ -53,7 +53,7 @@ LinvLib.Config.Compatibility = { // Compatibility Settings (after the update run
 }
 
 // Monitor Settings
-LinvLib.Config.MonitorShowEveryJoin = true // Monitor Show At Every Connection (true - false)
+LinvLib.Config.MonitorShowEveryJoin = false // Monitor Show At Every Connection (true - false)
 LinvLib.Config.MonitorShowIfNewUpdate = true // Monitor Show If New Update (true - false)
 LinvLib.Config.MonitorShowIfNewAddon = true // Monitor Show If New Addon Detected (true - false)
 LinvLib.Config.MonitorGroup = { // The group that can see the monitor

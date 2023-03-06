@@ -891,24 +891,21 @@ local function CanOpenMonitor()
     end
 end
 
-local function AddonNeedUpdate(data)
+local function OpenIfAddonNeedUpdate(data)
     if !data then
         http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
-            AddonNeedUpdate(util.JSONToTable(body))
+            OpenIfAddonNeedUpdate(util.JSONToTable(body))
         end, function(message)
             print(message)
         end)
-        return
-    end
-    local addon_need_update = 0
-    for k, v in pairs(data) do
-        if LinvLib.Install[k] && LinvLib.Install[k]["version"] && (LinvLib.Install[k]["version"] < v["version"])then
-            addon_need_update = addon_need_update + 1
+    else
+        for k, v in pairs(data) do
+            if !LinvLib.Install[k] then continue end
+            if LinvLib.Install[k] < v.version then
+                OpenMonitor()
+                return
+            end
         end
-    end
-    if addon_need_update > 0 then
-        LinvLib:Notif(LinvLib:GetTrad("addon_need_update") .. addon_need_update)
-        CanOpenMonitor()
     end
 end
 
@@ -984,7 +981,7 @@ hook.Add("InitPostEntity", "LinvLib:InitAll", function()
                 if LinvLib.Config.MonitorGroup[LocalPlayer():GetUserGroup()] && LinvLib.Config.MonitorShowEveryJoin then
                     OpenMonitor()
                 elseif LinvLib.Config.MonitorShowIfNewUpdate then
-                    AddonNeedUpdate()
+                    OpenIfAddonNeedUpdate()
                 end
                 -- NewAddonsDetected()
             end)
