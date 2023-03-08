@@ -19,7 +19,8 @@ local id_type = {
         ["MonitorShowNewAddon"] = true,
         ["ForceMaterial"] = true,
         ["MoneySymbolLeft"] = true,
-        ["ShowNPCName"] = true
+        ["ShowNPCName"] = true,
+        ["Blur"] = true
     },
     ["string"] = {
         ["Language"] = true,
@@ -77,43 +78,6 @@ local function RefreshIcon(element, v2)
     end
 end
 
--- local function ColorPanel(msg, defaut_color, func)
---     if !defaut_color then defaut_color = Color(255, 255, 255) end
-
---     local frame = LinvLib:Frame(400, 475, 8)
---     frame:DockPadding(RespW(30), RespW(30), RespW(30), RespW(30))
-
---     local title = LinvLib:LabelPanel(frame, msg, "LinvFontRobo25", 0, 0, 400, 60)
---     title:Dock(TOP)
---     title:DockMargin(0, 0, 0, RespW(15))
-
---     local color_mixer = vgui.Create("DColorMixer", frame)
---     color_mixer:Dock(FILL)
---     color_mixer:SetPalette(true)
---     color_mixer:SetAlphaBar(true)
---     color_mixer:SetWangs(true)
---     color_mixer:SetColor(defaut_color)
-
---     local panel_but = LinvLib:Panel(frame, 400, 50)
---     panel_but:Dock(BOTTOM)
---     panel_but:DockMargin(0, RespW(30), 0, 0)
---     panel_but.Paint = function(self, w, h) end
-
---     local but_reset = LinvLib:Button(panel_but, LinvLib:GetTrad("reset"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
---         color_mixer:SetColor(defaut_color)
---     end)
---     but_reset:Dock(LEFT)
-
---     local but_continue = LinvLib:Button(panel_but, LinvLib:GetTrad("continue"), 155, 50, LinvLib:GetColorTheme("element"), true, function()
---         func(color_mixer:GetColor())
---         frame:Remove()
---     end)
---     but_continue:Dock(RIGHT)
---     frame.OnRemove = function()
---         RunConsoleCommand("linvlib_settings")
---     end
--- end
-
 local function OpenSelect(data)
     -- local blur = LinvLib:Blur(Color(255, 180, 60, 60), 1)
     local select_menu = LinvLib:Frame(410, 415)
@@ -129,9 +93,6 @@ local function OpenSelect(data)
     if data["type"] == "addon" then
         data["data"] = LinvLib.Config.Compatibility
     end
-    -- scroll.Paint = function(self, w, h)
-    --     draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("element"))
-    -- end
     for k, v in pairs(data["data"]) do
         if data["type"] == "simple" then
             local button = LinvLib:Button(scroll, v, 365, 40, LinvLib:GetColorTheme("element"), true, function()
@@ -271,21 +232,6 @@ local function OpenSettings()
                 [1] = {
                     ["icon"] = LinvLib.Materials["edit"],
                     ["function"] = function()
-                        -- local data_table = {
-                        --     ["title"] = LinvLib:GetTrad("language"),
-                        --     ["data"] = LinvLib:GetLanguageId(),
-                        --     ["type"] = "simple",
-                        --     ["callback"] = function(data)
-                        --         if data == "Add Language" then
-                        --             LinvLib:Notif(LinvLib:GetTrad("language_add"))
-                        --         else
-                        --             LinvLib.Config.Language = data
-                        --             SaveSetting("Language", LinvLib.Config.Language)
-                        --         end
-                        --     end
-                        -- }
-                        -- data_table.data[#data_table.data + 1] = "Add Language"
-                        -- OpenSelect(data_table)
                         RunConsoleCommand("linvlib_settings")
                         LinvLib:Notif(LinvLib:GetTrad("lang_cant_changed"))
                     end,
@@ -332,22 +278,6 @@ local function OpenSettings()
                     end,
                     ["name"] = LinvLib:GetTrad("super_admin_group")
                 },
-                -- [3] = {
-                --     ["icon"] = LinvLib.Materials["edit"],
-                --     ["function"] = function()
-                --         OpenSelect({
-                --             ["title"] = LinvLib:GetTrad("compatible_addon"),
-                --             ["data"] = LinvLib.Config.Compatibility,
-                --             ["type"] = "addon",
-                --             ["callback"] = function(id, state)
-                --                 LinvLib.Config.Compatibility[id] = state
-                --                 -- SaveSetting("CompatibleAddon", LinvLib.Config.Compatibility)
-                --                 PrintTable(LinvLib.Config.Compatibility)
-                --             end
-                --         })
-                --     end,
-                --     ["name"] = LinvLib:GetTrad("compatible_addon")
-                -- },
             }
         },
         [2] = {
@@ -358,12 +288,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.MonitorShowEveryJoin,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        if LinvLib.Config.MonitorShowEveryJoin then
-                            LinvLib.Config.MonitorShowEveryJoin = false
-                        else
-                            LinvLib.Config.MonitorShowEveryJoin = true
-                        end
-                        SaveSetting("MonitorShowEveryJoin", LinvLib.Config.MonitorShowEveryJoin)
+                        SaveSetting("MonitorShowEveryJoin", !LinvLib.Config.MonitorShowEveryJoin)
                     end,
                     ["name"] = LinvLib:GetTrad("show_at_every_join")
                 },
@@ -372,85 +297,12 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.MonitorShowIfNewUpdate,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        if LinvLib.Config.MonitorShowIfNewUpdate then
-                            LinvLib.Config.MonitorShowIfNewUpdate = false
-                        else
-                            LinvLib.Config.MonitorShowIfNewUpdate = true
-                        end
-                        SaveSetting("MonitorShowNewUpadte", LinvLib.Config.MonitorShowIfNewUpdate)
+                        SaveSetting("MonitorShowNewUpadte", !LinvLib.Config.MonitorShowIfNewUpdate)
                     end,
                     ["name"] = LinvLib:GetTrad("show_if_need_update")
                 },
-                -- [3] = {
-                --     ["checkbox"] = true,
-                --     ["state"] = LinvLib.Config.MonitorShowIfNewAddon,
-                --     ["icon"] = LinvLib.Materials["valid"],
-                --     ["function"] = function()
-                --         if LinvLib.Config.MonitorShowIfNewAddon then
-                --             LinvLib.Config.MonitorShowIfNewAddon = false
-                --         else
-                --             LinvLib.Config.MonitorShowIfNewAddon = true
-                --         end
-                --         SaveSetting("MonitorShowNewAddon", LinvLib.Config.MonitorShowIfNewAddon)
-                --     end,
-                --     ["name"] = LinvLib:GetTrad("show_if_new_addon")
-                -- },
             }
         },
-        -- [3] = {
-        --     ["name"] = LinvLib:GetTrad("admin_suite"),
-        --     ["settings"] = {
-        --         [1] = {
-        --             ["checkbox"] = true,
-        --             ["state"] = LinvLib.Config.AdminMenu,
-        --             ["icon"] = LinvLib.Materials["valid"],
-        --             ["function"] = function()
-        --                 if LinvLib.Config.AdminMenu then
-        --                     LinvLib.Config.AdminMenu = false
-        --                 else
-        --                     LinvLib.Config.AdminMenu = true
-        --                 end
-        --                 SaveSetting("AdminMenu", LinvLib.Config.AdminMenu)
-        --             end,
-        --             ["name"] = LinvLib:GetTrad("admin_menu")
-        --         },
-        --         [2] = {
-        --             ["checkbox"] = true,
-        --             ["state"] = LinvLib.Config.AdminMenuExtended,
-        --             ["icon"] = LinvLib.Materials["valid"],
-        --             ["function"] = function()
-        --                 if LinvLib.Config.AdminMenuExtended then
-        --                     LinvLib.Config.AdminMenuExtended = false
-        --                 else
-        --                     LinvLib.Config.AdminMenuExtended = true
-        --                 end
-        --                 SaveSetting("AdminMenuExtend", LinvLib.Config.AdminMenuExtended)
-        --             end,
-        --             ["name"] = LinvLib:GetTrad("admin_menu_extend")
-        --         },
-        --         [3] = {
-        --             ["checkbox"] = true,
-        --             ["state"] = LinvLib.Config.AdminTicket,
-        --             ["icon"] = LinvLib.Materials["valid"],
-        --             ["function"] = function()
-        --                 if LinvLib.Config.AdminTicket then
-        --                     LinvLib.Config.AdminTicket = false
-        --                 else
-        --                     LinvLib.Config.AdminTicket = true
-        --                 end
-        --                 SaveSetting("AdminTicket", LinvLib.Config.AdminTicket)
-        --             end,
-        --             ["name"] = LinvLib:GetTrad("admin_ticket")
-        --         },
-        --         [4] = {
-        --             ["icon"] = LinvLib.Materials["edit"],
-        --             ["function"] = function()
-        --                 LinvLib:Notif(LinvLib:GetTrad("in_dev"))
-        --             end,
-        --             ["name"] = LinvLib:GetTrad("admin_group")
-        --         },
-        --     }
-        -- },
         [3] = {
         -- [4] = {
             ["name"] = LinvLib:GetTrad("linventif_security"),
@@ -460,39 +312,10 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.GlobalBan,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        if LinvLib.Config.GlobalBan then
-                            LinvLib.Config.GlobalBan = false
-                        else
-                            LinvLib.Config.GlobalBan = true
-                        end
-                        SaveSetting("GlobalBan", LinvLib.Config.GlobalBan)
+                        SaveSetting("GlobalBan", !LinvLib.Config.GlobalBan)
                     end,
                     ["name"] = LinvLib:GetTrad("global_ban")
                 },
-                -- [2] = {
-                --     ["checkbox"] = true,
-                --     ["state"] = LinvLib.Config.PlayerTrustFactor,
-                --     ["icon"] = LinvLib.Materials["valid"],
-                --     ["function"] = function()
-                --         if LinvLib.Config.PlayerTrustFactor then
-                --             LinvLib.Config.PlayerTrustFactor = false
-                --         else
-                --             LinvLib.Config.PlayerTrustFactor = true
-                --         end
-                --         SaveSetting("PlayerTrustFactor", LinvLib.Config.PlayerTrustFactor)
-                --     end,
-                --     ["name"] = LinvLib:GetTrad("ply_trust_factor")
-                -- },
-                -- [3] = {
-                --     ["icon"] = LinvLib.Materials["edit"],
-                --     ["function"] = function()
-                --         LinvLib:NumberPanel(LinvLib:GetTrad("ply_trust_factor_min"), LinvLib.Config.MinPlayerTrustFactor, 0, 100, function(value)
-                --             LinvLib.Config.MinPlayerTrustFactor = value
-                --             SaveSetting("MinPlayerTrustFactor", LinvLib.Config.MinPlayerTrustFactor)
-                --         end)
-                --     end,
-                --     ["name"] = LinvLib:GetTrad("ply_trust_factor_min")
-                -- },
             }
         },
         [4] = {
@@ -528,12 +351,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.MoneySymbolLeft,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        if LinvLib.Config.MoneySymbolLeft then
-                            LinvLib.Config.MoneySymbolLeft = false
-                        else
-                            LinvLib.Config.MoneySymbolLeft = true
-                        end
-                        SaveSetting("MoneySymbolLeft", LinvLib.Config.MoneySymbolLeft)
+                        SaveSetting("MoneySymbolLeft", !LinvLib.Config.MoneySymbolLeft)
                     end,
                     ["name"] = LinvLib:GetTrad("money_symbol_position")
                 },
@@ -583,12 +401,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.ShowName,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        if LinvLib.Config.ShowName then
-                            LinvLib.Config.ShowName = false
-                        else
-                            LinvLib.Config.ShowName = true
-                        end
-                        SaveSetting("ShowNPCName", LinvLib.Config.ShowName)
+                        SaveSetting("ShowNPCName", !LinvLib.Config.ShowName)
                     end,
                     ["name"] = LinvLib:GetTrad("show_npc_name")
                 },
@@ -602,12 +415,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.DebugMode,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        if LinvLib.Config.DebugMode then
-                            LinvLib.Config.DebugMode = false
-                        else
-                            LinvLib.Config.DebugMode = true
-                        end
-                        SaveSetting("DebugMode", LinvLib.Config.DebugMode)
+                        SaveSetting("DebugMode", !LinvLib.Config.DebugMode)
                     end,
                     ["name"] = LinvLib:GetTrad("debug_mode")
                 },
@@ -616,31 +424,13 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.ForceMaterial,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        if LinvLib.Config.ForceMaterial then
-                            LinvLib.Config.ForceMaterial = false
-                        else
-                            LinvLib.Config.ForceMaterial = true
-                        end
-                        SaveSetting("ForceMaterial", LinvLib.Config.ForceMaterial)
+                        SaveSetting("ForceMaterial", !LinvLib.Config.ForceMaterial)
                     end,
                     ["name"] = LinvLib:GetTrad("force_redownload_images")
                 },
             }
         },
     }
-
-    -- for k, v in pairs(LinvLib.CustomTheme) do
-    --     settings_list[5]["settings"][#settings_list[5]["settings"] + 1] = {
-    --         ["icon"] = LinvLib.Materials["edit"],
-    --         ["function"] = function()
-    --             ColorPanel(LinvLib:GetTrad(v), LinvLib:GetColorTheme(v), function(color)
-    --                 LinvLib:SetColorTheme(v, color)
-    --                 SaveSetting("color", color)
-    --             end)
-    --         end,
-    --         ["name"] = LinvLib:GetTrad(v) .. " : " .. LinvLib:RGBtoHEX(LinvLib:GetColorTheme(v))
-    --     }
-    -- end
 
     local frame = LinvLib:Frame(910, 720)
     frame:DockMargin(0, 0, 0, 0)
@@ -661,16 +451,6 @@ local function OpenSettings()
         surface.DrawTexturedRect(0, 0, RespW(36), RespH(36))
     end
 
-    -- local doc = LinvLib:Button(frame, " ", 29, 36, LinvLib:GetColorTheme("element"), false, function()
-    --     LinvLib:Notif(LinvLib:GetTrad("in_dev"))
-    -- end)
-    -- doc:SetPos(RespW(910 - 109), RespH(20))
-    -- doc.Paint = function(self, w, h)
-    --     surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
-    --     surface.SetMaterial(LinvLib.Materials["doc"])
-    --     surface.DrawTexturedRect(0, 0, RespW(29), RespH(36))
-    -- end
-
     local scroll = LinvLib:Scroll(frame, 895, 610)
     scroll:SetPos(RespW(0), RespH(80))
     for k, v in SortedPairs(settings_list) do
@@ -682,7 +462,6 @@ local function OpenSettings()
         end
         local dplist = vgui.Create("DPanelList", panel)
         dplist:SetSize(RespW(840), RespH(math.Round(#v["settings"]/2)*60 + (math.Round(#v["settings"]/2) - 1)*30))
-        // math.Round(#v["settings"]/2)*60 + (math.Round(#v["settings"]/2) - 1)*30) = total height (60 = height of panel, 30 = spacing)
         dplist:SetPos(RespW(0), RespH(50))
         dplist:EnableVerticalScrollbar(true)
         dplist:EnableHorizontal(true)
@@ -693,8 +472,6 @@ local function OpenSettings()
             panel:SetSize(RespW(405), RespH(60))
             panel.Paint = function(self, w, h)
                 LinvLib:NewPaint(panel, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("element"))
-                -- draw.RoundedBox(RespW(8), 0, 0, w, h, LinvLib:GetColorTheme("element"))
-                -- draw.RoundedBox(RespW(8), 355, 10, 40, 40, LinvLib:GetColorTheme("accent"))
                 draw.SimpleText(v2["name"], "LinvFontRobo20", RespW(177.5), RespH(30), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
             end
             local but_act = LinvLib:Button(panel, "", 40, 40, LinvLib:GetColorTheme("element"), false, v2["function"])
@@ -724,14 +501,14 @@ local nb_needupdate, nb_addon = 0, 0
 
 local function OpenMonitor(data, order)
     if !data then
-        http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
+        http.Fetch("https://api.linv.dev/addons.json", function(body, length, headers, code)
             OpenMonitor(util.JSONToTable(body))
         end, function(message)
             print(message)
         end)
         return
     elseif !order then
-        http.Fetch("https://api.linventif.fr/addons_order.json", function(body, length, headers, code)
+        http.Fetch("https://api.linv.dev/addons_order.json", function(body, length, headers, code)
             OpenMonitor(data, util.JSONToTable(body))
         end, function(message)
             print(message)
@@ -790,11 +567,7 @@ local function OpenMonitor(data, order)
 
     local scroll = LinvLib:Scroll(frame, 720, 480)
     scroll:Dock(FILL)
-    if nb_addon > 5 then
-        scroll:DockMargin(RespW(30), 0, RespW(10), RespH(30))
-    else
-        scroll:DockMargin(RespW(30), 0, RespW(20), RespH(30))
-    end
+    scroll:DockMargin(RespW(30), 0, LinvLib.ScrollBarAjust(nb_addon > 5, RespW(10), RespW(20)), RespH(30))
     for id, addon_folder in SortedPairs(order) do
         local k = addon_folder
         local v = data[addon_folder]
@@ -803,7 +576,7 @@ local function OpenMonitor(data, order)
         -- local addon = LinvLib:Button(scroll, "", 720, 84, LinvLib:GetColorTheme("element"), true, false)
         local addon = LinvLib:Panel(scroll, 720, 84, false, false, LinvLib:GetColorTheme("element"))
         addon:Dock(TOP)
-        addon:DockMargin(0, 0, RespW(10), RespH(15))
+        addon:DockMargin(0, 0, RespW(10 - LinvLib.Config.Border / 2), RespH(15))
         addon:DockPadding(RespW(10), RespH(10), RespW(10), RespH(10))
 
         if v.imgur then
@@ -893,7 +666,7 @@ end
 
 local function OpenIfAddonNeedUpdate(data)
     if !data then
-        http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
+        http.Fetch("https://api.linv.dev/addons.json", function(body, length, headers, code)
             OpenIfAddonNeedUpdate(util.JSONToTable(body))
         end, function(message)
             print(message)
@@ -911,7 +684,7 @@ end
 
 local function NewAddonPanel(data, data_ext)
     if !data_ext then
-        http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
+        http.Fetch("https://api.linv.dev/addons.json", function(body, length, headers, code)
             NewAddonPanel(data, util.JSONToTable(body))
         end, function(message)
             print(message)

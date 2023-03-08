@@ -1,3 +1,53 @@
+local ImageCache = {}
+
+function LinvLib.CreateImgurMaterials(materials, addon_var, folder, name)
+    if !file.Exists(folder, "DATA") then
+        file.CreateDir(folder)
+    end
+
+    local function getMatFromUrl(url, id)
+        materials[id] = Material("nil")
+
+        if file.Exists(folder .. "/" .. id .. ".png", "DATA") && !LinvLib.Config.ForceMaterial then
+            addon_var[id] = Material("../data/" .. folder .. "/" .. id .. ".png", "noclamp smooth")
+            print("| " .. name .. " | Image Loaded | " .. id .. ".png")
+            return
+        end
+
+        http.Fetch(url, function(body)
+            file.Write(folder .. "/" .. id .. ".png", body)
+            addon_var[id] = Material("../data/" .. folder .. "/" .. id .. ".png", "noclamp smooth")
+            ImageCache[table.Count(ImageCache) + 1] = {
+                ["folder"] = folder,
+                ["addon_var"] = addon_var,
+                ["id"] = id
+            }
+            print("| " .. name .. " | Image Downloaded | " .. id .. ".png")
+        end)
+    end
+
+    for k, v in pairs(materials) do
+        getMatFromUrl("https://i.imgur.com/" .. v .. ".png", k)
+    end
+end
+
+function LinvLib:RedowloadMaterials()
+    for k, v in pairs(ImageCache) do
+        v.addon_var[v.id] = Material("../data/" .. v.folder .. "/" .. v.id .. ".png", "noclamp smooth")
+        print("| " .. "v.name" .. " | Image Redownloaded | " .. v.id .. ".png")
+    end
+end
+
+concommand.Add("linvlib_redownload_materials", function()
+    LinvLib:RedowloadMaterials()
+end)
+
+concommand.Add("linvlib_show_materials", function()
+    PrintTable(ImageCache)
+end)
+
+// -- // -- // -- // -- // -- // -- // -- //
+
 LinvLib.Materials = {}
 
 local imgurID = {

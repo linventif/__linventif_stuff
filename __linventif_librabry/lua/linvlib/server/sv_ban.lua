@@ -2,7 +2,7 @@ local BanList = {}
 
 hook.Add("Initialize", "LinvLibBanUpdate", function()
     timer.Simple(5, function()
-        http.Fetch("https://api.linventif.fr/gmod-lib/ban.json", function(body, length, headers, code)
+        http.Fetch("https://api.linv.dev/bans.json", function(body, length, headers, code)
             BanList = util.JSONToTable(body)
         end, function(message)
             print(message)
@@ -11,7 +11,7 @@ hook.Add("Initialize", "LinvLibBanUpdate", function()
 end)
 
 timer.Create("LinvLib:BanUpdate", 300, 0, function()
-    http.Fetch("https://api.linventif.fr/gmod-lib/ban.json", function(body, length, headers, code)
+    http.Fetch("https://api.linv.dev/bans.json", function(body, length, headers, code)
         BanList = util.JSONToTable(body)
     end, function(message)
         print(message)
@@ -39,7 +39,7 @@ local function BanMessage(data)
         [17] = "",
         [18] = "If you think this is a mistake or you want to appeal,",
         [19] = "open a ticket on our discord server : ",
-        [20] = "https://discord.gg/EkVPk9y",
+        [20] = "https://linv.dev/discord",
         [21] = "",
         [22] = "Linventif Security"
     }

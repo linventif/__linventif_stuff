@@ -22,7 +22,7 @@ end
 
 hook.Add("Initialize", "LinvLib:GetVersion", function()
     timer.Simple( 5, function()
-        http.Fetch("https://api.linventif.fr/addons.json", function(body, length, headers, code)
+        http.Fetch("https://api.linv.dev/addons.json", function(body, length, headers, code)
             LinvLibVerif(util.JSONToTable(body))
         end, function(message)
             print(message)

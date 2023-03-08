@@ -69,7 +69,8 @@ local languages = {
         ["money_settings"] = "Money Settings",
         ["show_npc_name"] = "Show NPC's Name",
         ["admin_group"] = "Admin Group",
-        ["add_group"] = "Add New Group (enter = confirm)"
+        ["add_group"] = "Add New Group (enter = confirm)",
+        ["use_blur"] = "Use Blur"
     }
 }
 

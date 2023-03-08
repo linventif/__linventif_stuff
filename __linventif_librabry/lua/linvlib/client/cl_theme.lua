@@ -1,14 +1,3 @@
--- LinvLib.CustomTheme = {
---     [1] = "background",
---     [2] = "border",
---     [3] = "element",
---     [4] = "accent",
---     [5] = "hover",
---     [6] = "text",
---     [7] = "icon",
---     [8] = "red"
--- }
-
 local themes = {
     ["linventif"] = {
         ["background"] = Color(41, 44, 54),
@@ -22,24 +11,12 @@ local themes = {
         ["green"] = Color(76, 221, 76),
         ["orange"] = Color(255, 140, 0),
     },
-    ["gang-city"] = {
-        ["background"] = Color(26, 32, 64),
-        ["border"] = Color(118, 126, 148),
-        ["element"] = Color(44, 50, 84),
-        ["accent"] = Color(35, 71, 165),
-        ["hover"] = Color(190, 132, 50),
-        ["text"] = Color(255, 255, 255),
-        ["icon"] = Color(255, 255, 255),
-        ["red"] = Color(221, 93, 76),
-        ["green"] = Color(76, 221, 76),
-        ["orange"] = Color(255, 140, 0),
-    },
     ["dark"] = {
         ["background"] = Color(30, 30, 30),
-        ["border"] = Color(124, 124, 124),
+        ["border"] = Color(135, 135, 135),
         ["element"] = Color(50, 50, 50),
         ["accent"] = Color(75, 75, 75),
-        ["hover"] = Color(100, 100, 100),
+        ["hover"] = Color(90, 90, 90),
         ["text"] = Color(230, 230, 230),
         ["icon"] = Color(230, 230, 230),
         ["red"] = Color(221, 93, 76),
@@ -48,10 +25,10 @@ local themes = {
     },
     ["grey"] = {
         ["background"] = Color(55, 55, 55),
-        ["border"] = Color(118, 126, 148),
-        ["element"] = Color(80, 80, 80),
+        ["border"] = Color(115, 115, 115),
+        ["element"] = Color(75, 75, 75),
         ["accent"] = Color(115, 115, 115),
-        ["hover"] = Color(135, 135, 135),
+        ["hover"] = Color(90, 90, 90),
         ["text"] = Color(255, 255, 255),
         ["icon"] = Color(255, 255, 255),
         ["red"] = Color(221, 93, 76),
@@ -59,20 +36,18 @@ local themes = {
         ["orange"] = Color(255, 140, 0),
     },
     ["light"] = {
-        ["background"] = Color(85, 85, 85),
-        ["border"] = Color(118, 126, 148),
-        ["element"] = Color(110, 110, 110),
-        ["accent"] = Color(140, 140, 140),
-        ["hover"] = Color(165, 165, 165),
-        ["text"] = Color(255, 255, 255),
+        ["background"] = Color(175, 175, 175),
+        ["border"] = Color(100, 100, 100),
+        ["element"] = Color(150, 150, 150),
+        ["accent"] = Color(110, 110, 110),
+        ["hover"] = Color(130, 130, 130),
+        ["text"] = Color(0, 0, 0),
         ["icon"] = Color(255, 255, 255),
         ["red"] = Color(221, 93, 76),
-        ["green"] = Color(76, 221, 76),
+        ["green"] = Color(0, 255, 0),
         ["orange"] = Color(255, 140, 0),
     }
 }
-
--- file.Write("themes.txt", util.TableToJSON(themes, true))
 
 // -- // -- // -- // -- // -- // -- // -- //
 // DO NOT EDIT BELOW THIS LINE
@@ -96,36 +71,5 @@ end
 
 function LinvLib:AddTheme(id, tbl)
     themes[id] = tbl
+    print("| Linventif Library | Theme Added | " .. id)
 end
-
--- function LinvLib:SetColorTheme(id, color)
---     if themes[LinvLib.Config.Theme] && themes[LinvLib.Config.Theme][id] then
---         themes[LinvLib.Config.Theme][id] = color
---     else
---         themes["linventif"][id] = color
---     end
--- end
-
--- LinvLib.Config.CustomTheme = {
---     ["background"] = LinvLib:GetColorTheme("background"),
---     ["border"] = LinvLib:GetColorTheme("border"),
---     ["element"] = LinvLib:GetColorTheme("element"),
---     ["accent"] = LinvLib:GetColorTheme("accent"),
---     ["hover"] = LinvLib:GetColorTheme("hover"),
---     ["text"] = LinvLib:GetColorTheme("text"),
---     ["icon"] = LinvLib:GetColorTheme("icon"),
---     ["red"] = LinvLib:GetColorTheme("red"),
--- }
-
--- function LinvLib:RefreshCustomTheme()
---     LinvLib.Config.CustomTheme = {
---         ["background"] = LinvLib:GetColorTheme("background"),
---         ["border"] = LinvLib:GetColorTheme("border"),
---         ["element"] = LinvLib:GetColorTheme("element"),
---         ["accent"] = LinvLib:GetColorTheme("accent"),
---         ["hover"] = LinvLib:GetColorTheme("hover"),
---         ["text"] = LinvLib:GetColorTheme("text"),
---         ["icon"] = LinvLib:GetColorTheme("icon"),
---         ["red"] = LinvLib:GetColorTheme("red"),
---     }
--- end

@@ -16,6 +16,7 @@ LinvLib.Config.InGameSettings = true // Put to false if you want to change the c
 LinvLib.Config.Theme = "linventif" // Theme (linventif - dark - grey - light) you can add your own theme in cl_theme.lua
 LinvLib.Config.Rounded = 8 // Rounded (px 0 to disable)
 LinvLib.Config.Border = 0 // Border (px 0 to disable)
+LinvLib.Config.Blur = true // Use Blur (true - false)
 LinvLib.Config.CrossBorder = 0 // Cross Length (px) (0 to disable) (if < 1 it will be a percentage of the screen)
 
 // Money Settings

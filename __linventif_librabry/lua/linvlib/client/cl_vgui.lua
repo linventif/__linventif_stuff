@@ -6,6 +6,22 @@ function LinvLib:RespH(y)
     return ScrH() / 1080 * y
 end
 
+local blur = Material("pp/blurscreen")
+function LinvLib:DrawBlur(panel, amount, color)
+    local x, y = panel:LocalToScreen(0, 0)
+    local scrW, scrH = ScrW(), ScrH()
+    surface.SetDrawColor(255, 255, 255)
+    surface.SetMaterial(blur)
+    for i = 1, 3 do
+        blur:SetFloat("$blur", (i / 3) * (amount or 6))
+        blur:Recompute()
+        render.UpdateScreenEffectTexture()
+        surface.DrawTexturedRect(x * -1, y * -1, scrW, scrH)
+    end
+    surface.SetDrawColor(color or Color(255, 255, 255, 255))
+    surface.DrawRect(x * -1, y * -1, scrW, scrH)
+end
+
 local txt_cooldown = 0
 function LinvLib:DrawNPCText(self, text, height_pos)
     if text == "" || !LinvLib.Config.ShowName then return end
@@ -157,7 +173,21 @@ end
 
 // -- // -- // --
 
-function LinvLib:Frame(weight, height)
+function LinvLib.BlurPanel()
+    if !LinvLib.Config.Blur then return end
+    local blur_panel = vgui.Create("DPanel")
+    blur_panel:SetSize(ScrW(), ScrH())
+    blur_panel:Center()
+    blur_panel.Paint = function(self, w, h)
+        if !no_blur then LinvLib:DrawBlur(self, 4, Color(LinvLib:GetColorTheme("background").r, LinvLib:GetColorTheme("background").g, LinvLib:GetColorTheme("background").b, 80)) end
+    end
+    return blur_panel
+end
+
+function LinvLib:Frame(weight, height, blur)
+    if isnumber(blur) then blur = nil end
+    local blur_panel = LinvLib.BlurPanel()
+    if !blur then blur_panel:Remove() end
     local frame = vgui.Create("DFrame")
     frame:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     frame:Center()
@@ -167,6 +197,9 @@ function LinvLib:Frame(weight, height)
     frame:SetDraggable(false)
     frame.Paint = function(self, w, h)
         LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("background"))
+    end
+    if blur then
+        frame.OnRemove = function() blur_panel:Remove() end
     end
     return frame
 end
@@ -210,6 +243,14 @@ function LinvLib:Scroll(frame, weight, height, round)
         draw.RoundedBox(LinvLib:RespW(round), 0, 0, w, h, LinvLib:GetColorTheme("accent"))
     end
     return scroll
+end
+
+function LinvLib.ScrollBarAjust(boll, true_val, false_val)
+    if boll then
+        return true_val + LinvLib.Config.Border / 2
+    else
+        return false_val
+    end
 end
 
 local cooldown = 0
