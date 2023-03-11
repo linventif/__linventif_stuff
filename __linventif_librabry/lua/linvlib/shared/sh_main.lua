@@ -80,3 +80,9 @@ function LinvLib:GetPlyOfTeams(teams)
     end
     return plys
 end
+
+concommand.Add("clr", function(ply)
+    for i = 1, 100 do
+        print(" ")
+    end
+end)
