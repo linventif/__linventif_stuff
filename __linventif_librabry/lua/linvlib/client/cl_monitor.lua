@@ -440,42 +440,41 @@ local function OpenSettings()
     title:Dock(TOP)
     title:DockMargin(0, 0, 0, RespW(15))
 
-    local close = LinvLib:Button(frame, " ", 36, 36, LinvLib:GetColorTheme("element"), false, function()
+    LinvLib:CloseButton(frame, 36, 36, RespW(910 - 60), RespH(20), function()
         frame:Close()
         RunConsoleCommand("linvlib_monitor")
     end)
-    close:SetPos(RespW(910 - 60), RespH(20))
-    close.Paint = function(self, w, h)
-        surface.SetDrawColor(LinvLib:GetColorTheme("icon"))
-        surface.SetMaterial(LinvLib.Materials["cancel"])
-        surface.DrawTexturedRect(0, 0, RespW(36), RespH(36))
-    end
 
     local scroll = LinvLib:Scroll(frame, 895, 610)
-    scroll:SetPos(RespW(0), RespH(80))
+    scroll:Dock(TOP)
+    scroll:DockMargin(0, 0, LinvLib:RespW(10) + LinvLib.Config.Border / 2, 0)
+
     for k, v in SortedPairs(settings_list) do
-        local panel = vgui.Create("DPanel", scroll)
-        panel:SetSize(RespW(840), RespH(math.Round(#v["settings"]/2)*60 + (math.Round(#v["settings"]/2) - 1)*30) + 50)
-        panel.Paint = function(self, w, h)
-            draw.RoundedBox(RespW(8), 0, 0, w, h, Color(0, 0, 0, 0))
-            draw.SimpleText(v["name"], "LinvFontRobo25", RespW(840/2), RespH(20), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-        end
+        local panel = LinvLib:Panel(scroll, 845, math.Round(#v["settings"]/2) * 60 + (math.Round(#v["settings"]/2) - 1) * 30 + 65, true)
+        panel:DockMargin(0, 0, RespW(10), 0)
+
+        local title = LinvLib:LabelPanel(panel, v["name"], "LinvFontRobo25", 840, 50)
+        title:DockMargin(0, 0, RespW(10), RespH(15))
+        title:Dock(TOP)
+
         local dplist = vgui.Create("DPanelList", panel)
         dplist:SetSize(RespW(840), RespH(math.Round(#v["settings"]/2)*60 + (math.Round(#v["settings"]/2) - 1)*30))
-        dplist:SetPos(RespW(0), RespH(50))
         dplist:EnableVerticalScrollbar(true)
         dplist:EnableHorizontal(true)
         dplist:SetSpacing(RespW(30))
-        dplist:SetPadding(RespW(0))
+        dplist:Dock(TOP)
+
         for k2, v2 in SortedPairs(v["settings"]) do
-            local panel = vgui.Create("DPanel")
-            panel:SetSize(RespW(405), RespH(60))
-            panel.Paint = function(self, w, h)
-                LinvLib:NewPaint(panel, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("element"))
-                draw.SimpleText(v2["name"], "LinvFontRobo20", RespW(177.5), RespH(30), LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
-            end
+            local panel = LinvLib:Panel(dplist, 410, 60)
+            panel:SetBackground(LinvLib:GetColorTheme("element"))
+
+            local title = LinvLib:LabelPanel(panel, v2["name"], "LinvFontRobo20", 405, 30)
+            title:DockMargin(0, 0, RespW(15), 0)
+            title:Dock(FILL)
+
             local but_act = LinvLib:Button(panel, "", 40, 40, LinvLib:GetColorTheme("element"), false, v2["function"])
             but_act:SetPos(RespW(355), RespH(10))
+            but_act:DockMargin(RespW(10), RespH(10), RespW(10), RespH(10))
             RefreshIcon(but_act, v2)
             but_act.DoClick = function()
                 if v2["checkbox"] then
@@ -490,10 +489,12 @@ local function OpenSettings()
                 v2["function"]()
                 RefreshIcon(but_act, v2)
             end
+            but_act:Dock(RIGHT)
             dplist:AddItem(panel)
         end
         panel:Dock(TOP)
         panel:DockMargin(30, 0, 0, 30)
+        scroll:AddItem(panel)
     end
 end
 
@@ -568,12 +569,14 @@ local function OpenMonitor(data, order)
     local scroll = LinvLib:Scroll(frame, 720, 480)
     scroll:Dock(FILL)
     scroll:DockMargin(RespW(30), 0, LinvLib.ScrollBarAjust(nb_addon > 5, RespW(10), RespW(20)), RespH(30))
+
     for id, addon_folder in SortedPairs(order) do
         local k = addon_folder
         local v = data[addon_folder]
         if !LinvLib.Install[addon_folder] || !v || !k then continue end
         local need_update = LinvLib.Install[k] < v.version
         -- local addon = LinvLib:Button(scroll, "", 720, 84, LinvLib:GetColorTheme("element"), true, false)
+
         local addon = LinvLib:Panel(scroll, 720, 84, false, false, LinvLib:GetColorTheme("element"))
         addon:Dock(TOP)
         addon:DockMargin(0, 0, RespW(10 - LinvLib.Config.Border / 2), RespH(15))
@@ -607,6 +610,7 @@ local function OpenMonitor(data, order)
         local your_version = LinvLib:LabelPanel(addon, LinvLib.Install[k], "LinvFontRobo20", 125, 50)
         your_version:Dock(RIGHT)
         your_version:DockMargin(RespW(30), 0, 0, 0)
+
         if need_update then
             your_version.Paint = function(self, w, h)
                 draw.SimpleText(LinvLib.Install[k], "LinvFontRobo20", w/2, h/2, LinvLib:GetColorTheme("red"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)

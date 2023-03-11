@@ -184,10 +184,7 @@ function LinvLib.BlurPanel()
     return blur_panel
 end
 
-function LinvLib:Frame(weight, height, blur)
-    if isnumber(blur) then blur = nil end
-    local blur_panel = LinvLib.BlurPanel()
-    if !blur then blur_panel:Remove() end
+function LinvLib:Frame(weight, height)
     local frame = vgui.Create("DFrame")
     frame:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     frame:Center()
@@ -198,9 +195,11 @@ function LinvLib:Frame(weight, height, blur)
     frame.Paint = function(self, w, h)
         LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), LinvLib:GetColorTheme("background"))
     end
-    if blur then
-        frame.OnRemove = function() blur_panel:Remove() end
-    end
+    -- function frame:SetBackground(color)
+    --     frame.Paint = function(self, w, h)
+    --         LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), color)
+    --     end
+    -- end
     return frame
 end
 
@@ -209,6 +208,11 @@ function LinvLib:Panel(frame, weight, height, noborder, bord_color, back_color)
     panel:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     panel.Paint = function(self, w, h)
         LinvLib:NewPaint(frame, w, h, bord_color || LinvLib:GetColorTheme("border"), back_color || LinvLib:GetColorTheme("background"), noborder)
+    end
+    function panel:SetBackground(color)
+        panel.Paint = function(self, w, h)
+            LinvLib:NewPaint(frame, w, h, LinvLib:GetColorTheme("border"), color)
+        end
     end
     return panel
 end
@@ -300,7 +304,6 @@ function LinvLib:Blur(color, force)
 end
 
 function LinvLib:Label(frame, text)
-    -- local panel = LinvLib:Panel(frame, weight, height)
     local label = vgui.Create("DLabel", frame)
     label:SetText(text)
     label:SetTextColor(LinvLib:GetColorTheme("text"))
