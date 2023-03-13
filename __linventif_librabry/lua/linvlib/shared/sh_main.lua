@@ -86,3 +86,19 @@ concommand.Add("clr", function(ply)
         print(" ")
     end
 end)
+
+function LinvLib:PrepareTableWithSteamID64(tbl)
+    local newtbl = {}
+    for k, v in pairs(tbl) do
+        newtbl["steamid64:" .. k] = v
+    end
+    return newtbl
+end
+
+function LinvLib:CleanKeyTable(tbl, str)
+    local newtbl = {}
+    for k, v in pairs(tbl) do
+        newtbl[string.Replace(k, str, "")] = v
+    end
+    return newtbl
+end
