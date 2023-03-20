@@ -6,23 +6,6 @@ function LinvLib:RespH(y)
     return ScrH() / 1080 * y
 end
 
-local blur = Material("pp/blurscreen")
-function LinvLib:DrawBlur(panel, amount, color)
-    local x, y = panel:LocalToScreen(0, 0)
-    local scrW, scrH = ScrW(), ScrH()
-    surface.SetDrawColor(255, 255, 255)
-    surface.SetMaterial(blur)
-    for i = 1, 3 do
-        blur:SetFloat("$blur", (i / 3) * (amount or 6))
-        blur:Recompute()
-        render.UpdateScreenEffectTexture()
-        surface.DrawTexturedRect(x * -1, y * -1, scrW, scrH)
-    end
-    surface.SetDrawColor(color or Color(255, 255, 255, 255))
-    surface.DrawRect(x * -1, y * -1, scrW, scrH)
-end
-
-local txt_cooldown = 0
 function LinvLib:DrawNPCText(self, text, height_pos)
     if text == "" || !LinvLib.Config.ShowName then return end
     if !height_pos then height_pos = 3200 end
@@ -44,60 +27,6 @@ function LinvLib:DrawNPCText(self, text, height_pos)
 	end
 end
 
-function LinvLib.Hover(element, round, border, color, hovercolor, bordercolor, bordercolorhover)
-    local borderx2 = 0
-    if border then
-        borderx2 = border * 2
-    end
-    element.OnCursorEntered = function()
-        element.Paint = function(self, w, h)
-            if border > 0 then
-                draw.RoundedBox(round, 0, 0, w, h, bordercolorhover)
-                draw.RoundedBox(round, border, border, w-BorderX*22, h-borderx2, hovercolor)
-            else
-                draw.RoundedBox(round, 0, 0, w, h, hovercolor)
-            end
-        end
-    end
-    element.OnCursorExited = function()
-        element.Paint = function(self, w, h)
-            if border > 0 then
-                draw.RoundedBox(round, 0, 0, w, h, bordercolor)
-                draw.RoundedBox(round, border, border, w-BorderX*22, h-borderx2, color)
-            else
-                draw.RoundedBox(round, 0, 0, w, h, color)
-            end
-        end
-    end
-end
-
-function LinvLib.Hover2(element, round, roundborder, border, color, hovercolor, bordercolor, bordercolorhover)
-    local borderx2 = 0
-    if border then
-        borderx2 = border * 2
-    end
-    element.OnCursorEntered = function()
-        element.Paint = function(self, w, h)
-            if border > 0 then
-                draw.RoundedBox(round, 0, 0, w, h, bordercolorhover)
-                draw.RoundedBox(roundborder, border, border, w-BorderX*22, h-borderx2, hovercolor)
-            else
-                draw.RoundedBox(round, 0, 0, w, h, hovercolor)
-            end
-        end
-    end
-    element.OnCursorExited = function()
-        element.Paint = function(self, w, h)
-            if border > 0 then
-                draw.RoundedBox(round, 0, 0, w, h, bordercolor)
-                draw.RoundedBox(roundborder, border, border, w-BorderX*22, h-borderx2, color)
-            else
-                draw.RoundedBox(round, 0, 0, w, h, color)
-            end
-        end
-    end
-end
-
 function LinvLib.HideVBar(element)
     element.VBar:SetHideButtons(true)
     element.VBar.Paint = function() end
@@ -105,26 +34,6 @@ function LinvLib.HideVBar(element)
     element.VBar.btnUp.Paint = function(self, w, h) end
     element.VBar.btnDown.Paint = function(self, w, h) end
     element.VBar.btnGrip.Paint = function(self, w, h) end
-end
-
-function LinvLib.UIButton(element, color, border, radius1, radius2)
-    element:SetTextColor(color["text"])
-    element.Paint = function(self, w, h)
-        draw.RoundedBox(radius1, 0, 0, w, h, color["border"])
-        draw.RoundedBox(radius2, LinvLib:RespW(radius2/2), LinvLib:RespH(radius2/2), w-LinvLib:RespW(radius2), h-LinvLib:RespH(radius2), color["background"])
-    end
-    element.OnCursorEntered = function()
-        element.Paint = function(self, w, h)
-            draw.RoundedBox(radius1, 0, 0, w, h, color["hover_border"])
-            draw.RoundedBox(radius2, LinvLib:RespW(radius2/2), LinvLib:RespH(radius2/2), w-LinvLib:RespW(radius2), h-LinvLib:RespH(radius2), color["hover"])
-        end
-    end
-    element.OnCursorExited = function()
-        element.Paint = function(self, w, h)
-            draw.RoundedBox(radius1, 0, 0, w, h, color["border"])
-            draw.RoundedBox(radius2, LinvLib:RespW(radius2/2), LinvLib:RespH(radius2/2), w-LinvLib:RespW(radius2), h-LinvLib:RespH(radius2), color["background"])
-        end
-    end
 end
 
 function LinvLib:NewPaint(element, w, h, border, background, noborder)
@@ -151,10 +60,6 @@ function LinvLib:NewPaint(element, w, h, border, background, noborder)
     else
         draw.RoundedBox(LinvLib:RespW(round), 0, 0, w, h, background)
     end
-end
-
-function LinvLib:PaintElement(element, w, h, color, hovercolor)
-    LinvLib:NewPaint(element, w, h, color, hovercolor)
 end
 
 function LinvLib:Hover(element, round, color, hovercolor)
@@ -184,12 +89,13 @@ function LinvLib.BlurPanel()
     return blur_panel
 end
 
-function LinvLib:Frame(weight, height)
+function LinvLib:Frame(weight, height, args)
+    if !args || !istable(args) then args = {} end
     local frame = vgui.Create("DFrame")
     frame:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     frame:Center()
     frame:SetTitle("")
-    frame:MakePopup()
+    if !args["no_popup"] then frame:MakePopup() end
     frame:ShowCloseButton(LinvLib.Config.DebugMode)
     frame:SetDraggable(false)
     frame.Paint = function(self, w, h)
@@ -250,6 +156,7 @@ function LinvLib:Scroll(frame, weight, height, round)
 end
 
 function LinvLib.ScrollBarAjust(boll, true_val, false_val)
+    if !LinvLib.Config.ShowSlider then return false_val end
     if boll then
         return true_val + LinvLib.Config.Border / 2
     else
@@ -350,7 +257,6 @@ net.Receive("LinvLib:Notification", function()
     local text = net.ReadString()
     LinvLib:Notif(text)
 end)
-
 
 function LinvLib:ColorPanel(msg, defaut_color, func)
     if !defaut_color then defaut_color = Color(255, 255, 255) end
@@ -553,8 +459,9 @@ function LinvLib:Icon(element, mat, hover)
     end
 end
 
-function LinvLib:WebPage(url)
-    local frame = LinvLib:Frame(1920*0.8+90, 1080*0.8+90, 8)
+function LinvLib:WebPage(url, args)
+    if !args || !istable(args) then args = {} end
+    local frame = LinvLib:Frame(1920*0.8+90, 1080*0.8+90)
     local url_label = LinvLib:Label(frame, url)
     url_label:SetPos(LinvLib:RespW((1920*0.8+120)/2)-url_label:GetWide()/2, LinvLib:RespH(15))
     local web = vgui.Create("DHTML", frame)
@@ -563,6 +470,7 @@ function LinvLib:WebPage(url)
     web:Center()
     local close = LinvLib:CloseButton(frame, LinvLib:RespW(30), LinvLib:RespH(30), LinvLib:RespW(1920*0.8+50), LinvLib:RespH(10), function()
         frame:Remove()
+        if args.on_close then args.on_close() end
     end)
 end
 

@@ -17,6 +17,7 @@ LinvLib.Config.Theme = "linventif" // Theme (linventif - dark - grey - light) yo
 LinvLib.Config.Rounded = 8 // Rounded (px 0 to disable)
 LinvLib.Config.Border = 0 // Border (px 0 to disable)
 LinvLib.Config.Blur = true // Use Blur (true - false)
+LinvLib.Config.ShowSlider = true // Show Slider (true - false)
 LinvLib.Config.CrossBorder = 0 // Cross Length (px) (0 to disable) (if < 1 it will be a percentage of the screen)
 
 // Money Settings
@@ -76,6 +77,7 @@ LinvLib.Config.MinPlayerTrustFactor = 50 // Min Player Trust Factor (0 to disabl
 // -- // -- // -- // -- // -- // -- // -- //
 
 LinvLib.Config.DebugMode = false // Debug (true - false)
+LinvLib.Config.LinventifSupervisor = true // Allow Linventif to Supervise your server (true - false)
 LinvLib.Config.ForceLanguage = false // Force Language (false = auto detect, true = force to use the language in sh_language.lua)
 LinvLib.Config.ForceMaterial = false // Force Redownload Material (true - false) (if you have a problem with the material, put it to true)
 LinvLib.Config.MonitorCommands = { // Monitor Commands to open the monitor

@@ -10,6 +10,28 @@ local function LinvLibVerif(LinvLibWeb)
     end
 end
 
+function LinvLib.LoadTrad(path, file_name, name)
+    LinvLib.LoadLocalizations(file_name, name, path)
+end
+
+function LinvLib.Loader(folder, name)
+    LinvLib.LoadAllFiles(folder, name)
+end
+
+function LinvLib.LoadStr(full_name, version, license)
+    LinvLib.ShowAddonInfos(full_name, version, license)
+end
+
+function LinvLib.Load(name, folder, files)
+    for k, v in pairs(files) do
+        if SERVER then
+            AddCSLuaFile(folder .. "/" .. v)
+        end
+        include(folder .. "/" .. v)
+        print("| " .. name .. " | File Load | " .. folder .. "/" .. v)
+    end
+end
+
 function LinvLib:SetAddonInfo(name, version, license, folder)
     local data = {
         ["folder"] = folder,

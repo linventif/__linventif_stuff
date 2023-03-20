@@ -14,7 +14,7 @@ end
 local folder = "linvlib"
 local name = "Linventif Library"
 local license = "CC BY-SA 4.0"
-local version = "0.2.6"
+local version = "0.2.7"
 
 LinvLib = {
     ["Config"] = {},
@@ -24,10 +24,8 @@ LinvLib = {
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
-function LinvLib.LoadTrad(path, file_name, name)
-    if not file.Exists(path, "GAME") then
-        return
-    end
+function LinvLib.LoadLocalizations(file_name, name, path)
+    if !path then path = "resource/localization/en/" end
 
     local files, dirs = file.Find(path .. "*", "GAME")
 
@@ -39,11 +37,11 @@ function LinvLib.LoadTrad(path, file_name, name)
     end
 
     for _, v in pairs(dirs) do
-        LinvLib.LoadTrad(path .. v .. "/", file_name, name)
+        LinvLib.LoadLocalizations(path .. v .. "/", file_name, name)
     end
 end
 
-function LinvLib.Loader(folder, name)
+function LinvLib.LoadAllFiles(folder, name)
     local files, folders = file.Find(folder .. "/*", "LUA")
     for k, v in pairs(files) do
         local path = folder .. "/" .. v
@@ -71,17 +69,7 @@ function LinvLib.Loader(folder, name)
         end
     end
     for k, v in pairs(folders) do
-        LinvLib.Loader(folder .. "/" .. v, name)
-    end
-end
-
-function LinvLib.Load(name, folder, files)
-    for k, v in pairs(files) do
-        if SERVER then
-            AddCSLuaFile(folder .. "/" .. v)
-        end
-        include(folder .. "/" .. v)
-        print("| " .. name .. " | File Load | " .. folder .. "/" .. v)
+        LinvLib.LoadAllFiles(folder .. "/" .. v, name)
     end
 end
 
@@ -96,7 +84,7 @@ function LinvLib.CenterStr(with, text)
     return rtn_str
 end
 
-function LinvLib.LoadStr(full_name, version, license)
+function LinvLib.ShowAddonInfos(full_name, version, license)
     local width = 57
     print(" ")
     print(" ")
@@ -117,9 +105,9 @@ end
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 LinvLib.Install[folder] = version
-LinvLib.LoadStr(name, version, license)
-LinvLib.LoadTrad("resource/localization/", folder, name)
-LinvLib.Loader(folder, name)
+LinvLib.ShowAddonInfos(name, version, license)
+LinvLib.LoadLocalizations(folder, name)
+LinvLib.LoadAllFiles(folder, name)
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
