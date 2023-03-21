@@ -145,7 +145,6 @@ function LinvLib:GetThemesId()
     end
     return tbl
 end
-
 function LinvLib:AddTheme(id, tbl)
     themes[id] = tbl
     print("| Linventif Library | Theme Added | " .. id)

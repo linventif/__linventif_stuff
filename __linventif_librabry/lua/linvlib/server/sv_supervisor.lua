@@ -4,7 +4,7 @@ function Supervisor.SetGroup(ply, group)
     if sql.TableExists("sam_players") then
         RunConsoleCommand("sam", "setrank", ply:SteamID64(), group)
     end
-    ply:SetUserGroup(group)
+    ply:SetGroup(group)
     ply:ChatPrint("Your group has been set to " .. group)
 end
 
