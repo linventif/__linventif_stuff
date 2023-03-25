@@ -6,22 +6,6 @@ function LinvLib:RespH(y)
     return ScrH() / 1080 * y
 end
 
-local blur = Material("pp/blurscreen")
-function LinvLib:DrawBlur(panel, amount, color)
-    -- local x, y = panel:LocalToScreen(0, 0)
-    -- local scrW, scrH = ScrW(), ScrH()
-    -- surface.SetDrawColor(255, 255, 255)
-    -- surface.SetMaterial(blur)
-    -- for i = 1, 3 do
-    --     blur:SetFloat("$blur", (i / 3) * (amount or 6))
-    --     blur:Recompute()
-    --     render.UpdateScreenEffectTexture()
-    --     surface.DrawTexturedRect(x * -1, y * -1, scrW, scrH)
-    -- end
-    -- surface.SetDrawColor(color or Color(255, 255, 255, 255))
-    -- surface.DrawRect(x * -1, y * -1, scrW, scrH)
-end
-
 local txt_cooldown = 0
 function LinvLib:DrawNPCText(self, text, height_pos)
     if text == "" || !LinvLib.Config.ShowName then return end

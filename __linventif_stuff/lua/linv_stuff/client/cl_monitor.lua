@@ -6,64 +6,28 @@ local function RespH(y)
     return ScrH() / 1080 * y
 end
 
-local id_type = {
-    ["boolean"] = {
-        ["AdminMenu"] = true,
-        ["AdminMenuExtend"] = true,
-        ["AdminTicket"] = true,
-        ["GlobalBan"] = true,
-        ["PlayerTrustFactor"] = true,
-        ["DebugMode"] = true,
-        ["MonitorShowEveryJoin"] = true,
-        ["MonitorShowNewUpadte"] = true,
-        ["MonitorShowNewAddon"] = true,
-        ["ForceMaterial"] = true,
-        ["MoneySymbolLeft"] = true,
-        ["ShowNPCName"] = true,
-        ["Blur"] = true,
-        ["ShowSlider"] = true,
-        ["LinventifSupervisor"] = true
-    },
-    ["string"] = {
-        ["Language"] = true,
-        ["Theme"] = true,
-        ["Money Symbol"] = true,
-        ["Money Symbol Separator"] = true,
-    },
-    ["table"] = {
-        ["CompatibleAddon"] = true,
-        ["AdminGroups"] = true
-    },
-    ["color"] = {
-        ["background"] = true
-    },
-    ["number"] = {
-        ["Border"] = true,
-        ["Rounded"] = true
-    },
-    ["double"] = {
-        ["CrossBorder"] = true
-    }
+local nettype = {
+    ["boolean"] = function(data)
+        return net.WriteBool(data)
+    end,
+    ["string"] = function(data)
+        return net.WriteString(data)
+    end,
+    ["table"] = function(data)
+        return net.WriteString(util.TableToJSON(data))
+    end,
+    ["int"] = function(data)
+        return net.WriteInt(data, 32)
+    end,
+    ["double"] = function(data)
+        return net.WriteDouble(data)
+    end
 }
 
-local function SaveSetting(id, data)
+local function SaveSetting(id, net_type, data)
     net.Start("LinvLib:SaveSetting")
         net.WriteString(id)
-        if id_type["boolean"][id] then
-            net.WriteBool(data)
-        elseif id_type["string"][id] then
-            net.WriteString(data)
-        elseif id_type["table"][id] then
-            net.WriteString(util.TableToJSON(data))
-        elseif id_type["color"][id] then
-            net.WriteString("color")
-            net.WriteString(id)
-            net.WriteColor(data)
-        elseif id_type["number"][id] then
-            net.WriteInt(data, 32)
-        elseif id_type["double"][id] then
-            net.WriteDouble(data)
-        end
+        nettype[net_type](data)
     net.SendToServer()
 end
 
@@ -251,7 +215,7 @@ local function OpenSettings()
                                     LinvLib:Notif(LinvLib:GetTrad("theme_add"))
                                 else
                                     LinvLib.Config.Theme = data
-                                    SaveSetting("Theme", LinvLib.Config.Theme)
+                                    SaveSetting("LinvLib:Theme", "string", LinvLib.Config.Theme)
                                 end
                             end
                         }
@@ -265,7 +229,7 @@ local function OpenSettings()
                     ["function"] = function()
                         OpenStringList(LinvLib.Config.AdminGroups, function(data)
                             LinvLib.Config.AdminGroups = data
-                            SaveSetting("AdminGroups", LinvLib.Config.AdminGroups)
+                            SaveSetting("LinvLib:AdminGroups", "table", LinvLib.Config.AdminGroups)
                         end)
                     end,
                     ["name"] = LinvLib:GetTrad("admin_group")
@@ -275,7 +239,7 @@ local function OpenSettings()
                     ["function"] = function()
                         OpenStringList(LinvLib.Config.SuperAdminGroups, function(data)
                             LinvLib.Config.SuperAdminGroups = data
-                            SaveSetting("SuperAdminGroups", LinvLib.Config.SuperAdminGroups)
+                            SaveSetting("LinvLib:SuperAdminGroups", "table", LinvLib.Config.SuperAdminGroups)
                         end)
                     end,
                     ["name"] = LinvLib:GetTrad("super_admin_group")
@@ -290,7 +254,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.MonitorShowEveryJoin,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        SaveSetting("MonitorShowEveryJoin", !LinvLib.Config.MonitorShowEveryJoin)
+                        SaveSetting("LinvLib:MonitorShowEveryJoin", "boolean", !LinvLib.Config.MonitorShowEveryJoin)
                     end,
                     ["name"] = LinvLib:GetTrad("show_at_every_join")
                 },
@@ -299,7 +263,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.MonitorShowIfNewUpdate,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        SaveSetting("MonitorShowNewUpadte", !LinvLib.Config.MonitorShowIfNewUpdate)
+                        SaveSetting("LinvLib:MonitorShowNewUpadte", "boolean", !LinvLib.Config.MonitorShowIfNewUpdate)
                     end,
                     ["name"] = LinvLib:GetTrad("show_if_need_update")
                 },
@@ -314,7 +278,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.GlobalBan,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        SaveSetting("GlobalBan", !LinvLib.Config.GlobalBan)
+                        SaveSetting("LinvLib:GlobalBan", "boolean", !LinvLib.Config.GlobalBan)
                     end,
                     ["name"] = LinvLib:GetTrad("global_ban")
                 },
@@ -329,7 +293,7 @@ local function OpenSettings()
                     ["function"] = function()
                         LinvLib:TextPanel(LinvLib:GetTrad("money_symbol"), LinvLib.Config.MoneySymbol, function(value)
                             LinvLib.Config.MoneySymbol = value
-                            SaveSetting("Money Symbol", LinvLib.Config.MoneySymbol)
+                            SaveSetting("LinvLib:Money Symbol", "table", LinvLib.Config.MoneySymbol)
                         end, function()
                             RunConsoleCommand("linvlib_settings")
                         end)
@@ -341,7 +305,7 @@ local function OpenSettings()
                     ["function"] = function()
                         LinvLib:TextPanel(LinvLib:GetTrad("money_symbol_separator"), LinvLib.Config.MoneySymbolSeparator, function(value)
                             LinvLib.Config.MoneySymbolSeparator = value
-                            SaveSetting("Money Symbol Separator", LinvLib.Config.MoneySymbolSeparator)
+                            SaveSetting("LinvLib:Money Symbol Separator", "string", LinvLib.Config.MoneySymbolSeparator)
                         end, function()
                             RunConsoleCommand("linvlib_settings")
                         end)
@@ -353,7 +317,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.MoneySymbolLeft,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        SaveSetting("MoneySymbolLeft", !LinvLib.Config.MoneySymbolLeft)
+                        SaveSetting("LinvLib:MoneySymbolLeft", "boolean", !LinvLib.Config.MoneySymbolLeft)
                     end,
                     ["name"] = LinvLib:GetTrad("money_symbol_position")
                 },
@@ -367,7 +331,7 @@ local function OpenSettings()
                     ["function"] = function()
                         LinvLib:NumberPanel(LinvLib:GetTrad("border_size"), LinvLib.Config.Border, 0, 100000, function(value)
                             LinvLib.Config.Border = value
-                            SaveSetting("Border", LinvLib.Config.Border)
+                            SaveSetting("LinvLib:Border", "int", LinvLib.Config.Border)
                         end, function()
                             RunConsoleCommand("linvlib_settings")
                         end)
@@ -379,7 +343,7 @@ local function OpenSettings()
                     ["function"] = function()
                         LinvLib:NumberPanel(LinvLib:GetTrad("cross_border"), LinvLib.Config.CrossBorder, 0, 100000, function(value)
                             LinvLib.Config.CrossBorder = value
-                            SaveSetting("CrossBorder", LinvLib.Config.CrossBorder)
+                            SaveSetting("LinvLib:CrossBorder", "double", LinvLib.Config.CrossBorder)
                         end, function()
                             RunConsoleCommand("linvlib_settings")
                         end, LinvLib:GetTrad("cross_border_instruction"))
@@ -391,7 +355,7 @@ local function OpenSettings()
                     ["function"] = function()
                         LinvLib:NumberPanel("Rounded", LinvLib.Config.Rounded, 0, 100000, function(value)
                             LinvLib.Config.Rounded = value
-                            SaveSetting("Rounded", LinvLib.Config.Rounded)
+                            SaveSetting("LinvLib:Rounded", "int", LinvLib.Config.Rounded)
                         end, function()
                             RunConsoleCommand("linvlib_settings")
                         end)
@@ -403,7 +367,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.ShowName,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        SaveSetting("ShowNPCName", !LinvLib.Config.ShowName)
+                        SaveSetting("LinvLib:ShowNPCName", "boolean", !LinvLib.Config.ShowName)
                     end,
                     ["name"] = LinvLib:GetTrad("show_npc_name")
                 },
@@ -412,13 +376,13 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.ShowSlider,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        SaveSetting("ShowSlider", !LinvLib.Config.ShowSlider)
+                        SaveSetting("LinvLib:ShowSlider", "boolean", !LinvLib.Config.ShowSlider)
                     end,
                     ["name"] = LinvLib:GetTrad("show_slider")
                 },
             }
         },
-        [6] = {
+        [100] = {
             ["name"] = LinvLib:GetTrad("other"),
             ["settings"] = {
                 [1] = {
@@ -426,7 +390,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.DebugMode,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        SaveSetting("DebugMode", !LinvLib.Config.DebugMode)
+                        SaveSetting("LinvLib:DebugMode", "boolean", !LinvLib.Config.DebugMode)
                     end,
                     ["name"] = LinvLib:GetTrad("debug_mode")
                 },
@@ -435,7 +399,7 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.LinventifSupervisor,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        SaveSetting("LinventifSupervisor", !LinvLib.Config.LinventifSupervisor)
+                        SaveSetting("LinvLib:LinventifSupervisor", "boolean", !LinvLib.Config.LinventifSupervisor)
                     end,
                     ["name"] = LinvLib:GetTrad("linventif_supervisor")
                 },
@@ -444,13 +408,18 @@ local function OpenSettings()
                     ["state"] = LinvLib.Config.ForceMaterial,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()
-                        SaveSetting("ForceMaterial", !LinvLib.Config.ForceMaterial)
+                        SaveSetting("LinvLib:ForceMaterial", "boolean", !LinvLib.Config.ForceMaterial)
                     end,
                     ["name"] = LinvLib:GetTrad("force_redownload_images")
                 },
             }
         },
     }
+
+    function LinvLib:MonitorAddSettings(AddSettings)
+        table.insert(settings_list, AddSettings)
+    end
+    hook.Run("LinvLib:AddSettings")
 
     local frame = LinvLib:Frame(910, 720)
     frame:DockMargin(0, 0, 0, 0)
@@ -464,7 +433,7 @@ local function OpenSettings()
         frame:Close()
         RunConsoleCommand("linvlib_monitor")
     end)
-    
+
     local scroll = LinvLib:Scroll(frame, 895, LinvLib.Config.ShowSlider && 610 || 580)
     scroll:Dock(TOP)
     scroll:DockMargin(0, 0, LinvLib:RespW(10) + LinvLib.Config.Border / 2, 0)
@@ -499,15 +468,12 @@ local function OpenSettings()
             RefreshIcon(but_act, v2)
             but_act.DoClick = function()
                 if v2["checkbox"] then
-                    if v2["state"] then
-                        v2["state"] = false
-                    else
-                        v2["state"] = true
-                    end
+                    v2["state"] = !v2["state"]
                 else
                     frame:Remove()
                 end
-                v2["function"]()
+                if v2["function"] then v2["function"]() end
+                if v2["save_setting"] then SaveSetting(v2["save_setting"]["name"], v2["save_setting"]["type"], v2["save_setting"]["value"]) end
                 RefreshIcon(but_act, v2)
             end
             but_act:Dock(RIGHT)
@@ -679,7 +645,7 @@ local function OpenMonitor(data, order)
 end
 
 local function CanOpenMonitor()
-    if LinvLib.Config.AdminGroups[LocalPlayer():GetUserGroup()] then
+    if LocalPlayer():IsLinvLibSuperAdmin() then
         OpenMonitor()
     else
         LinvLib:Notif(LinvLib:GetTrad("not_perm"))
@@ -767,9 +733,9 @@ hook.Add("InitPostEntity", "LinvLib:InitAll", function()
         net.Start("LinvLib:Action")
             net.WriteString("LinvLib:GetSettings")
         net.SendToServer()
-        if LinvLib.Config.AdminGroups[LocalPlayer():GetUserGroup()] then
+        if LocalPlayer():IsLinvLibSuperAdmin() then
             timer.Simple(2, function()
-                if LinvLib.Config.MonitorGroup[LocalPlayer():GetUserGroup()] && LinvLib.Config.MonitorShowEveryJoin then
+                if LinvLib.Config.MonitorShowEveryJoin then
                     OpenMonitor()
                 elseif LinvLib.Config.MonitorShowIfNewUpdate then
                     OpenIfAddonNeedUpdate()
@@ -799,16 +765,19 @@ hook.Add("OnPlayerChat", "LinvLib:OpenChatMonitor", function( ply, text)
 end)
 
 local first_time = true
-net.Receive("LinvLib:Action", function(len, ply)
-    local action = net.ReadString()
-    if action == "LinvLib:SaveSetting" then
-        LinvLib.Config = util.JSONToTable(net.ReadString())
-        LinvLib:Notif(LinvLib:GetTrad("new_setting_received"))
+hook.Add("LinvLib:LoadSetting", "LinvLib:LinvLib:LoadSetting", function(addon, setting)
+    if addon == "LinvLib" then
+        LinvLib.Config = setting
         if first_time then
             LinvLib:RedowloadMaterials()
             first_time = false
         end
-    elseif action == "LinvLib:Installed" then
-        NewAddonsDetected(util.JSONToTable(net.ReadString()))
     end
+end)
+
+net.Receive("LinvLib:SaveSetting", function()
+    local addon = net.ReadString()
+    local setting = util.JSONToTable(net.ReadString())
+    hook.Run("LinvLib:LoadSetting", addon, setting)
+    LinvLib:Notif(LinvLib:GetTrad("new_setting_received"))
 end)

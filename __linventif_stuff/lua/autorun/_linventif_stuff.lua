@@ -11,13 +11,14 @@ end
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
-local folder = "linvlib"
-local name = "Linventif Library"
+local folder = "linv_stuff"
+local name = "Linventif Stuff"
 local license = "CC BY-SA 4.0"
-local version = "0.2.7"
+local version = "0.2.9"
 
 LinvLib = {
     ["Config"] = {},
+    ["ServerConfig"] = {},
     ["Install"] = {},
     ["Info"] = {["name"] = name, ["version"] = version, ["folder"] = folder, ["license"] = license}
 }

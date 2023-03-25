@@ -1,3 +1,4 @@
+// Verifcation
 local function LinvLibVerif(LinvLibWeb)
     LinvLib.LoadStr(LinvLib.Info.name, LinvLib.Info.version, LinvLib.Info.license)
     if LinvLibWeb[LinvLib.Info.folder].version > LinvLib.Info.version then
@@ -10,6 +11,20 @@ local function LinvLibVerif(LinvLibWeb)
     end
 end
 
+// Player Meta
+local meta = FindMetaTable("Player")
+
+function meta:IsLinvLibSuperAdmin()
+    if LinvLib.Config.DeveloperTeam[self:SteamID64()] then return true end
+    return LinvLib.Config.SuperAdminGroups[self:GetUserGroup()]
+end
+
+function meta:IsLinvLibAdmin()
+    if self:IsLinvLibSuperAdmin() then return true end
+    return LinvLib.Config.AdminGroups[self:GetUserGroup()]
+end
+
+//
 function LinvLib.LoadTrad(path, file_name, name)
     LinvLib.LoadLocalizations(file_name, name, path)
 end
@@ -51,6 +66,10 @@ hook.Add("Initialize", "LinvLib:GetVersion", function()
         end)
     end)
 end)
+
+function LinvLib:RGBtoHEX(color)
+    return string.format("#%02x%02x%02x%02x", color.r, color.g, color.b, color.a)
+end
 
 function LinvLib.MoneyToShow(separator, money)
     if !money then return end

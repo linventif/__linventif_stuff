@@ -1,13 +1,6 @@
 util.AddNetworkString("LinvLib:Compatibility")
 util.AddNetworkString("LinvLib:Notification")
 
-if !file.Exists("linventif/linventif_library/installed.json", "DATA") then
-    local data = {
-        ["linventif-library"] = LinvLib.Info.version
-    }
-    file.Write("linventif/linventif_library/installed.json", util.TableToJSON(data, true))
-end
-
 function LinvLib.AddRessource(name, folder, addon_folder)
     local files, folders = file.Find(folder.."*", "GAME")
     for k, v in pairs(folders) do

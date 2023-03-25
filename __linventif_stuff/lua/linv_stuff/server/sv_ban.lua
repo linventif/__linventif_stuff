@@ -1,3 +1,16 @@
+-- sql.Query([[
+--     CREATE TABLE IF NOT EXISTS 'linv_ban' (
+--         'id' INT(11) NOT NULL AUTO_INCREMENT,
+--         'steamid' VARCHAR(32) NOT NULL,
+--         'reason' VARCHAR(255) NOT NULL,
+--         'admin' VARCHAR(32) NOT NULL,
+--         'ban_time' INT(11) NOT NULL,
+--         'unban_time' INT(11) NOT NULL,
+--         PRIMARY KEY ('id')
+--     );
+-- ]])
+
+
 local BanList = {}
 
 hook.Add("Initialize", "LinvLibBanUpdate", function()
