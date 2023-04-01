@@ -706,32 +706,10 @@ local function NewAddonPanel(data, data_ext)
     end
 end
 
-local function NewAddonsDetected(data)
-    if !data then
-        net.Start("LinvLib:Action")
-            net.WriteString("LinvLib:GetInstalled")
-        net.SendToServer()
-        return
-    end
-    local new_addon = {}
-    for k, v in pairs(LinvLib.Install) do
-        if !data[k] then
-            new_addon[k] = true
-        end
-    end
-    if table.Count(new_addon) > 0 then
-        LinvLib:Notif(LinvLib:GetTrad("new_addon_detected") .. table.Count(new_addon))
-        timer.Simple(4, function()
-            NewAddonPanel(new_addon)
-        end)
-    end
-end
-
 hook.Add("InitPostEntity", "LinvLib:InitAll", function()
     if !LinvLib.Config.InGameSettings then return end
     timer.Simple(2, function()
-        net.Start("LinvLib:Action")
-            net.WriteString("LinvLib:GetSettings")
+        net.Start("LinvLib:GetSettings")
         net.SendToServer()
         if LocalPlayer():IsLinvLibSuperAdmin() then
             timer.Simple(2, function()
@@ -740,7 +718,6 @@ hook.Add("InitPostEntity", "LinvLib:InitAll", function()
                 elseif LinvLib.Config.MonitorShowIfNewUpdate then
                     OpenIfAddonNeedUpdate()
                 end
-                -- NewAddonsDetected()
             end)
         end
     end)
@@ -757,10 +734,9 @@ concommand.Add("linvlib_settings", function()
 end)
 
 hook.Add("OnPlayerChat", "LinvLib:OpenChatMonitor", function( ply, text)
-    if (ply != LocalPlayer()) then return end
-    if LinvLib.Config.MonitorCommands[string.lower(text)] then
+    if ply != LocalPlayer() then return end
+    if LinvLib.Config.MonitorCommands[text] then
         RunConsoleCommand("linvlib_monitor")
-		return true
     end
 end)
 

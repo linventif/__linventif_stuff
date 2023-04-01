@@ -1,5 +1,5 @@
 util.AddNetworkString("LinvLib:SaveSetting")
-util.AddNetworkString("LinvLib:Action")
+util.AddNetworkString("LinvLib:GetSettings")
 
 function LinvLib:SaveSettings(file_name, var, version, addon)
     if !file.Exists("linventif/linventif_stuff", "DATA") then
@@ -140,13 +140,6 @@ hook.Add("Initialize", "LinvLib:LoadSettings", function()
     LinvLib.Config = LinvLib:LoadSettings("linvlib_settings", LinvLib.Config, LinvLib.Info.version, "LinvLib")
 end)
 
-local function SendSettings(ply)
-    net.Start("LinvLib:Action")
-        net.WriteString("LinvLib:SaveSetting")
-        net.WriteString(util.TableToJSON(LinvLib.Config))
-    net.Send(ply)
-end
-
 hook.Add("LinvLib:SendSettings", "LinvLib:LinvLib:SendSettings", function()
     net.Start("LinvLib:SaveSetting")
         net.WriteString("LinvLib")
@@ -154,9 +147,9 @@ hook.Add("LinvLib:SendSettings", "LinvLib:LinvLib:SendSettings", function()
     net.Broadcast()
 end)
 
-net.Receive("LinvLib:Action", function(len, ply)
-    local action = net.ReadString()
-    if action == "LinvLib:GetSetting" then
-        hook.Run("LinvLib:SendSettings")
-    end
+net.Receive("LinvLib:GetSettings", function(len, ply)
+    net.Start("LinvLib:SaveSetting")
+        net.WriteString("LinvLib")
+        net.WriteString(util.TableToJSON(LinvLib.Config))
+    net.Send(ply)
 end)

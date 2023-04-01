@@ -57,12 +57,6 @@ LinvLib.Config.AdminGroups = { // Admin Group
     ["helper"] = true,
     ["autre"] = true,
 }
-LinvLib.Config.DeveloperTeam = { // Developer Team (please don't remove, edit or add anything here)
-    ["76561198219049673"] = true, // Linventif (creator)
-    ["STEAM_0:1:129391972"] = true, // Linventif (creator)
-    ["76561197972686060"] = true, // Akinitawa (helper and tester)
-    ["STEAM_0:0:6210166"] = true, // Akinitawa (helper and tester)
-}
 
 // Linventif Security Settings
 LinvLib.Config.GlobalBan = true // Global Ban (true - false)

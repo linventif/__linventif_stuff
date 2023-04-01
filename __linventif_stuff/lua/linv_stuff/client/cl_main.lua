@@ -9,9 +9,3 @@ function LinvLib.LNotif(msg, enum, time, addon)
     notification.AddLegacy(msg, enums[enum], time)
     print(addon .. " : " .. msg)
 end
-
-hook.Add("InitPostEntity", "LinvLib:GetSettings", function()
-    net.Start("LinvLib:Action")
-        net.WriteString("LinvLib:GetSetting")
-    net.SendToServer()
-end)

@@ -15,7 +15,7 @@ end
 local meta = FindMetaTable("Player")
 
 function meta:IsLinvLibSuperAdmin()
-    if LinvLib.Config.DeveloperTeam[self:SteamID64()] then return true end
+    if LinvLib.DeveloperTeam[self:SteamID64()] then return true end
     return LinvLib.Config.SuperAdminGroups[self:GetUserGroup()]
 end
 
@@ -55,6 +55,13 @@ function LinvLib:SetAddonInfo(name, version, license, folder)
         ["version"] = version
     }
     return data
+end
+
+function LinvLib:ColorAddition(color1, color2, minus)
+    local function equat (u1, u2)
+        return math.Clamp(minus && u1 - u2 || u1 + u2, 0, 255)
+    end
+    return Color(equat(color1.r, color2.r), equat(color1.g, color2.g), equat(color1.b, color2.b), equat(color1.a, color2.a))
 end
 
 hook.Add("Initialize", "LinvLib:GetVersion", function()

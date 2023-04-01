@@ -66,7 +66,9 @@ local imgurID = {
     ["check"] = "FAmDUm7",
     ["cross"] = "cQ0mMqv",
     ["invite"] = "q7rzNKH",
-    ["earth"] = "xwJM5KZ"
+    ["earth"] = "xwJM5KZ",
+    ["map5"] = "ggtZgtZ",
+    ["cursor2"] = "dnna6rx"
 }
 
 LinvLib.CreateImgurMaterials(imgurID, LinvLib.Materials, "linventif/linvlib/material", "Linventif Library")

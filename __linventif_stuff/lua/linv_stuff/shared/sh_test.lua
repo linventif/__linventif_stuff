@@ -283,3 +283,32 @@ else
     end )
 end
 */
+
+if SERVER then
+    // Server
+    util.AddNetworkString("LeSuperNetString")
+    -- for _, ply in pairs(player.GetAll()) do
+    --     ply:Give("weapon_nomjoueur")
+    -- end
+else
+    // Client
+    local function OpenMenu(ent)
+        local frame = LinvLib:Frame(400, 400)
+        frame:DockPadding(0, 40, 0, 0)
+        local label = LinvLib:LabelPanel(frame, "Name: " .. ent:GetName(), "LinvFontRobo20", 400, 30)
+        label:Dock(TOP)
+        local label = LinvLib:LabelPanel(frame, "Health: " .. ent:Health(), "LinvFontRobo20", 400, 30)
+        label:Dock(TOP)
+        local label = LinvLib:LabelPanel(frame, "Armor: " .. ent:Armor(), "LinvFontRobo20", 400, 30)
+        label:Dock(TOP)
+        local label = LinvLib:LabelPanel(frame, "Model: " .. ent:GetModel(), "LinvFontRobo20", 400, 30)
+        label:Dock(TOP)
+        local label = LinvLib:LabelPanel(frame, "Class: " .. ent:GetClass(), "LinvFontRobo20", 400, 30)
+        label:Dock(TOP)
+    end
+    hook.Add("OpenMenuPassport", "OpenMenuPassport", OpenMenu(ent))
+    net.Receive("LeSuperNetString", function()
+        local ent = net.ReadEntity()
+        OpenMenu(ent)
+    end)
+end

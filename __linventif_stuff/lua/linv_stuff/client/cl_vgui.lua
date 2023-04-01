@@ -231,6 +231,7 @@ function LinvLib:Scroll(frame, weight, height, round)
     scroll.VBar.btnGrip.Paint = function(self, w, h)
         draw.RoundedBox(LinvLib:RespW(round), 0, 0, w, h, LinvLib:GetColorTheme("accent"))
     end
+    if !LinvLib.Config.ShowSlider then scroll.VBar:SetWide(0) end
     return scroll
 end
 
@@ -289,14 +290,41 @@ function LinvLib:Blur(color, force)
     return blur
 end
 
-function LinvLib:Label(frame, text)
-    local label = vgui.Create("DLabel", frame)
+function LinvLib:Label(parent, text)
+    local label = vgui.Create("DLabel", parent)
     label:SetText(text)
+    label:SetAutoStretchVertical(true)
     label:SetTextColor(LinvLib:GetColorTheme("text"))
     label:SetFont("LinvFontRobo20")
     label:SizeToContents()
     label:SetContentAlignment(5)
     return label
+end
+
+function LinvLib:RichText(parent, text, w, h)
+    local scroll = LinvLib:Scroll(parent, w, h)
+    scroll:Dock(FILL)
+
+    function AddLine(line)
+        local label = vgui.Create("DLabel", scroll)
+        label:SetWrap(true)
+        label:SetAutoStretchVertical(true)
+        label:SetText(line)
+        label:SetWidth(w - 20) -- Laisser de l'espace pour la barre de défilement
+        label:SetTextColor(LinvLib:GetColorTheme("text"))
+        label:SetFont("LinvFontRobo20")
+        label:Dock(TOP)
+    end
+
+    -- Séparation du texte en lignes individuelles
+    local lines = string.Explode("\n", text)
+
+    -- Ajout des lignes de texte individuelles
+    for _, line in ipairs(lines) do
+        AddLine(line)
+    end
+
+    return scroll
 end
 
 function LinvLib:LabelPanel(frame, text, font, weight, height)

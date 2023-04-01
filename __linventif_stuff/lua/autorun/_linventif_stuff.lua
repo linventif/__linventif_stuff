@@ -5,7 +5,6 @@
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 if SERVER then
-    local server_name = GetHostName()
     if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linventif/debug.txt", "DATA") then return end
 end
 
@@ -20,7 +19,13 @@ LinvLib = {
     ["Config"] = {},
     ["ServerConfig"] = {},
     ["Install"] = {},
-    ["Info"] = {["name"] = name, ["version"] = version, ["folder"] = folder, ["license"] = license}
+    ["Info"] = {["name"] = name, ["version"] = version, ["folder"] = folder, ["license"] = license},
+    ["DeveloperTeam"] = {
+        ["76561198219049673"] = true, // Linventif (creator)
+        ["STEAM_0:1:129391972"] = true, // Linventif (creator)
+        ["76561197972686060"] = true, // Akinitawa (helper and tester)
+        ["STEAM_0:0:6210166"] = true, // Akinitawa (helper and tester)
+    }
 }
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
