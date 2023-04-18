@@ -18,6 +18,10 @@ local func_command = {
     ["!bot"] = function()
         RunConsoleCommand("bot")
     end,
+    ["!getpos"] = function(ply)
+        local pos = ply:GetPos()
+        ply:ChatPrint("Your position is " .. math.Round(pos.x) .. ", " .. math.Round(pos.y) .. ", " .. math.Round(pos.z))
+    end
 }
 
 hook.Add("PlayerSay", "LinvLib:AdminFunc", function(ply, text, team)
@@ -26,3 +30,5 @@ hook.Add("PlayerSay", "LinvLib:AdminFunc", function(ply, text, team)
     if !func_command[args[1]] then return end
     func_command[args[1]](ply, args)
 end)
+
+// -1506, -9855, 367

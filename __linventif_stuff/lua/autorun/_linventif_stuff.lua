@@ -5,7 +5,7 @@
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 if SERVER then
-    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linventif/debug.txt", "DATA") then return end
+    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("addons/__linventif_stuff_dev", "GAME") then return end
 end
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
@@ -13,7 +13,7 @@ end
 local folder = "linv_stuff"
 local name = "Linventif Stuff"
 local license = "CC BY-SA 4.0"
-local version = "0.2.9"
+local version = "0.3.0"
 
 LinvLib = {
     ["Config"] = {},

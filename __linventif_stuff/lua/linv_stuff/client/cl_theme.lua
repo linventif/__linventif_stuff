@@ -1,15 +1,8 @@
-local order = {
-    [1] = "linventif",
-    [2] = "light",
-    [3] = "grey",
-    [4] = "dark",
-    [5] = "dark-green",
-    [6] = "dark-blue",
-    [7] = "dark-purple",
-    [8] = "flash-bang",
-}
+// -- // -- // -- // -- // -- // -- // -- //
+// Themes
+// -- // -- // -- // -- // -- // -- // -- //
 
-local themes = {
+local themes_colors = {
     ["linventif"] = {
         ["background"] = Color(41, 44, 54),
         ["border"] = Color(118, 126, 148),
@@ -121,31 +114,98 @@ local themes = {
     }
 }
 
+// Theme Fonts
+local themes_fonts = {
+    ["roboto"] = {
+        ["title"] = "LinvFontRobo25",
+        ["subtitle"] = "LinvFontRobo20",
+        ["text"] = "LinvFontRobo15",
+    }
+}
+
 // -- // -- // -- // -- // -- // -- // -- //
-// DO NOT EDIT BELOW THIS LINE
+// Themes Order
 // -- // -- // -- // -- // -- // -- // -- //
 
-function LinvLib:GetColorTheme(id)
-    if themes[LinvLib.Config.Theme] && themes[LinvLib.Config.Theme][id] then
-        return themes[LinvLib.Config.Theme][id]
+// The order of the themes colors
+local theme_colors_order = {
+    [1] = "linventif",
+    [2] = "light",
+    [3] = "grey",
+    [4] = "dark",
+    [5] = "dark-green",
+    [6] = "dark-blue",
+    [7] = "dark-purple",
+    [8] = "flash-bang",
+}
+
+// The order of the themes fonts
+local theme_fonts_order = {
+    [1] = "roboto",
+}
+
+// -- // -- // -- // -- // -- // -- // -- //
+// Getters
+// -- // -- // -- // -- // -- // -- // -- //
+
+// Get the color for <id> of the current theme
+function LinvLib.GetThemeColor(id)
+    if themes_colors[LinvLib.Config.ThemeColors] && themes_colors[LinvLib.Config.ThemeColors][id] then
+        return themes_colors[LinvLib.Config.ThemeColors][id]
     else
-        return themes["linventif"][id]
+        return themes_colors["linventif"][id]
     end
 end
 
-function LinvLib:GetThemesId()
+// Get the font name for <id> of the current theme
+function LinvLib.GetThemeFont(id)
+    if themes_fonts[LinvLib.Config.ThemeFonts] && themes_fonts[LinvLib.Config.ThemeFonts][id] then
+        return themes_fonts[LinvLib.Config.ThemeFonts][id]
+    else
+        return themes_fonts["roboto"][id]
+    end
+end
+
+// Get the list of all themes colors
+function LinvLib.GetThemesColorsList()
     local tbl = {}
-    for k, v in SortedPairs(order) do
+    for k, v in SortedPairs(theme_colors_order) do
         table.insert(tbl, v)
     end
-    for k, v in SortedPairs(themes) do
+    for k, v in SortedPairs(themes_colors) do
         if !table.HasValue(tbl, k) then
             table.insert(tbl, k)
         end
     end
     return tbl
 end
-function LinvLib:AddTheme(id, tbl)
-    themes[id] = tbl
+
+// -- // -- // -- // -- // -- // -- // -- //
+// Setters
+// -- // -- // -- // -- // -- // -- // -- //
+
+// Add a new theme colors
+function LinvLib.AddThemeColors(id, tbl)
+    themes_colors[id] = tbl
     print("| Linventif Library | Theme Added | " .. id)
+end
+
+// -- // -- // -- // -- // -- // -- // -- //
+// Retrocompatibility
+// -- // -- // -- // -- // -- // -- // -- //
+
+function LinvLib:GetColorTheme(id)
+    if themes_colors[LinvLib.Config.Theme] && themes_colors[LinvLib.Config.Theme][id] then
+        return themes_colors[LinvLib.Config.Theme][id]
+    else
+        return themes_colors["linventif"][id]
+    end
+end
+
+function LinvLib:GetThemesId()
+    return LinvLib.GetThemesColorsList()
+end
+
+function LinvLib:AddTheme(id, tbl)
+    LinvLib.AddThemeColors(id, tbl)
 end

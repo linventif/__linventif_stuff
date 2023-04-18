@@ -150,3 +150,20 @@ function LinvLib:CleanKeyTable(tbl, str)
     end
     return newtbl
 end
+
+function LinvLib.convertDateToTime(date)
+    local pattern = "(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)"
+    local year, month, day, hour, minute, second = date:match(pattern)
+    local convertedTime = os.time({year = year, month = month, day = day, hour = hour, min = minute, sec = second})
+
+    return convertedTime
+end
+
+function LinvLib.timeDifference(date1, date2)
+    local time1 = LinvLib.convertDateToTime(date1)
+    local time2 = LinvLib.convertDateToTime(date2)
+
+    local difference = math.abs(time1 - time2)
+
+    return difference
+end

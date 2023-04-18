@@ -13,7 +13,8 @@ LinvLib.Config.InGameSettings = true // Put to false if you want to change the c
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 // Panel
-LinvLib.Config.Theme = "linventif" // Theme (linventif - dark - grey - light) you can add your own theme in cl_theme.lua
+LinvLib.Config.ThemeColors = "linventif" // Color Theme (linventif = default) you can add your own color theme in cl_theme.lua
+LinvLib.Config.ThemeFonts = "default" // Font Theme (default) you can add your own font theme in cl_theme.lua
 LinvLib.Config.Rounded = 8 // Rounded (px 0 to disable)
 LinvLib.Config.ShowSlider = true // Show Slider (true - false)
 
@@ -25,6 +26,9 @@ LinvLib.Config.CrossBorder = 0 // Cross Length (px) (0 to disable) (if < 1 it wi
 LinvLib.Config.MoneySymbol = "€" // Money Symbol
 LinvLib.Config.MoneySymbolPosition = "After" // Money Symbol Position (before - after)
 LinvLib.Config.MoneySymbolSeparator = " " // Money Symbol between the number
+
+// Notification Settings
+LinvLib.Config.NotificationType = "chat" // Notification Type (chat - legacy - none)
 
 // NPC Settings
 LinvLib.Config.ShowName = true // Show NPC Name (true - false)
@@ -45,6 +49,9 @@ LinvLib.Config.MonitorShowIfNewAddon = true // Monitor Show If New Addon Detecte
 //                 Security Settings                  //
 //                                                    //
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
+
+// Permission Settings
+LinvLib.Config.UserDataBase = true // Save all user information in a database
 
 // Permission Settings
 LinvLib.Config.SuperAdminGroups = { // Super Admin Group
@@ -103,6 +110,7 @@ LinvLib.Config.AdminCommands = { // Admin Commands to open the admin menu
 //                                                    //
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
+LinvLib.Config.Theme = "linventif" // Theme (linventif - dark - grey - light) you can add your own theme in cl_theme.lua
 LinvLib.Config.Language = "english" // Language (english - french)
 LinvLib.Config.Blur = false // Use Blur (true - false)
 LinvLib.Config.Compatibility = { // Compatibility Settings (after the update run linvlib_refresh in the console server)

@@ -1,0 +1,37 @@
+{
+    "info": {
+        "name": "Rockford",
+        "map": "rp_rockford_v2b",
+        "multizone": true,
+        "images": {
+            "rp_rockford_v2b": "02IMkDg",
+            "other_test": "TYpMlgh"
+        }
+    },
+    "zones":{
+        "1": {
+            "pos_start":{
+                "x": -1000,
+                "y": -1000,
+                "z": -1000
+            },
+            "pos_end":{
+                "x": 1000,
+                "y": 1000,
+                "z": 1000
+            },
+            "image_id": "other_test"
+        }
+    },
+    "points":{
+        "hospital": {
+            "x": 0,
+            "y": 0,
+            "zone": 1,
+            "image_id": "hospital"
+        }
+    },
+    "paths":{
+        
+    }
+}

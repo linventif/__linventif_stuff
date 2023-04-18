@@ -293,7 +293,7 @@ local function OpenSettings()
                     ["function"] = function()
                         LinvLib:TextPanel(LinvLib:GetTrad("money_symbol"), LinvLib.Config.MoneySymbol, function(value)
                             LinvLib.Config.MoneySymbol = value
-                            SaveSetting("LinvLib:Money Symbol", "table", LinvLib.Config.MoneySymbol)
+                            SaveSetting("LinvLib:Money Symbol", "string", LinvLib.Config.MoneySymbol)
                         end, function()
                             RunConsoleCommand("linvlib_settings")
                         end)
@@ -706,11 +706,16 @@ local function NewAddonPanel(data, data_ext)
     end
 end
 
+hook.Add("LinvLib:GetAddonSettings", "LinvLib:GetAddonSettings", function(addon)
+    net.Start("LinvLib:GetSettings")
+        net.WriteString(addon)
+    net.SendToServer()
+end)
+
 hook.Add("InitPostEntity", "LinvLib:InitAll", function()
     if !LinvLib.Config.InGameSettings then return end
+    hook.Call("LinvLib:GetAddonSettings", nil, "LinvLib")
     timer.Simple(2, function()
-        net.Start("LinvLib:GetSettings")
-        net.SendToServer()
         if LocalPlayer():IsLinvLibSuperAdmin() then
             timer.Simple(2, function()
                 if LinvLib.Config.MonitorShowEveryJoin then
@@ -755,5 +760,5 @@ net.Receive("LinvLib:SaveSetting", function()
     local addon = net.ReadString()
     local setting = util.JSONToTable(net.ReadString())
     hook.Run("LinvLib:LoadSetting", addon, setting)
-    LinvLib:Notif(LinvLib:GetTrad("new_setting_received"))
+    -- LinvLib:Notif(LinvLib:GetTrad("new_setting_received"))
 end)

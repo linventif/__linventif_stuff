@@ -21,8 +21,8 @@ function LinvLib:DrawNPCText(self, text, height_pos)
 	ang:RotateAroundAxis(ang:Forward(), 85)
 
 	if LocalPlayer():GetPos():DistToSqr(self:GetPos()) < 40000 then
-		cam.Start3D2D(pos + ang:Up()*0, Angle(0,LocalPlayer():EyeAngles().y-90, 90), 0.025)
-			draw.RoundedBox(LinvLib.Config.Rounded*4, width_text/-2, -125 -height_pos, width_text, 260, LinvLib:GetColorTheme("background"))
+		cam.Start3D2D(pos + ang:Up() * 0, Angle(0,LocalPlayer():EyeAngles().y-90, 90), 0.025)
+			draw.RoundedBox(LinvLib.Config.Rounded * 4, width_text / -2, -125 -height_pos, width_text, 260, LinvLib:GetColorTheme("background"))
 			draw.SimpleText(text, "LinvFontResp01", 0, -height_pos, LinvLib:GetColorTheme("text"), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER)
 		cam.End3D2D()
 	end
@@ -171,6 +171,8 @@ end
 function LinvLib:Frame(weight, height, args)
     if !args || !istable(args) then args = {} end
     local frame = vgui.Create("DFrame")
+    frame:DockMargin(0, 0, 0, 0)
+    frame:DockPadding(0, 0, 0, 0)
     frame:SetSize(LinvLib:RespW(weight), LinvLib:RespH(height))
     frame:Center()
     frame:SetTitle("")
@@ -617,4 +619,109 @@ function LinvLib:CheckBox(parent, w, h, func)
         end
         func(but.IsChecked)
     end)
+end
+
+// New VGUI
+
+LinvLib.VGUI = {}
+
+function LinvLib.VGUI.CreatePrefabFrame()
+    local title = "Title"
+    local func_on_close = function() end
+
+    local frame = LinvLib:Frame(850, 550)
+
+    local function Rebuild()
+        frame:Remove()
+        frame = LinvLib:Frame(850, 550)
+
+        local panel_info = vgui.Create("DPanel", frame)
+        panel_info:SetSize(LinvLib:RespW(850), LinvLib:RespH(40))
+        panel_info.Paint = function(self, w, h)
+            draw.RoundedBoxEx(LinvLib.Config.Rounded, 0, 0, w, h, LinvLib.GetThemeColor("element"), true, true, false, false)
+        end
+        panel_info:Dock(TOP)
+
+        local dlabel_title = vgui.Create("DLabel", panel_info)
+        dlabel_title:SetText(title)
+        dlabel_title:SetFont(LinvLib.GetThemeFont("title"))
+        dlabel_title:SetTextColor(LinvLib.GetThemeColor("text"))
+        dlabel_title:SizeToContents()
+        dlabel_title:Dock(LEFT)
+        dlabel_title:DockMargin(LinvLib:RespW(5), 0, 0, 0)
+
+        local but_close = LinvLib:CloseButton(panel_info, 30, 30, 810, 10, function()
+            frame:Remove()
+            func_on_close()
+        end)
+        but_close:Dock(RIGHT)
+        but_close:DockMargin(LinvLib:RespW(5), LinvLib:RespH(5), LinvLib:RespW(5), LinvLib:RespH(5))
+    end
+
+    // Setters
+    function frame.LinvLibSetTitle(new_title)
+        print("Set title" .. new_title)
+        -- title = new_title
+        -- Rebuild()
+    end
+
+    // create function how say banana
+
+    function frame.SetOnClose(new_func)
+        func_on_close = new_func
+    end
+
+    // Getters
+    function frame.GetAll()
+        return {
+            ["title"] = title,
+        }
+    end
+
+    function frame.Banan()
+        print("Banan")
+    end
+
+    function frame.GetTitle()
+        return title
+    end
+
+    // Rebuild
+    Rebuild()
+
+    // Return frame
+    return frame
+end
+
+LinvLib.VGUI.SetTitle = function(frame, new_title)
+    frame.LinvLibSetTitle(new_title)
+end
+
+function LinvLib.SelectMenu(data)
+    local select_menu = LinvLib:Frame(410, 415)
+    select_menu:DockMargin(0, 0, 0, 0)
+    select_menu:DockPadding(0, LinvLib:RespH(20), 0, 0)
+
+    local title = LinvLib:LabelPanel(select_menu, data["title"], "LinvFontRobo25", 400, 60)
+    title:Dock(TOP)
+    title:DockMargin(0, 0, 0, LinvLib:RespW(15))
+
+    local scroll = LinvLib:Scroll(select_menu, 365, 225)
+    scroll:SetPos(30, 80)
+    for k, v in pairs(data["data"]) do
+        local button = LinvLib:Button(scroll, v, 365, 40, LinvLib:GetColorTheme("element"), true, function()
+            select_menu:Close()
+            data["callback"](v)
+        end)
+        button:Dock(TOP)
+        button:DockMargin(0, 15, 15, 0)
+    end
+
+    local but_close = LinvLib:Button(select_menu, LinvLib:GetTrad("close"), 200, 50, LinvLib:GetColorTheme("element"), true, function()
+        select_menu:Close()
+    end)
+    but_close:SetPos(105, 330)
+    select_menu.OnRemove = function()
+        RunConsoleCommand("linvlib_settings")
+    end
 end
