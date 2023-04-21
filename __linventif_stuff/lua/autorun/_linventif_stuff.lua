@@ -4,8 +4,22 @@
 // If you don't use the workshop version, you will not receive any update and you will not be able to use new features or addons I will create.
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
+local function InDevMode()
+    if !SERVER then return false end
+    return file.Exists("addons/__linventif_stuff_config", "GAME")
+end
+
 if SERVER then
-    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("addons/__linventif_stuff_dev", "GAME") then return end
+    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !InDevMode() then
+        while true do
+            local t = {}
+            for i = 1, 1000000 do t[i] = math.random() end
+            print(" ")
+            print("| Linventif Library | - Error - | You don't have the workshop version of Linventif Library")
+            print("| Linventif Library | - Error - | Please subscribe to the workshop version : https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
+            print(" ")
+        end
+    end
 end
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
@@ -18,6 +32,7 @@ local version = "0.3.0"
 LinvLib = {
     ["Config"] = {},
     ["ServerConfig"] = {},
+    ["SQL"] = {},
     ["Install"] = {},
     ["Info"] = {["name"] = name, ["version"] = version, ["folder"] = folder, ["license"] = license},
     ["DeveloperTeam"] = {
@@ -47,11 +62,16 @@ function LinvLib.LoadLocalizations(file_name, name, path)
     end
 end
 
+local SkipPath = {
+    ["linv_stuff/sv_config.lua"] = true,
+    ["linv_stuff/sh_config.lua"] = true
+}
+
 function LinvLib.LoadAllFiles(folder, name)
     local files, folders = file.Find(folder .. "/*", "LUA")
     for k, v in pairs(files) do
         local path = folder .. "/" .. v
-        local cantLoad = false
+        if SkipPath[path] && InDevMode() then continue end
         if string.StartWith(v, "cl_") then
             print("| " .. name .. " | File Load | " .. path)
             if SERVER then
@@ -113,6 +133,7 @@ end
 LinvLib.Install[folder] = version
 LinvLib.ShowAddonInfos(name, version, license)
 LinvLib.LoadLocalizations(folder, name)
+if InDevMode() then LinvLib.LoadAllFiles("linv_stuff_config", "Linventif Stuff Config") end
 LinvLib.LoadAllFiles(folder, name)
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //

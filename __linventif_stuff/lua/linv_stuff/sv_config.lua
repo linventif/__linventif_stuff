@@ -4,16 +4,14 @@
 // If you don't use the workshop version, you will not receive any update and you will not be able to use new features or addons I will create.
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
-LinvLib.ServerConfig.InGameSettings = true // Put to false if you want to change the configuration in this file
-
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 //                                                    //
 //             SQL DATABASE CONFIGURATION             //
 //                                                    //
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
-LinvLib.ServerConfig.UseExternalDatabase = false // Do you want to use an external database ?
-LinvLib.ServerConfig.SQL = { // If you want to use an external database, please fill this table
+LinvLib.ConfigSQL_UseExternalDatabase = false // Do you want to use an external database ?
+LinvLib.ConfigSQL = { // If you want to use an external database, please fill this table
     ["host"] = "localhost",
     ["username"] = "username",
     ["password"] = "password",
