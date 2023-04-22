@@ -163,7 +163,7 @@ function LinvLib.timeDifference(date1, date2)
     local time1 = LinvLib.convertDateToTime(date1)
     local time2 = LinvLib.convertDateToTime(date2)
 
-    local difference = math.abs(time1 - time2)
+    local difference = math.abs(time1 - time2) // in seconds
 
     return difference
 end

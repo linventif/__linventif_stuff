@@ -10,11 +10,11 @@
 //                                                    //
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
-LinvLib.ConfigSQL_UseExternalDatabase = false // Do you want to use an external database ?
-LinvLib.ConfigSQL = { // If you want to use an external database, please fill this table
-    ["host"] = "localhost",
-    ["username"] = "username",
-    ["password"] = "password",
+LinvLib.ServerConfig.UseExternalDatabase = false // Do you want to use an external database ?
+LinvLib.ServerConfig.SQL = { // If you want to use an external database, please fill this table
+    ["host"] = "127.0.0.1",
+    ["port"] = 3306,
     ["database"] = "database",
-    ["port"] = 3306
+    ["username"] = "username",
+    ["password"] = "password"
 }

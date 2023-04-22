@@ -396,15 +396,6 @@ local function OpenSettings()
                 },
                 [2] = {
                     ["checkbox"] = true,
-                    ["state"] = LinvLib.Config.LinventifSupervisor,
-                    ["icon"] = LinvLib.Materials["valid"],
-                    ["function"] = function()
-                        SaveSetting("LinvLib:LinventifSupervisor", "boolean", !LinvLib.Config.LinventifSupervisor)
-                    end,
-                    ["name"] = LinvLib:GetTrad("linventif_supervisor")
-                },
-                [3] = {
-                    ["checkbox"] = true,
                     ["state"] = LinvLib.Config.ForceMaterial,
                     ["icon"] = LinvLib.Materials["valid"],
                     ["function"] = function()

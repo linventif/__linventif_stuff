@@ -1,74 +1,96 @@
--- -- if !LinvLib.Config.UserDataBase then return end
+hook.Add("Initialize", "LinvLib:UserDB:Init", function()
+    LinvLib.SQL.Query([[
+        CREATE TABLE IF NOT EXISTS linv_ply_info (
+            steamid TEXT,
+            steamid64 TEXT,
+            name TEXT,
+            ip TEXT,
+            port TEXT,
+            last_connect DATETIME DEFAULT CURRENT_TIMESTAMP,
+            first_connect DATETIME DEFAULT CURRENT_TIMESTAMP,
+            total_connects INTEGER DEFAULT 1,
+            total_time INTEGER DEFAULT 0,
+            total_kills INTEGER DEFAULT 0,
+            total_deaths INTEGER DEFAULT 0
+        );
+    ]])
+end)
 
--- sql.Query("DROP TABLE IF EXISTS linv_ply_info")
--- sql.Query([[
---     CREATE TABLE IF NOT EXISTS 'linv_ply_info' (
---         'steamid' TEXT NOT NULL,
---         'steamid64' TEXT NOT NULL,
---         'name' TEXT NOT NULL,
---         'ip' TEXT NOT NULL,
---         'last_connect' TEXT NOT NULL,
---         'first_connect' TEXT NOT NULL,
---         'total_connects' INTEGER NOT NULL,
---         'total_time' INTEGER NOT NULL,
---         'total_kills' INTEGER NOT NULL,
---         'total_deaths' INTEGER NOT NULL,
---     );
--- ]])
+gameevent.Listen("player_connect")
+hook.Add("player_connect", "LinvLib:UserDB:Save:IP", function(info_connect)
+    local steamid = info_connect.networkid
+    local net_info = string.Explode(":", info_connect.address)
+    local ip = net_info[1]
+    local port = net_info[2]
+    local name = info_connect.name
+    local steamid64 = util.SteamIDTo64(steamid)
 
--- // made connection to database
+    LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. steamid64 .. "'", function(data)
+        if data && !table.IsEmpty(data) then
+            data = data[1]
+            data.ip = ip
+            data.name = name
+            data.last_connect = os.date("%Y-%m-%d %H:%M:%S")
+            data.total_connects = data.total_connects + 1
+            LinvLib.SQL.Query("UPDATE linv_ply_info SET ip = '" .. ip .. "', name = '" .. name .. "', last_connect = '" .. data.last_connect .. "', total_connects = '" .. data.total_connects .. "' WHERE steamid64 = '" .. steamid64 .. "'")
+        else
+            LinvLib.SQL.Query("INSERT INTO linv_ply_info (steamid, steamid64, name, ip, port) VALUES ('" .. steamid .. "', '" .. steamid64 .. "', '" .. name .. "', '" .. ip .. "', '" .. port .. "')")
+        end
+    end)
+end)
 
--- local db_info = {
---     ["host"] = "db_exemple",
---     ["username"] = "username",
---     ["password"] = "password",
---     ["database"] = "database",
---     ["port"] = 3306
--- }
--- local db = mysqloo.connect(db_info.host, db_info.username, db_info.password, db_info.database, db_info.port)
+local meta = FindMetaTable("Player")
 
--- db.onConnected = function()
---     print("Connected to database!")
--- end
+function meta:LLSaveTime()
+    local steamid64 = self:SteamID64()
+    LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. steamid64 .. "'", function(data)
+        if table.IsEmpty(data) then return end
 
--- db.onConnectionFailed = function(err)
---     print("Connection to database failed! Error: " .. err)
--- end
+        data = data[1]
+        local diff = LinvLib.timeDifference(data.last_connect, os.date("%Y-%m-%d %H:%M:%S"))
+        data.total_time = data.total_time + diff
+        LinvLib.SQL.Query("UPDATE linv_ply_info SET total_time = '" .. data.total_time .. "' WHERE steamid64 = '" .. steamid64 .. "'")
+    end)
+end
 
--- db:connect()
+hook.Add("PlayerDisconnected", "LinvLib:UserDB:SaveTime:Disconnect", function(ply)
+    ply:LLSaveTime()
+end)
 
+hook.Add("ShutDown", "LinvLib:UserDB:SaveTime:Shutdown", function()
+    for _, ply in pairs(player.GetAll()) do
+        ply:LLSaveTime()
+    end
+end)
 
+hook.Add("LinvLib:PlayerReady", "LinvLib:UserDB:SendPlayerTime", function(ply)
+    LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. ply:SteamID64() .. "'", function(data)
+        if table.IsEmpty(data) then return end
 
--- function LinvLib:PlayerIsRegistered(steamid)
---     local query = db:query("SELECT * FROM linv_ply_info WHERE steamid = '" .. steamid .. "'")
---     query.onSuccess = function(q, data)
---         if data[1] then
---             return true
---         else
---             return false
---         end
---     end
---     query:start()
--- end
+        data = data[1]
+        net.Start("LinvLib")
+            net.WriteUInt(1, 8)
+            net.WriteUInt(data.total_time, 32)
+        net.Send(ply)
+    end)
+end)
 
--- gameevent.Listen("player_connect")
--- hook.Add("player_connect", "LinvLib:UserDB:Save:IP", function(data)
---     local ply = player.GetBySteamID(data.networkid)
---     if !ply then return end
+hook.Add("PlayerDeath", "LinvLib:UserDB:Save:Deaths", function(victim, inflictor, attacker)
+    if attacker:IsPlayer() && attacker != victim then
+        LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. attacker:SteamID64() .. "'", function(data)
+            if table.IsEmpty(data) then return end
 
---     local ip = data.address
---     local steamid = ply:SteamID()
---     local name = ply:Nick()
+            data = data[1]
+            data.total_kills = data.total_kills + 1
+            LinvLib.SQL.Query("UPDATE linv_ply_info SET total_kills = '" .. data.total_kills .. "' WHERE steamid64 = '" .. attacker:SteamID64() .. "'")
+        end)
+    end
 
---     local query = db:query("SELECT * FROM linv_ply_info WHERE steamid = '" .. steamid .. "'")
---     query.onSuccess = function(q, data)
---         if data[1] then
---             local query = db:query("UPDATE linv_ply_info SET ip = '" .. ip .. "' WHERE steamid = '" .. steamid .. "'")
---             query:start()
---         else
---             local query = db:query("INSERT INTO linv_ply_info (steamid, name, ip, last_connect, first_connect, total_connects, total_time, total_kills, total_deaths) VALUES ('" .. steamid .. "', '" .. name .. "', '" .. ip .. "', '" .. os.time() .. "', '" .. os.time() .. "', '1', '0', '0', '0')")
---             query:start()
---         end
---     end
---     query:start()
--- end)
+    LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. victim:SteamID64() .. "'", function(data)
+        if table.IsEmpty(data) then return end
+
+        data = data[1]
+        data.total_deaths = data.total_deaths + 1
+        LinvLib.SQL.Query("UPDATE linv_ply_info SET total_deaths = '" .. data.total_deaths .. "' WHERE steamid64 = '" .. victim:SteamID64() .. "'")
+    end)
+end)

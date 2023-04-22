@@ -51,9 +51,6 @@ LinvLib.Config.MonitorShowIfNewAddon = true // Monitor Show If New Addon Detecte
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 // Permission Settings
-LinvLib.Config.UserDataBase = true // Save all user information in a database
-
-// Permission Settings
 LinvLib.Config.SuperAdminGroups = { // Super Admin Group
     ["superadmin"] = true,
 }

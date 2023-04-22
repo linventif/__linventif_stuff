@@ -4,22 +4,8 @@
 // If you don't use the workshop version, you will not receive any update and you will not be able to use new features or addons I will create.
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
-local function InDevMode()
-    if !SERVER then return false end
-    return file.Exists("addons/__linventif_stuff_config", "GAME")
-end
-
 if SERVER then
-    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !InDevMode() then
-        while true do
-            local t = {}
-            for i = 1, 1000000 do t[i] = math.random() end
-            print(" ")
-            print("| Linventif Library | - Error - | You don't have the workshop version of Linventif Library")
-            print("| Linventif Library | - Error - | Please subscribe to the workshop version : https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
-            print(" ")
-        end
-    end
+    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linv_stuff_config", "LUA") then return end
 end
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
@@ -62,16 +48,10 @@ function LinvLib.LoadLocalizations(file_name, name, path)
     end
 end
 
-local SkipPath = {
-    ["linv_stuff/sv_config.lua"] = true,
-    ["linv_stuff/sh_config.lua"] = true
-}
-
 function LinvLib.LoadAllFiles(folder, name)
     local files, folders = file.Find(folder .. "/*", "LUA")
-    for k, v in pairs(files) do
+    for k, v in SortedPairs(files) do
         local path = folder .. "/" .. v
-        if SkipPath[path] && InDevMode() then continue end
         if string.StartWith(v, "cl_") then
             print("| " .. name .. " | File Load | " .. path)
             if SERVER then
@@ -94,7 +74,7 @@ function LinvLib.LoadAllFiles(folder, name)
             print("| " .. name .. " | - Error - | File Name Invalid : " .. path)
         end
     end
-    for k, v in pairs(folders) do
+    for k, v in SortedPairs(folders, true) do
         LinvLib.LoadAllFiles(folder .. "/" .. v, name)
     end
 end
@@ -128,12 +108,44 @@ function LinvLib.ShowAddonInfos(full_name, version, license)
     print(" ")
 end
 
+if SERVER then
+    function LinvLib:SaveSettings(file_name, var, version, addon, server_only)
+        if !file.Exists("linventif/linventif_stuff", "DATA") then
+            file.CreateDir("linventif/linventif_stuff")
+        end
+        local data = {
+            ["version"] = version,
+            ["config"] = var
+        }
+        file.Write("linventif/linventif_stuff/" .. file_name .. ".json", util.TableToJSON(data, true))
+        if server_only then return end
+        net.Start("LinvLib:SaveSetting")
+            net.WriteString(addon)
+            net.WriteString(util.TableToJSON(var))
+        net.Broadcast()
+    end
+
+    function LinvLib:LoadSettings(path, new_data, version, addon, server_only)
+        if file.Exists("linventif/linventif_stuff/" .. path .. ".json", "DATA") then
+            local data = util.JSONToTable(file.Read("linventif/linventif_stuff/" .. path .. ".json", "DATA"))
+            if data.version < version then
+                data.config = table.Merge(new_data, data.config)
+                data.version = version
+                LinvLib:SaveSettings(path, new_data, version, addon, server_only)
+            end
+            return data.config
+        else
+            LinvLib:SaveSettings(path, new_data, version, addon, server_only)
+            return new_data
+        end
+    end
+end
+
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 LinvLib.Install[folder] = version
 LinvLib.ShowAddonInfos(name, version, license)
 LinvLib.LoadLocalizations(folder, name)
-if InDevMode() then LinvLib.LoadAllFiles("linv_stuff_config", "Linventif Stuff Config") end
 LinvLib.LoadAllFiles(folder, name)
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //

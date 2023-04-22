@@ -1,6 +1,3 @@
-util.AddNetworkString("LinvLib:Compatibility")
-util.AddNetworkString("LinvLib:Notification")
-
 function LinvLib.AddRessource(name, folder, addon_folder)
     local files, folders = file.Find(folder.."*", "GAME")
     for k, v in pairs(folders) do

@@ -1,21 +1,3 @@
-util.AddNetworkString("LinvLib:SaveSetting")
-util.AddNetworkString("LinvLib:GetSettings")
-
-function LinvLib:SaveSettings(file_name, var, version, addon)
-    if !file.Exists("linventif/linventif_stuff", "DATA") then
-        file.CreateDir("linventif/linventif_stuff")
-    end
-    local data = {
-        ["version"] = version,
-        ["config"] = var
-    }
-    file.Write("linventif/linventif_stuff/" .. file_name .. ".json", util.TableToJSON(data, true))
-    net.Start("LinvLib:SaveSetting")
-        net.WriteString(addon)
-        net.WriteString(util.TableToJSON(var))
-    net.Broadcast()
-end
-
 local SaveNewSettings = {
     ["LinvLib:AdminMenu"] = function()
         LinvLib.Config.AdminMenu = net.ReadBool()
@@ -121,25 +103,6 @@ net.Receive("LinvLib:SaveSetting", function(len, ply)
     end
 end)
 
-function LinvLib:LoadSettings(path, new_data, version, addon)
-    if file.Exists("linventif/linventif_stuff/" .. path .. ".json", "DATA") then
-        local data = util.JSONToTable(file.Read("linventif/linventif_stuff/" .. path .. ".json", "DATA"))
-        if data.version < version then
-            data.config = table.Merge(new_data, data.config)
-            data.version = version
-            LinvLib:SaveSettings(path, new_data, version, addon)
-        end
-        return data.config
-    else
-        LinvLib:SaveSettings(path, new_data, version, addon)
-        return new_data
-    end
-end
-
-hook.Add("Initialize", "LinvLib:LoadSettings", function()
-    LinvLib.Config = LinvLib:LoadSettings("linvlib_settings", LinvLib.Config, LinvLib.Info.version, "LinvLib")
-end)
-
 function LinvLib.SendAddonSettings(addon, config)
     net.Start("LinvLib:SaveSetting")
         net.WriteString(addon)
@@ -149,9 +112,4 @@ end
 
 hook.Add("LinvLib:SendSettings", "LinvLib:LinvLib:SendSettings", function()
     LinvLib.SendAddonSettings("LinvLib", LinvLib.Config)
-end)
-
-net.Receive("LinvLib:GetSettings", function(len, ply)
-    local addon = net.ReadString()
-    hook.Call(addon .. ":SendSettings", nil, ply)
 end)
