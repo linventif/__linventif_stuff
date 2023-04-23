@@ -7,5 +7,4 @@ function LinvLib.LNotif(msg, enum, time, addon)
         ["cut"] = 4
     }
     notification.AddLegacy(msg, enums[enum], time)
-    print(addon .. " : " .. msg)
 end

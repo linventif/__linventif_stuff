@@ -93,7 +93,7 @@ function LinvLib.MoneyToShow(separator, money)
 end
 
 function LinvLib.FormatMoney(money)
-    local monlen = string.len(money)
+    if !money then return end
     local moneystr = LinvLib.MoneyToShow(separator, money)
     if LinvLib.Config.MoneySymbolLeft then
         moneystr = LinvLib.Config.MoneySymbol .. moneystr

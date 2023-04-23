@@ -41,7 +41,7 @@ end)
 
 local meta = FindMetaTable("Player")
 
-function meta:LLSaveTime()
+function meta:LLSaveTime(func)
     local steamid64 = self:SteamID64()
     LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. steamid64 .. "'", function(data)
         if table.IsEmpty(data) then return end
@@ -49,7 +49,9 @@ function meta:LLSaveTime()
         data = data[1]
         local diff = LinvLib.timeDifference(data.last_connect, os.date("%Y-%m-%d %H:%M:%S"))
         data.total_time = data.total_time + diff
-        LinvLib.SQL.Query("UPDATE linv_ply_info SET total_time = '" .. data.total_time .. "' WHERE steamid64 = '" .. steamid64 .. "'")
+        LinvLib.SQL.Query("UPDATE linv_ply_info SET total_time = '" .. data.total_time .. "' WHERE steamid64 = '" .. steamid64 .. "'", function()
+            if func then func() end
+        end)
     end)
 end
 
@@ -57,9 +59,15 @@ hook.Add("PlayerDisconnected", "LinvLib:UserDB:SaveTime:Disconnect", function(pl
     ply:LLSaveTime()
 end)
 
-hook.Add("ShutDown", "LinvLib:UserDB:SaveTime:Shutdown", function()
-    for _, ply in pairs(player.GetAll()) do
-        ply:LLSaveTime()
+hook.Add("ShutDown", "LinvLib:UserDB:SaveTime:ShutDown", function()
+    for k, v in pairs(player.GetAll()) do
+        v:LLSaveTime()
+    end
+end)
+
+timer.Create("LinvLib:UserDB:SaveTime:Timer", 300, 0, function()
+    for k, v in pairs(player.GetAll()) do
+        v:LLSaveTime()
     end
 end)
 
