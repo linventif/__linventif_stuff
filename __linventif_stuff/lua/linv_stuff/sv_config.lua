@@ -4,6 +4,8 @@
 // If you don't use the workshop version, you will not receive any update and you will not be able to use new features or addons I will create.
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
+LinvLib.ServerConfig.InGameSettings = true // Put to false if you want to change the configuration in this file
+
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 //                                                    //
 //             SQL DATABASE CONFIGURATION             //

@@ -570,6 +570,10 @@ function LinvLib:Icon(element, mat, hover)
 end
 
 function LinvLib:WebPage(url, args)
+    if LinvLib.Config.OpenOldNavigator then
+        gui.OpenURL(url)
+        return
+    end
     if !args || !istable(args) then args = {} end
     local frame = LinvLib:Frame(1920*0.8+90, 1080*0.8+90)
     local url_label = LinvLib:Label(frame, url)

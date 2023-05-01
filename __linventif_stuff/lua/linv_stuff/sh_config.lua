@@ -17,6 +17,7 @@ LinvLib.Config.ThemeColors = "linventif" // Color Theme (linventif = default) yo
 LinvLib.Config.ThemeFonts = "default" // Font Theme (default) you can add your own font theme in cl_theme.lua
 LinvLib.Config.Rounded = 8 // Rounded (px 0 to disable)
 LinvLib.Config.ShowSlider = true // Show Slider (true - false)
+LinvLib.Config.OpenOldNavigator = false // Open Old Navigator (true - false)
 
 // Border
 LinvLib.Config.Border = 0 // Border (px 0 to disable)

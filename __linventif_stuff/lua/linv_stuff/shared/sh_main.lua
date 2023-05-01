@@ -182,3 +182,7 @@ end
 function LinvLib.Debug()
     return LinvLib.Config.Debug
 end
+
+function LinvLib.Rounded()
+    return LinvLib.Config.Rounded
+end

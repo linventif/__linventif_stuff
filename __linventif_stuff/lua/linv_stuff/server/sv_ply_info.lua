@@ -32,19 +32,19 @@ hook.Add("player_connect", "LinvLib:UserDB:Save:IP", function(info_connect)
     ]])
 end)
 
-local meta = FindMetaTable("Player")
-function meta:LLSaveTime()
-    local steamid64 = self:SteamID64()
+local function SaveTime(ply)
+    if !IsValid(ply) || !ply:IsPlayer() then return end
+    local steamid64 = ply:SteamID64()
     LinvLib.SQL.Query("UPDATE linv_ply_info SET total_time = total_time + TIMESTAMPDIFF(SECOND, last_connect, NOW()) WHERE steamid64 = '" .. steamid64 .. "'")
 end
 
 hook.Add("PlayerDisconnected", "LinvLib:UserDB:SaveTime:Disconnect", function(ply)
-    ply:LLSaveTime()
+    SaveTime(ply)
 end)
 
 hook.Add("ShutDown", "LinvLib:UserDB:SaveTime:ShutDown", function()
-    for k, v in pairs(player.GetAll()) do
-        v:LLSaveTime()
+    for _, ply in pairs(player.GetAll()) do
+        SaveTime(ply)
     end
 end)
 

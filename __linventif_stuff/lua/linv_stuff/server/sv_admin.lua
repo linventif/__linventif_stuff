@@ -25,8 +25,8 @@ local func_command = {
     ["!stop"] = function()
         RunConsoleCommand("killserver")
     end,
-    ["!map"] = function(args)
-        RunConsoleCommand("changelevel", args[2])
+    ["!remap"] = function()
+        RunConsoleCommand("changelevel", game.GetMap())
     end,
 }
 

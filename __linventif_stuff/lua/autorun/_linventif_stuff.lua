@@ -5,7 +5,7 @@
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 if SERVER then
-    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linv_stuff_config", "LUA") then return end
+    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linv_stuff_config", "LUA") then RunConsoleCommand("killserver") return end
 end
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
@@ -123,21 +123,6 @@ if SERVER then
             net.WriteString(addon)
             net.WriteString(util.TableToJSON(var))
         net.Broadcast()
-    end
-
-    function LinvLib:LoadSettings(path, new_data, version, addon, server_only)
-        if file.Exists("linventif/linventif_stuff/" .. path .. ".json", "DATA") then
-            local data = util.JSONToTable(file.Read("linventif/linventif_stuff/" .. path .. ".json", "DATA"))
-            if data.version < version then
-                data.config = table.Merge(new_data, data.config)
-                data.version = version
-                LinvLib:SaveSettings(path, new_data, version, addon, server_only)
-            end
-            return data.config
-        else
-            LinvLib:SaveSettings(path, new_data, version, addon, server_only)
-            return new_data
-        end
     end
 end
 
