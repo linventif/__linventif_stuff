@@ -77,6 +77,9 @@ local SaveNewSettings = {
     ["LinvLib:SaveSettings"] = function()
         LinvLib:SaveSettings("linvlib_settings", LinvLib.Config, LinvLib.Info.version, "LinvLib")
     end,
+    ["LinvLib:ShowTimer"] = function()
+        LinvLib.Config.ShowTimer = net.ReadBool()
+    end,
 }
 
 function LinvLib:MonitorAddSettings(id, AddSettings)

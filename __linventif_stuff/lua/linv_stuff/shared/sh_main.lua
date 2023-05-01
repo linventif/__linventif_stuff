@@ -159,11 +159,26 @@ function LinvLib.convertDateToTime(date)
     return convertedTime
 end
 
-function LinvLib.timeDifference(date1, date2)
+function LinvLib.timeDifference(date1, date2, format)
     local time1 = LinvLib.convertDateToTime(date1)
     local time2 = LinvLib.convertDateToTime(date2)
 
     local difference = math.abs(time1 - time2) // in seconds
 
-    return difference
+    if format == "minutes" then
+        return difference / 60, "minutes"
+    elseif format == "hours" then
+        return difference / 60 / 60, "hours"
+    elseif format == "days" then
+        return difference / 60 / 60 / 24, "days"
+    elseif format == "weeks" then
+        return difference / 60 / 60 / 24 / 7, "weeks"
+    elseif format == "months" then
+        return difference / 60 / 60 / 24 / 30, "months"
+    end
+    return difference, "seconds"
+end
+
+function LinvLib.Debug()
+    return LinvLib.Config.Debug
 end

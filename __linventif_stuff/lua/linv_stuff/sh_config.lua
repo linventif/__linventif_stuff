@@ -27,6 +27,9 @@ LinvLib.Config.MoneySymbol = "€" // Money Symbol
 LinvLib.Config.MoneySymbolPosition = "After" // Money Symbol Position (before - after)
 LinvLib.Config.MoneySymbolSeparator = " " // Money Symbol between the number
 
+// Client
+LinvLib.Config.ShowTimer = false // Show Timer (true - false)
+
 // Notification Settings
 LinvLib.Config.NotificationType = "chat" // Notification Type (chat - legacy - none)
 

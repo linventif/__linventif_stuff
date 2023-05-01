@@ -30,6 +30,14 @@ if LinvLib.UseExtDB() then
         end
         dbQuery:start()
     end
+
+    function LinvLib.SQL.TableExists(tableName, callback)
+        LinvLib.SQL.Query("SHOW TABLES LIKE '" .. tableName .. "'", function(data)
+            if callback then
+                callback(data)
+            end
+        end)
+    end
 else
     function LinvLib.SQL.Query(query, callback)
         if LinvLib.Config.DebugMode then print("| Linventif Debug | SQLite | Query | " .. query) end
@@ -37,6 +45,14 @@ else
         if callback then
             callback(result)
         end
+    end
+
+    function LinvLib.SQL.TableExists(tableName, callback)
+        LinvLib.SQL.Query("SELECT * FROM sqlite_master WHERE type='table' AND name='" .. tableName .. "'", function(data)
+            if callback then
+                callback(data)
+            end
+        end)
     end
 end
 

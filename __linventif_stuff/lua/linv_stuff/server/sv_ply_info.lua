@@ -2,7 +2,7 @@ hook.Add("Initialize", "LinvLib:UserDB:Init", function()
     LinvLib.SQL.Query([[
         CREATE TABLE IF NOT EXISTS linv_ply_info (
             steamid TEXT,
-            steamid64 TEXT,
+            steamid64 CHAR(17) NOT NULL PRIMARY KEY,
             name TEXT,
             ip TEXT,
             port TEXT,
@@ -25,34 +25,17 @@ hook.Add("player_connect", "LinvLib:UserDB:Save:IP", function(info_connect)
     local name = info_connect.name
     local steamid64 = util.SteamIDTo64(steamid)
 
-    LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. steamid64 .. "'", function(data)
-        if data && !table.IsEmpty(data) then
-            data = data[1]
-            data.ip = ip
-            data.name = name
-            data.last_connect = os.date("%Y-%m-%d %H:%M:%S")
-            data.total_connects = data.total_connects + 1
-            LinvLib.SQL.Query("UPDATE linv_ply_info SET ip = '" .. ip .. "', name = '" .. name .. "', last_connect = '" .. data.last_connect .. "', total_connects = '" .. data.total_connects .. "' WHERE steamid64 = '" .. steamid64 .. "'")
-        else
-            LinvLib.SQL.Query("INSERT INTO linv_ply_info (steamid, steamid64, name, ip, port) VALUES ('" .. steamid .. "', '" .. steamid64 .. "', '" .. name .. "', '" .. ip .. "', '" .. port .. "')")
-        end
-    end)
+    LinvLib.SQL.Query([[
+        INSERT INTO linv_ply_info (steamid, steamid64, name, ip, port, last_connect, total_connects)
+        VALUES (']] .. steamid .. [[', ']] .. steamid64 .. [[', ']] .. name .. [[', ']] .. ip .. [[', ']] .. port .. [[', NOW(), 1)
+        ON DUPLICATE KEY UPDATE ip = VALUES(ip), name = VALUES(name), last_connect = NOW(), total_connects = total_connects + 1
+    ]])
 end)
 
 local meta = FindMetaTable("Player")
-
-function meta:LLSaveTime(func)
+function meta:LLSaveTime()
     local steamid64 = self:SteamID64()
-    LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. steamid64 .. "'", function(data)
-        if table.IsEmpty(data) then return end
-
-        data = data[1]
-        local diff = LinvLib.timeDifference(data.last_connect, os.date("%Y-%m-%d %H:%M:%S"))
-        data.total_time = data.total_time + diff
-        LinvLib.SQL.Query("UPDATE linv_ply_info SET total_time = '" .. data.total_time .. "' WHERE steamid64 = '" .. steamid64 .. "'", function()
-            if func then func() end
-        end)
-    end)
+    LinvLib.SQL.Query("UPDATE linv_ply_info SET total_time = total_time + TIMESTAMPDIFF(SECOND, last_connect, NOW()) WHERE steamid64 = '" .. steamid64 .. "'")
 end
 
 hook.Add("PlayerDisconnected", "LinvLib:UserDB:SaveTime:Disconnect", function(ply)
@@ -60,12 +43,6 @@ hook.Add("PlayerDisconnected", "LinvLib:UserDB:SaveTime:Disconnect", function(pl
 end)
 
 hook.Add("ShutDown", "LinvLib:UserDB:SaveTime:ShutDown", function()
-    for k, v in pairs(player.GetAll()) do
-        v:LLSaveTime()
-    end
-end)
-
-timer.Create("LinvLib:UserDB:SaveTime:Timer", 300, 0, function()
     for k, v in pairs(player.GetAll()) do
         v:LLSaveTime()
     end
@@ -85,20 +62,8 @@ end)
 
 hook.Add("PlayerDeath", "LinvLib:UserDB:Save:Deaths", function(victim, inflictor, attacker)
     if attacker:IsPlayer() && attacker != victim then
-        LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. attacker:SteamID64() .. "'", function(data)
-            if table.IsEmpty(data) then return end
-
-            data = data[1]
-            data.total_kills = data.total_kills + 1
-            LinvLib.SQL.Query("UPDATE linv_ply_info SET total_kills = '" .. data.total_kills .. "' WHERE steamid64 = '" .. attacker:SteamID64() .. "'")
-        end)
+        LinvLib.SQL.Query("UPDATE linv_ply_info SET total_kills = total_kills + 1 WHERE steamid64 = '" .. attacker:SteamID64() .. "'")
     end
 
-    LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. victim:SteamID64() .. "'", function(data)
-        if table.IsEmpty(data) then return end
-
-        data = data[1]
-        data.total_deaths = data.total_deaths + 1
-        LinvLib.SQL.Query("UPDATE linv_ply_info SET total_deaths = '" .. data.total_deaths .. "' WHERE steamid64 = '" .. victim:SteamID64() .. "'")
-    end)
+    LinvLib.SQL.Query("UPDATE linv_ply_info SET total_deaths = total_deaths + 1 WHERE steamid64 = '" .. victim:SteamID64() .. "'")
 end)

@@ -380,6 +380,15 @@ local function OpenSettings()
                     end,
                     ["name"] = LinvLib:GetTrad("show_slider")
                 },
+                [6] = {
+                    ["checkbox"] = true,
+                    ["state"] = LinvLib.Config.ShowTimer,
+                    ["icon"] = LinvLib.Materials["valid"],
+                    ["function"] = function()
+                        SaveSetting("LinvLib:ShowTimer", "boolean", !LinvLib.Config.ShowTimer)
+                    end,
+                    ["name"] = LinvLib:GetTrad("show_timer")
+                },
             }
         },
         [100] = {

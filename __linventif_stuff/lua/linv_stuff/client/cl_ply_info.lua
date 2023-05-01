@@ -1,6 +1,7 @@
 local past_time, start_time = 0, 0
 
 hook.Add("HUDPaint", "LinvLib:HUD:PlayerTime", function()
+    if !LinvLib.Config.ShowTimer then return end
     local timeLeft = math.Round(past_time + CurTime() - start_time)
     // convert sec to day / hour / min / sec
     timeLeft = {

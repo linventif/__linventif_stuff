@@ -154,4 +154,4 @@ if SERVER then
     resource.AddWorkshop("2882747990")
 end
 
-print("| Linventif Library | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
+print("| Linventif Stuff | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
