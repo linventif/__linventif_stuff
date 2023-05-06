@@ -80,6 +80,9 @@ local SaveNewSettings = {
     ["LinvLib:ShowTimer"] = function()
         LinvLib.Config.ShowTimer = net.ReadBool()
     end,
+    ["LinvLib:OldNavigator"] = function()
+        LinvLib.Config.OpenOldNavigator = net.ReadBool()
+    end,
 }
 
 function LinvLib:MonitorAddSettings(id, AddSettings)
