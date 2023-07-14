@@ -570,7 +570,7 @@ function LinvLib:Icon(element, mat, hover)
 end
 
 function LinvLib:WebPage(url, args)
-    if LinvLib.Config.OpenOldNavigator then
+    if (jit.version != "LuaJIT 2.1.0-beta3") then
         gui.OpenURL(url)
         return
     end

@@ -14,9 +14,9 @@ LinvLib.ServerConfig.InGameSettings = true // Put to false if you want to change
 
 LinvLib.ServerConfig.UseExternalDatabase = false // Do you want to use an external database ?
 LinvLib.ServerConfig.SQL = { // If you want to use an external database, please fill this table
-    ["host"] = "127.0.0.1",
+    ["host"] = "",
     ["port"] = 3306,
-    ["database"] = "database",
-    ["username"] = "username",
-    ["password"] = "password"
+    ["database"] = "",
+    ["username"] = "",
+    ["password"] = ""
 }

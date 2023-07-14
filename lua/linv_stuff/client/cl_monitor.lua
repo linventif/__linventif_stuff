@@ -389,15 +389,6 @@ local function OpenSettings()
                     end,
                     ["name"] = LinvLib:GetTrad("show_timer")
                 },
-                [7] = {
-                    ["checkbox"] = true,
-                    ["state"] = LinvLib.Config.OpenOldNavigator,
-                    ["icon"] = LinvLib.Materials["valid"],
-                    ["function"] = function()
-                        SaveSetting("LinvLib:OldNavigator", "boolean", !LinvLib.Config.OpenOldNavigator)
-                    end,
-                    ["name"] = LinvLib:GetTrad("use_old_navigator")
-                },
             }
         },
         [100] = {
