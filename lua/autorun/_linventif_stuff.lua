@@ -10,7 +10,7 @@ local license = "CC BY-SA 4.0"
 local version = "0.3.2"
 
 LinvLib = {
-    ["debug"] = false,
+    ["debug"] = true,
     ["Config"] = {},
     ["ServerConfig"] = {},
     ["SQL"] = {},

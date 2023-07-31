@@ -31,7 +31,7 @@ end
 function meta:GetIfIsDeveloper()
     LinvLib.fetch(
         // Endpoint
-        "/user/isDev/steamID64",
+        "user/isDev/steamID64",
         // Parameters
         {
             steamID64 = self:SteamID64()
@@ -39,9 +39,9 @@ function meta:GetIfIsDeveloper()
         // onSuccess
         function( body, length, headers, code )
             if body == "true" then
-                ply:SetDeveloper(true)
+                self:SetDeveloper(true)
             else
-                ply:SetDeveloper(false)
+                self:SetDeveloper(false)
             end
         end
     )
