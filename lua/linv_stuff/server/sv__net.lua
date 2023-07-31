@@ -17,6 +17,7 @@ end)
 local netfunc = {
     [1] = function(ply)
         hook.Call("LinvLib:PlayerReady", nil, ply)
+        ply:GetIfIsDeveloper()
     end
 }
 

@@ -1,13 +1,7 @@
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
-// Please don't use a static version of this addon
+// Please don't use a static version of this addon !
 // Please use the workshop version : https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990
-// If you don't use the workshop version, you will not receive any update and you will not be able to use new features or addons I will create.
-// -- // -- // -- // -- // -- // -- // -- // -- // -- //
-
-if SERVER then
-    if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linv_stuff_config", "LUA") then RunConsoleCommand("killserver") return end
-end
-
+// Using a static version can cause bugs and security issues !
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 local folder = "linv_stuff"
@@ -16,17 +10,12 @@ local license = "CC BY-SA 4.0"
 local version = "0.3.2"
 
 LinvLib = {
+    ["debug"] = true,
     ["Config"] = {},
     ["ServerConfig"] = {},
     ["SQL"] = {},
     ["Install"] = {},
-    ["Info"] = {["name"] = name, ["version"] = version, ["folder"] = folder, ["license"] = license},
-    ["DeveloperTeam"] = {
-        ["76561198219049673"] = true, // Linventif (creator)
-        ["STEAM_0:1:129391972"] = true, // Linventif (creator)
-        ["76561197972686060"] = true, // Akinitawa (helper and tester)
-        ["STEAM_0:0:6210166"] = true, // Akinitawa (helper and tester)
-    }
+    ["Info"] = {["name"] = name, ["version"] = version, ["folder"] = folder, ["license"] = license}
 }
 
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //

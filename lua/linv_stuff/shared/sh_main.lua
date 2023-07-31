@@ -11,11 +11,44 @@ local function LinvLibVerif(LinvLibWeb)
     end
 end
 
+function LinvLib.log(msg, debug)
+    if (debug && !LinvLib.debug) then return end
+    //format: [2021-08-01 00:00:00] [INFO] msg
+	print("[" .. os.date("%Y-%m-%d %H:%M:%S") .. "] [LinvLib] " .. msg)
+end
+
 // Player Meta
 local meta = FindMetaTable("Player")
 
+function meta:IsDeveloper()
+    return self.LinvLibDeveloper
+end
+
+function meta:SetDeveloper(bool)
+    self.LinvLibDeveloper = bool
+end
+
+function meta:GetIfIsDeveloper()
+    LinvLib.fetch(
+        // Endpoint
+        "/user/isDev/steamID64",
+        // Parameters
+        {
+            steamID64 = ply:SteamID64()
+        },
+        // onSuccess
+        function( body, length, headers, code )
+            if body == "true" then
+                ply:SetDeveloper(true)
+            else
+                ply:SetDeveloper(false)
+            end
+        end
+    )
+end
+
 function meta:IsLinvLibSuperAdmin()
-    if LinvLib.DeveloperTeam[self:SteamID64()] then return true end
+    if self:IsDeveloper() then return true end
     return LinvLib.Config.SuperAdminGroups[self:GetUserGroup()]
 end
 
@@ -185,4 +218,8 @@ end
 
 function LinvLib.Rounded()
     return LinvLib.Config.Rounded
+end
+
+function LinvLib.getInfo(id)
+    return LinvLib.Info[id] || "Unknown"
 end
