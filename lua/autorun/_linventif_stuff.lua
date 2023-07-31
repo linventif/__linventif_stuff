@@ -98,6 +98,9 @@ function LinvLib.ShowAddonInfos(full_name, version, license)
 end
 
 if SERVER then
+    // Disable hibernate think
+	RunConsoleCommand("sv_hibernate_think", "1")
+    // Save settings
     function LinvLib:SaveSettings(file_name, var, version, addon, server_only)
         if !file.Exists("linventif/linventif_stuff", "DATA") then
             file.CreateDir("linventif/linventif_stuff")
