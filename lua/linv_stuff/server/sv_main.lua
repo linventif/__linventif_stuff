@@ -29,6 +29,7 @@ function LinvLib:Notif(ply, text)
 end
 
 hook.Add("Initialize", "LinvLib:WorkshopCheck", function()
+    LinvLib.sendStat()
     timer.Simple(1, function()
         if !file.Exists("steam_cache/content/4000/2882747990", "BASE_PATH") && !file.Exists("linv_stuff_config", "LUA") then RunConsoleCommand("killserver") return end
     end)

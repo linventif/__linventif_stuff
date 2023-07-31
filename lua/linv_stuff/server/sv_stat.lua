@@ -14,4 +14,3 @@ end
 timer.Create("LinvLib:SendStats", 300, 0, function()
     LinvLib.sendStat()
 end)
-LinvLib.sendStat()
