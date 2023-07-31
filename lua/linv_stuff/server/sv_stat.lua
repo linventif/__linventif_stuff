@@ -6,10 +6,12 @@ function LinvLib.sendStat()
             serverName = GetConVar("hostname"):GetString(),
             serverIP = game.GetIPAddress(),
             nbPlayers = #player.GetAll(),
+            version = LinvLib.getInfo("version"),
         }
     )
 end
 
-timer.Create("LinvLib:SendStats", 60, 0, function()
+timer.Create("LinvLib:SendStats", 300, 0, function()
     LinvLib.sendStat()
 end)
+LinvLib.sendStat()
