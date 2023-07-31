@@ -34,7 +34,7 @@ function meta:GetIfIsDeveloper()
         "/user/isDev/steamID64",
         // Parameters
         {
-            steamID64 = ply:SteamID64()
+            steamID64 = self:SteamID64()
         },
         // onSuccess
         function( body, length, headers, code )

@@ -36,6 +36,7 @@ hook.Add("player_connect", "LinvLib:Player:Connect", function(data)
         function(body, length, headers, code)
             body = util.JSONToTable(body)
             table.Merge(body, data)
+            PrintTable(body)
             if body.ban then
                 game.KickID(data.networkid, BanMessage(body))
             end
