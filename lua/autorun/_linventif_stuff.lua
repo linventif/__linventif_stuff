@@ -21,6 +21,8 @@ LinvLib = {
 // -- // -- // -- // -- // -- // -- // -- // -- // -- //
 
 function LinvLib.LoadLocalizations(file_name, name, path)
+    // If is singleplayer, don't load
+    if game.SinglePlayer() then return end
     if !path then path = "resource/localization/en/" end
 
     local files, dirs = file.Find(path .. "*", "GAME")
@@ -38,6 +40,8 @@ function LinvLib.LoadLocalizations(file_name, name, path)
 end
 
 function LinvLib.LoadAllFiles(folder, name)
+    // If is singleplayer, don't load
+    if game.SinglePlayer() then return end
     local files, folders = file.Find(folder .. "/*", "LUA")
     for k, v in SortedPairs(files) do
         local path = folder .. "/" .. v
