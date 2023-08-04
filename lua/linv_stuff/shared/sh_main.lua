@@ -38,11 +38,7 @@ function meta:GetIfIsDeveloper()
         },
         // onSuccess
         function( body, length, headers, code )
-            if body == "true" then
-                self:SetDeveloper(true)
-            else
-                self:SetDeveloper(false)
-            end
+	    self:SetDeveloper(body == "true")
         end
     )
 end
