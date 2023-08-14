@@ -1,7 +1,11 @@
+function LinvLib.getInfo(id)
+    return LinvLib.Info[id] || "Unknown"
+end
+
 // Verifcation
 local function LinvLibVerif(LinvLibWeb)
-    LinvLib.LoadStr(LinvLib.Info.name, LinvLib.Info.version, LinvLib.Info.license)
-    if LinvLibWeb[LinvLib.Info.folder].version > LinvLib.Info.version then
+    LinvLib.LoadStr(LinvLib.getInfo('name'), LinvLib.getInfo('version'), LinvLib.getInfo('license'))
+    if LinvLibWeb[LinvLib.getInfo('folder')].version > LinvLib.getInfo('version') then
         print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
         print(" -                                                                                         - ")
         print(" -                             Linventif Library is outdated !                             - ")
@@ -100,6 +104,7 @@ end
 hook.Add("Initialize", "LinvLib:GetVersion", function()
     timer.Simple( 5, function()
         http.Fetch("https://api.linv.dev/addons.json", function(body, length, headers, code)
+            if !body then return end
             LinvLibVerif(util.JSONToTable(body))
         end, function(message)
             print(message)
@@ -218,8 +223,4 @@ end
 
 function LinvLib.Rounded()
     return LinvLib.Config.Rounded
-end
-
-function LinvLib.getInfo(id)
-    return LinvLib.Info[id] || "Unknown"
 end
