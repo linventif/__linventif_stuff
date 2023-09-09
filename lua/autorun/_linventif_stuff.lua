@@ -1,13 +1,15 @@
-// -- // -- // -- // -- // -- // -- // -- // -- // -- //
-// Please don't use a static version of this addon !
-// Please use the workshop version : https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990
-// Using a static version can cause bugs and security issues !
-// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+//
+// Local Variables
+//
 
 local folder = "linv_stuff"
 local name = "Linventif Stuff"
 local license = "CC BY-SA 4.0"
 local version = "0.3.3"
+
+//
+// Global Variables
+//
 
 LinvLib = {
     ["debug"] = false,
@@ -18,13 +20,15 @@ LinvLib = {
     ["Info"] = {["name"] = name, ["version"] = version, ["folder"] = folder, ["license"] = license}
 }
 
-// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+//
+// Primary Functions
+//
 
 function LinvLib.LoadLocalizations(file_name, name, path)
     // If is singleplayer, don't load
     if game.SinglePlayer() then return end
-    if !path then path = "resource/localization/en/" end
 
+    if !path then path = "resource/localization/en/" end
     local files, dirs = file.Find(path .. "*", "GAME")
 
     for _, v in pairs(files) do
@@ -122,17 +126,20 @@ if SERVER then
     end
 end
 
-// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+//
+// Load all files
+//
 
 LinvLib.Install[folder] = version
 LinvLib.ShowAddonInfos(name, version, license)
 LinvLib.LoadLocalizations(folder, name)
 LinvLib.LoadAllFiles(folder, name)
 
-// -- // -- // -- // -- // -- // -- // -- // -- // -- //
+//
+// Add workshop
+//
 
 if SERVER then
     resource.AddWorkshop("2882747990")
+    print("| Linventif Stuff | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
 end
-
-print("| Linventif Stuff | Add Workshop | https://steamcommunity.com/sharedfiles/filedetails/?id=2882747990")
