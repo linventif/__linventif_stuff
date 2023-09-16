@@ -5,7 +5,7 @@
 local folder = "linv_stuff"
 local name = "Linventif Stuff"
 local license = "CC BY-SA 4.0"
-local version = "0.3.3"
+local version = "0.3.4"
 
 //
 // Global Variables
