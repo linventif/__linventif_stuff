@@ -78,3 +78,20 @@ hook.Add("PlayerNoClip", "LinvLib:AdminNoclip", function(ply, desiredState)
 	end
     return true
 end)
+
+/*
+Pickup players
+when pickup player, set player to noclip
+when drop player, set player to noclip
+no fall damage until player touches ground
+god mode until player touches ground
+right click to freeze player in air
+left click to unfreeze player
+*/
+
+hook.Add("PhysgunPickup", "LinvLib:AdminPhysgunPickup", function(ply, plyTarget)
+    if !ply:IsLinvLibSuperAdmin() then return end
+    if plyTarget:IsPlayer() then
+        plyTarget:SetMoveType(MOVETYPE_NOCLIP)
+    end
+end)
