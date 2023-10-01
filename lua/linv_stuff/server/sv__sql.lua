@@ -3,24 +3,25 @@
 //
 
 // By default use SQLite
-local sqlQuery = function(query, callback)
-    if LinvLib.Config.DebugMode then print("| Linventif Debug | SQLite | Query | " .. query) end
+function LinvLib.SQL.Query(query, callback)
+    if LinvLib.debug then print("| Linventif Debug | MySQL | Query | " .. query) end
     local result = sql.Query(query)
     if callback then
         callback(result)
+        if LinvLib.debug then
+            print("| Linventif Debug | MySQL | Query Result | ")
+            PrintTable(result)
+        end
     end
 end
 
-local sqlTableExists = function(tableName, callback)
+function LinvLib.SQL.TableExists(tableName, callback)
     LinvLib.SQL.Query("SELECT * FROM sqlite_master WHERE type='table' AND name='" .. tableName .. "'", function(data)
         if callback then
             callback(data)
         end
     end)
 end
-
-LinvLib.SQL.Query = LinvLib.SQL.Query || sqlQuery
-LinvLib.SQL.TableExists = LinvLib.SQL.TableExists || sqlTableExists
 
 // Load external database if enabled
 timer.Simple(0.1, function()
@@ -47,6 +48,10 @@ timer.Simple(0.1, function()
             dbQuery.onSuccess = function(_, data)
                 if callback then
                     callback(data)
+                    if LinvLib.debug then
+                        print("| Linventif Debug | MySQL | Query Result | ")
+                        PrintTable(result)
+                    end
                 end
             end
             dbQuery.onError = function(_, err)
@@ -65,5 +70,7 @@ timer.Simple(0.1, function()
                 end
             end)
         end
+    else
+        hook.Call("LinvLib.SQL.Init")
     end
 end)
