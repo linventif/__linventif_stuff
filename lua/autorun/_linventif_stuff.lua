@@ -105,6 +105,10 @@ function LinvLib.ShowAddonInfos(full_name, version, license)
     print(" ")
 end
 
+function LinvLib.DebugMode()
+    return LinvLib.debug || LinvLib.Config.DebugMode
+end
+
 if SERVER then
     // Disable hibernate think
 	RunConsoleCommand("sv_hibernate_think", "1")

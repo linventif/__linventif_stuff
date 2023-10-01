@@ -4,14 +4,12 @@
 
 // By default use SQLite
 function LinvLib.SQL.Query(query, callback)
-    if LinvLib.debug then print("| Linventif Debug | MySQL | Query | " .. query) end
+    if LinvLib.DebugMode() then print("| Linventif Debug | MySQL | Query | " .. query) end
     local result = sql.Query(query)
     if callback then
         callback(result)
-        if LinvLib.debug then
-            print("| Linventif Debug | MySQL | Query Result | ")
-            PrintTable(result)
-        end
+        if LinvLib.DebugMode() then print("| Linventif Debug | MySQL | Query Result | ") end
+        PrintTable(result || {})
     end
 end
 
@@ -43,15 +41,13 @@ timer.Simple(0.1, function()
 
         // Override SQLite functions
         function LinvLib.SQL.Query(query, callback)
-            if LinvLib.debug then print("| Linventif Debug | MySQL | Query | " .. query) end
+            if LinvLib.DebugMode() then print("| Linventif Debug | MySQL | Query | " .. query) end
             local dbQuery = db:query(query)
             dbQuery.onSuccess = function(_, data)
                 if callback then
                     callback(data)
-                    if LinvLib.debug then
-                        print("| Linventif Debug | MySQL | Query Result | ")
-                        PrintTable(result)
-                    end
+                    if LinvLib.DebugMode() then print("| Linventif Debug | MySQL | Query Result | ") end
+                    PrintTable(data || {})
                 end
             end
             dbQuery.onError = function(_, err)
