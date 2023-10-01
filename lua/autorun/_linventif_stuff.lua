@@ -5,7 +5,7 @@
 local folder = "linv_stuff"
 local name = "Linventif Stuff"
 local license = "CC BY-SA 4.0"
-local version = "0.3.4"
+local version = "0.3.5"
 
 //
 // Global Variables
@@ -97,9 +97,9 @@ function LinvLib.ShowAddonInfos(full_name, version, license)
     print(" -                                                           - ")
     print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
     print(" -                                                           - ")
-    print(" - " .. LinvLib.CenterStr(width, "Create by : Linventif") .. " - ")
-    print(" - " .. LinvLib.CenterStr(width, "Join my discord : https://linv.dev/discord") .. " - ")
-    if license != "" then print(" - " .. LinvLib.CenterStr(width, "License : " .. license) .. " - ") end
+    print(" - " .. LinvLib.CenterStr(width, "Create by: Linventif") .. " - ")
+    if license != "" then print(" - " .. LinvLib.CenterStr(width, "License: " .. license) .. " - ") end
+    print(" - " .. LinvLib.CenterStr(width, "Support: https://linv.dev/discord") .. " - ")
     print(" -                                                           - ")
     print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
     print(" ")
