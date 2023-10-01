@@ -50,7 +50,7 @@ end)
 
 hook.Add("LinvLib:PlayerReady", "LinvLib:UserDB:SendPlayerTime", function(ply)
     LinvLib.SQL.Query("SELECT * FROM linv_ply_info WHERE steamid64 = '" .. ply:SteamID64() .. "'", function(data)
-        if table.IsEmpty(data) then return end
+        if (!data || data[1] || table.IsEmpty(data)) then return end
 
         data = data[1]
         net.Start("LinvLib")
