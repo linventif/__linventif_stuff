@@ -118,7 +118,7 @@ if SERVER then
             ["config"] = var
         }
         file.Write("linventif/linventif_stuff/" .. file_name .. ".json", util.TableToJSON(data, true))
-        if server_only then return end
+        if !server_only then return end
         net.Start("LinvLib:SaveSetting")
             net.WriteString(addon)
             net.WriteString(util.TableToJSON(var))
