@@ -1,9 +1,17 @@
 function LinvLib:RespW(x)
-    return ScrW() / 1920 * x
+    if string.sub(tostring(x), -1) == "%" then
+        return ScrW() / 100 * tonumber(string.sub(x, 1, -2))
+    else
+        return ScrW() / 1920 * x
+    end
 end
 
 function LinvLib:RespH(y)
-    return ScrH() / 1080 * y
+    if string.sub(tostring(y), -1) == "%" then
+        return ScrH() / 100 * tonumber(string.sub(y, 1, -2))
+    else
+        return ScrH() / 1080 * y
+    end
 end
 
 local txt_cooldown = 0
