@@ -40,6 +40,10 @@ local func_command = {
         ply:SetHealth(tonumber(args[2]))
         ply:ChatPrint("Your health has been set to " .. args[2])
     end,
+    ["hp"] = function(ply, args)
+        ply:SetHealth(tonumber(args[2]))
+        ply:ChatPrint("Your health has been set to " .. args[2])
+    end,
     ["armor_max"] = function(ply, args)
         ply:SetMaxArmor(tonumber(args[2]))
         ply:ChatPrint("Your max armor has been set to " .. args[2])
