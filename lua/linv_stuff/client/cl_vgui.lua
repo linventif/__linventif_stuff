@@ -570,22 +570,7 @@ function LinvLib:Icon(element, mat, hover)
 end
 
 function LinvLib:WebPage(url, args)
-    if (jit.version != "LuaJIT 2.1.0-beta3") then
-        gui.OpenURL(url)
-        return
-    end
-    if !args || !istable(args) then args = {} end
-    local frame = LinvLib:Frame(1920*0.8+90, 1080*0.8+90)
-    local url_label = LinvLib:Label(frame, url)
-    url_label:SetPos(LinvLib:RespW((1920*0.8+120)/2)-url_label:GetWide()/2, LinvLib:RespH(15))
-    local web = vgui.Create("DHTML", frame)
-    web:SetSize(LinvLib:RespW(1920*0.8), LinvLib:RespH(1080*0.8))
-    web:OpenURL(url)
-    web:Center()
-    local close = LinvLib:CloseButton(frame, LinvLib:RespW(30), LinvLib:RespH(30), LinvLib:RespW(1920*0.8+50), LinvLib:RespH(10), function()
-        frame:Remove()
-        if args.on_close then args.on_close() end
-    end)
+    gui.OpenURL(url)
 end
 
 function LinvLib:CheckBox(parent, w, h, func)
