@@ -5,7 +5,7 @@
 local folder = "linv_stuff"
 local name = "Linventif Stuff"
 local license = "CC BY-SA 4.0"
-local version = "0.3.5"
+local version = "0.3.4"
 
 //
 // Global Variables
@@ -97,16 +97,12 @@ function LinvLib.ShowAddonInfos(full_name, version, license)
     print(" -                                                           - ")
     print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
     print(" -                                                           - ")
-    print(" - " .. LinvLib.CenterStr(width, "Create by: Linventif") .. " - ")
-    if license != "" then print(" - " .. LinvLib.CenterStr(width, "License: " .. license) .. " - ") end
-    print(" - " .. LinvLib.CenterStr(width, "Support: https://linv.dev/discord") .. " - ")
+    print(" - " .. LinvLib.CenterStr(width, "Create by : Linventif") .. " - ")
+    print(" - " .. LinvLib.CenterStr(width, "Join my discord : https://linv.dev/discord") .. " - ")
+    if license != "" then print(" - " .. LinvLib.CenterStr(width, "License : " .. license) .. " - ") end
     print(" -                                                           - ")
     print(" - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ")
     print(" ")
-end
-
-function LinvLib.DebugMode()
-    return LinvLib.debug || LinvLib.Config.DebugMode
 end
 
 if SERVER then
@@ -122,7 +118,7 @@ if SERVER then
             ["config"] = var
         }
         file.Write("linventif/linventif_stuff/" .. file_name .. ".json", util.TableToJSON(data, true))
-        if !server_only then return end
+        if server_only then return end
         net.Start("LinvLib:SaveSetting")
             net.WriteString(addon)
             net.WriteString(util.TableToJSON(var))

@@ -1,17 +1,9 @@
 function LinvLib:RespW(x)
-    if string.sub(tostring(x), -1) == "%" then
-        return ScrW() / 100 * tonumber(string.sub(x, 1, -2))
-    else
-        return ScrW() / 1920 * x
-    end
+    return ScrW() / 1920 * x
 end
 
 function LinvLib:RespH(y)
-    if string.sub(tostring(y), -1) == "%" then
-        return ScrH() / 100 * tonumber(string.sub(y, 1, -2))
-    else
-        return ScrH() / 1080 * y
-    end
+    return ScrH() / 1080 * y
 end
 
 local txt_cooldown = 0
@@ -578,7 +570,22 @@ function LinvLib:Icon(element, mat, hover)
 end
 
 function LinvLib:WebPage(url, args)
-    gui.OpenURL(url)
+    if (jit.version != "LuaJIT 2.1.0-beta3") then
+        gui.OpenURL(url)
+        return
+    end
+    if !args || !istable(args) then args = {} end
+    local frame = LinvLib:Frame(1920*0.8+90, 1080*0.8+90)
+    local url_label = LinvLib:Label(frame, url)
+    url_label:SetPos(LinvLib:RespW((1920*0.8+120)/2)-url_label:GetWide()/2, LinvLib:RespH(15))
+    local web = vgui.Create("DHTML", frame)
+    web:SetSize(LinvLib:RespW(1920*0.8), LinvLib:RespH(1080*0.8))
+    web:OpenURL(url)
+    web:Center()
+    local close = LinvLib:CloseButton(frame, LinvLib:RespW(30), LinvLib:RespH(30), LinvLib:RespW(1920*0.8+50), LinvLib:RespH(10), function()
+        frame:Remove()
+        if args.on_close then args.on_close() end
+    end)
 end
 
 function LinvLib:CheckBox(parent, w, h, func)
